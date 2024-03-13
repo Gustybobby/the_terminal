@@ -21,7 +21,7 @@ export default async function Airline(){
                             <li>+ 2000/5s from Terminal 2</li>
                             <li>+ 500/15s from Terminal 3</li>
                             <li>- 20/5s from Terminal 4</li>
-                            <li>- 200/10s from Airline 2's Debuff</li>
+                            <li>- 200/10s from Airline 2&apos;s Debuff</li>
                         </ul>
                     </div>
                     <SkillsSection/>

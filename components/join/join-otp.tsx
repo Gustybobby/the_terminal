@@ -23,7 +23,7 @@ export default function JoinOTP({ setValue }: {
                 <>
                     <InputOTPGroup>
                         {slots.map((slot, index) => (
-                        <InputOTPSlot key={index} {...slot} className="border-black size-10"/>
+                        <InputOTPSlot key={index} {...slot} className="border-black size-10 bg-white"/>
                         ))}{" "}
                     </InputOTPGroup>
                 </>

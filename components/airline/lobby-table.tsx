@@ -19,7 +19,6 @@ export default function LobbyTable(){
         }, 5000)
         return () => clearInterval(interval)
     },[])
-
     return (
         <Table className="bg-white">
             <TableHeader className="font-bold">

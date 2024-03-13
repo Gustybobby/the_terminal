@@ -8,7 +8,7 @@ export function GET(){
         },
         {
             role: "Engineer",
-            name: "Napat Niam-La-Ong"
+            name: "Napat Niamla-Ong"
         }
     ]
     return NextResponse.json({ data })

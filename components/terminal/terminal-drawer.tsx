@@ -1,6 +1,6 @@
-import * as React from "react"
- 
-import { Button } from "@/components/ui/button"
+import * as React from "react";
+
+import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -10,66 +10,35 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer"
- 
-export function TerminalDrawer() {
-  const code = "123456"
+} from "@/components/ui/drawer";
+import prisma from "@/prisma-client";
+    
+export async function TerminalDrawer({terminalId} : {terminalId : number}) {
+  const terminal = await prisma.terminal.findFirst({
+    where : {
+      id: terminalId
+    },
+    select: {
+      currentFlagSecret: true
+    }
+})
+  const terminalFlag = terminal?.currentFlagSecret;
   return (
     <Drawer>
-      <DrawerTrigger asChild>
-        <Button variant="outline">Open Drawer</Button>
-      </DrawerTrigger>
+      <DrawerTrigger className="font-light border-2 p-4 border-slate-300 rounded-lg">Check Terminal Secret</DrawerTrigger>
       <DrawerContent>
-        <div className="mx-auto w-full max-w-sm">
-          <DrawerHeader>
-            <DrawerTitle>Secret Goal</DrawerTitle>
-          </DrawerHeader>
-          <div className="p-4 pb-0">
-            <div className="flex items-center justify-center space-x-2">
-             
-              <div className="flex-1 text-center">
-                <div className="text-7xl font-bold tracking-tighter">
-                  {code}
-                </div>
-                <div className="text-[0.70rem] uppercase text-muted-foreground">
-                  Calories/day
-                </div>
-              </div>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8 shrink-0 rounded-full"
-                onClick={() => onClick(10)}
-                disabled={goal >= 400}
-              >
-                <Plus className="h-4 w-4" />
-                <span className="sr-only">Increase</span>
-              </Button>
-            </div>
-            <div className="mt-3 h-[120px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={data}>
-                  <Bar
-                    dataKey="goal"
-                    style={
-                      {
-                        fill: "hsl(var(--foreground))",
-                        opacity: 0.9,
-                      } as React.CSSProperties
-                    }
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-          <DrawerFooter>
-            <Button>Submit</Button>
-            <DrawerClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </div>
+        <DrawerHeader>
+          <DrawerTitle>Terminal Secret</DrawerTitle>
+          <DrawerDescription>Please keep this as a secret</DrawerDescription>
+          <div className = "text-4xl font-semibold leading-none tracking-tight">{terminalFlag}</div>
+        </DrawerHeader>
+        <DrawerFooter>
+          {/* <Button>Submit</Button> */}
+          <DrawerClose>
+            <Button variant="outline">Close</Button>
+          </DrawerClose>
+        </DrawerFooter>
       </DrawerContent>
     </Drawer>
-  )
+  );
 }

@@ -33,7 +33,7 @@ model Terminal {
   description         String
   passengerRate       Int
   staffs              User[]
-  caturedBy           Airline?        @relation(fields: [airlineId], references: [id], onUpdate: Restrict, onDelete: Restrict)
+  capturedBy           Airline?        @relation(fields: [airlineId], references: [id], onUpdate: Restrict, onDelete: Restrict)
   airlineId           Int?
   capturedByRecords   CaptureRecord[]
   lastPassengerUpdate DateTime

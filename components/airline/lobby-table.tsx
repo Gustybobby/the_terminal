@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table"
-import type { LobbyTableData } from "@/types/lobbyTableData"
+import type { LobbyTableData } from "@/types/airline"
+import { Session } from "next-auth"
 
-export default function LobbyTable(){
+export default function LobbyTable({ session }: { session: Session }){
 
     const [tableData, setTableData] = useState<LobbyTableData[]>([])
     useEffect(() => {
@@ -30,8 +31,8 @@ export default function LobbyTable(){
             <TableBody>
                 {tableData.map((row, index) => (
                 <TableRow key={index}>
-                    <TableCell className="font-medium">{row.role}</TableCell>
-                    <TableCell>{row.name}</TableCell>
+                    <TableCell className={row.name === session.user.name? "font-bold text-blue-600" : "font-medium"}>{row.role}</TableCell>
+                    <TableCell className={row.name === session.user.name? "font-bold text-blue-600" : ""}>{row.name}</TableCell>
                 </TableRow>
                 ))}
             </TableBody>

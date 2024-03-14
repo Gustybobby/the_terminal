@@ -15,7 +15,7 @@ export default function JoinSection(){
                 variant={"outline"}
                 disabled={value.length !== 6}
                 className={value.length == 6? "border-black" : ""}
-                onClick={() => router.push("/")}
+                onClick={() => router.push("/airline")}
             > 
                 Join
             </Button>

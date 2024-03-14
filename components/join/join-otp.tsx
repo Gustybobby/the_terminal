@@ -9,11 +9,13 @@ import {
 import { REGEXP_ONLY_DIGITS  } from "input-otp"
 import type { Dispatch, SetStateAction } from "react"
 
-export default function JoinOTP({ setValue }: {
+export default function JoinOTP({ value, setValue }: {
+    value: string,
     setValue: Dispatch<SetStateAction<string>>
 }){
     return (
         <InputOTP
+            value={value}
             onChange={(value) => {
                 setValue(value)
             }}

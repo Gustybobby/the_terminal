@@ -9,22 +9,24 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id         String    @id @default(cuid())
-  email      String    @unique
-  name       String?
-  role       Role      @default(USER)
-  terminal   Terminal? @relation(fields: [terminalId], references: [id], onUpdate: Restrict, onDelete: Restrict)
-  terminalId Int?
-  airline    Airline?  @relation(fields: [airlineId], references: [id], onUpdate: Restrict, onDelete: Restrict)
-  airlineId  Int?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id                String      @id @default(cuid())
+  email             String      @unique
+  name              String?
+  role              Role        @default(USER)
+  airlineRole       AirlineRole @default(Crew)
+  terminal          Terminal?   @relation(fields: [terminalId], references: [id], onUpdate: Restrict, onDelete: Restrict)
+  terminalId        Int?
+  airline           Airline?    @relation(fields: [airlineId], references: [id], onUpdate: Restrict, onDelete: Restrict)
+  airlineId         Int?
+  lastSecretAttempt DateTime?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
 }
 
 model Terminal {
@@ -32,8 +34,10 @@ model Terminal {
   title               String
   description         String
   passengerRate       Int
+  unitTime            Int             @default(5)
+  game                Game            @default(None)
   staffs              User[]
-  caturedBy           Airline?        @relation(fields: [airlineId], references: [id], onUpdate: Restrict, onDelete: Restrict)
+  capturedBy          Airline?        @relation(fields: [airlineId], references: [id], onUpdate: Restrict, onDelete: Restrict)
   airlineId           Int?
   capturedByRecords   CaptureRecord[]
   lastPassengerUpdate DateTime
@@ -41,15 +45,16 @@ model Terminal {
 }
 
 model Airline {
-  id                Int             @id
-  airlineSecret     String
-  passengers        Int
-  lastSecretAttempt DateTime
-  crews             User[]
-  captures          Terminal[]
-  captureRecords    CaptureRecord[]
-  class             AirlineClass?   @relation(fields: [classId], references: [id], onUpdate: Restrict, onDelete: Restrict)
-  classId           Int?
+  id             Int             @id
+  title          String          @default("Untitled")
+  airlineSecret  String          @unique
+  passengers     Int
+  class          AirlineClass    @default(None)
+  crews          User[]
+  captures       Terminal[]
+  captureRecords CaptureRecord[]
+  recieveEffects Effect[]        @relation(name: "applyBy")
+  applyEffects   Effect[]        @relation(name: "applyTo")
 }
 
 model CaptureRecord {
@@ -61,15 +66,43 @@ model CaptureRecord {
   airlineId  Int
 }
 
-model AirlineClass {
-  id       Int       @id @default(autoincrement())
-  title    String
-  effect   Json?
-  airlines Airline[]
+model Effect {
+  id        Int          @id @default(autoincrement())
+  type      AirlineClass
+  from      DateTime
+  to        DateTime
+  applyBy   Airline      @relation(name: "applyBy", fields: [applyById], references: [id], onUpdate: Restrict, onDelete: Restrict)
+  applyById Int
+  applyTo   Airline      @relation(name: "applyTo", fields: [applyToId], references: [id], onUpdate: Restrict, onDelete: Restrict)
+  applyToId Int
 }
 
 enum Role {
   ADMIN
   STAFF
   USER
+}
+
+enum AirlineRole {
+  Captain
+  Crew
+  Co_pilot //map to Co-pilot
+}
+
+enum AirlineClass {
+  CPE
+  DE
+  ChE
+  CE
+  IE
+  ME
+  EE
+  BA
+  None
+}
+
+enum Game {
+  Chayen
+  Wordle
+  None
 }

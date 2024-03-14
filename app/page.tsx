@@ -4,7 +4,7 @@ import Link from "next/link"
 
 export default function Home() {
     return (
-        <main className="text-black h-screen">
+        <main className="relative text-black h-screen">
             <Image
                 src="/rsc/airplane.gif"
                 alt="BG Image"

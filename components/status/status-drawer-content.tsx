@@ -55,6 +55,7 @@ export default function StatusDrawerContent({
         <Button
           className={`border-2 border-black w-full`}
           variant="outline"
+          disabled={userFlag.length !== 6}
           onClick={async() => {
             // Call Hook to check flag
             const res = await sendJSONToAPI({
@@ -62,6 +63,7 @@ export default function StatusDrawerContent({
               method: "POST",
               body: JSON.stringify({ data: userFlag })
             })
+            setUserFlag("")
             const error = res.message === "ERROR"
             const cooldown = res.message === "COOLDOWN";
             if (error || cooldown) {

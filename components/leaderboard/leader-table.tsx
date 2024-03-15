@@ -3,7 +3,10 @@
 import { FaMedal } from "react-icons/fa";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import useLeaderboard from "../hooks/useLeaderboard";
-import AnimatedNumbers from "react-animated-numbers";
+import dynamic from "next/dynamic"
+const AnimatedNumbers = dynamic(() => import("react-animated-numbers"), {
+    ssr: false,
+});
 
 export default function LeaderTable(){
     const { leaderboard } = useLeaderboard({ refreshRate: 5000 })

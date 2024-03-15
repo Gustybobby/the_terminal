@@ -4,7 +4,10 @@ import { Gain } from "@/types/passenger"
 import { IoPeopleCircleSharp } from "react-icons/io5"
 import { LoadingSpinner } from "../ui/loading-spinner"
 import type { AirlineData, CaptureData } from "@/types/airline"
-import AnimatedNumbers from "react-animated-numbers"
+import dynamic from "next/dynamic"
+const AnimatedNumbers = dynamic(() => import("react-animated-numbers"), {
+    ssr: false,
+});
 
 export default function Display({ airline }: { airline: AirlineData | "loading" }){
     if(airline === "loading"){

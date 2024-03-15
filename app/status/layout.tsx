@@ -18,7 +18,6 @@ export default function RootLayout({ children }: Readonly<{
             <body className={inter.className}>
                 {children}
                 <Toaster />
-
             </body>
         </html>
     )

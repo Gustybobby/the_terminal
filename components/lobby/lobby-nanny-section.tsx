@@ -5,9 +5,7 @@ import { Button } from "@/components/ui/button";
 import type { LobbyTableData } from "@/types/airline";
 
 import { Session } from "next-auth";
-import LobbyDropDownMenu from "./lobby-dropdown-role";
 import LobbyNannyTable from "./lobby-nanny-table";
-import { count } from "console";
 export default function LobbyNannySection({ session }: { session: Session }) {
   // useEffect(() => {
   //     fetch("/api/airline/lobby")

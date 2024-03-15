@@ -1,18 +1,11 @@
-import LobbyWaitTable from "@/components/lobby/lobby-wait-table";
-import LobbyNannyWaitTable from "@/components/lobby/lobby-nanny-table";
+import LobbyWaitSection from "@/components/lobby/lobby-wait-section";
 import LobbyNannySection from "@/components/lobby/lobby-nanny-section";
 
-import NavBar from "@/components/navbar/nav-bar";
 import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/_utils";
 import { redirect } from "next/navigation";
 import prisma from "@/prisma-client";
 import { AirlineRole } from "@prisma/client";
-import { Button } from "@/components/ui/button";
-// enum AirlineRole {
-//     Captain
-//     Crew
-//     Co_pilot //map to Co-pilot
-//   }
+
 export default async function Airline({ params }: { params: { id: string } }) {
   const session = await getServerAuthSession();
   if (!session?.user.id) {
@@ -44,24 +37,13 @@ export default async function Airline({ params }: { params: { id: string } }) {
         <h1 className="text-center font-extrabold text-3xl bg-gray-200 rounded-t-lg py-2">
           {`${user.airline?.title} Airline`}
         </h1>
-        <LobbyNannySection session={session}/>
+        {user.airlineRole == AirlineRole.Co_pilot ||
+        session.user.role == "ADMIN" ? (
+          <LobbyNannySection session={session} />
+        ) : (
+          <LobbyWaitSection session={session} />
+        )}
       </div>
     </main>
   );
-}
-// {user.airlineRole == AirlineRole.Co_pilot ||
-//     session.user.role == "ADMIN" ? (
-//       <>
-//         {/* <LobbyNannyWaitTable session={session} /> */}
-//         <ReadyButton />
-//       </>
-//     ) : (
-//       <>
-//         {/* <LobbyNannyWaitTable session={session} /> */}
-//         <ReadyButton />
-//       </>
-//       //   <LobbyWaitTable session={session} />
-//     )}
-function ReadyButton() {
-  return <Button className = "mt-8" disabled = {true}>Ready</Button>;
 }

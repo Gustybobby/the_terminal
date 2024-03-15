@@ -41,6 +41,7 @@ export default function LobbyTable({
                   : "font-medium"
               }
             >
+            {row.role}
             </TableCell>
             <TableCell
               className={

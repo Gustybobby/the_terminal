@@ -44,7 +44,7 @@ export default function LobbyNannySection({ session }: { session: Session }) {
     setReady(!ready);
   };
   return (
-    <div>
+    <div className="flex flex-col ">
       <LobbyNannyTable
         session={session}
         className={"mb-4"}
@@ -52,7 +52,7 @@ export default function LobbyNannySection({ session }: { session: Session }) {
         setTableData={setTableData}
       />
       <Button
-        className={`${ready ?? "bg-green"} mt-8`}
+        className={`text-center mt-8 focus:shadow-outline `}
         disabled={!correct}
         onClick={handleClick}
       >

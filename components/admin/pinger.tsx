@@ -6,7 +6,7 @@ export default function Pinger(){
 
     useEffect(() => {
         const interval = setInterval(() => {
-            fetch("admin/clock")
+            fetch("/api/admin/clock")
         },5000)
         return () => clearInterval(interval)
     },[])

@@ -1,6 +1,5 @@
-import { buttonVariants } from "@/components/ui/button"
+import PlayButton from "@/components/home/play-button"
 import Image from "next/image"
-import Link from "next/link"
 
 export default function Home() {
     return (
@@ -24,12 +23,7 @@ export default function Home() {
                 <h2 className="text-lg font-semibold mb-2">
                     by SIIT Insight Camp 2024
                 </h2>
-                <Link
-                    className={buttonVariants({ variant: "outline" })}
-                    href="/join"
-                >
-                    Play Now
-                </Link>
+                <PlayButton/>
             </div>
         </main>
     )

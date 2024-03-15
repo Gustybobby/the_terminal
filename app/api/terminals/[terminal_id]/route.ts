@@ -1,7 +1,6 @@
 import prisma from "@/prisma-client"
 import { NextRequest, NextResponse } from "next/server"
 import { getServerAuthSession } from "../../auth/[...nextauth]/_utils"
-import { passengerUpdate } from "@/modules/routine"
 
 export async function GET(req: NextRequest, { params }: { params: { terminal_id: string }}){
     const session = await getServerAuthSession()
@@ -9,7 +8,6 @@ export async function GET(req: NextRequest, { params }: { params: { terminal_id:
         return NextResponse.json({ message: "UNAUTHORIZED" }, { status: 400 })
     }
     try {
-        await passengerUpdate()
         const terminal = await prisma.terminal.findUniqueOrThrow({
             where: {
                 id: +params.terminal_id

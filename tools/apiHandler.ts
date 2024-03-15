@@ -3,13 +3,17 @@ export async function sendJSONToAPI({ url, method, body }: {
     method: "POST" | "PATCH" | "PUT" | "DELETE",
     body: string
 }){
-    const res = await fetch(url, {
-        method,
-        body,
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
-    const response = await res.json()
-    return response
+    try {
+        const res = await fetch(url, {
+            method,
+            body,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        const response = await res.json()
+        return response
+    } catch(e){
+        return { message: "ERROR" }
+    }
 }

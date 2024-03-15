@@ -29,7 +29,7 @@ export default function JoinSection(){
                     })
                     setProgress(100)
                     if(res?.message === "SUCCESS"){
-                        router.push("/airline")
+                        router.push("/airlines")
                     } else {
                         setValue("")
                         setTimeout(() => {

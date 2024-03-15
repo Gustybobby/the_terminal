@@ -20,7 +20,7 @@ export default async function JoinPage(){
         }
     })
     if(user.airlineId != null){
-        redirect("/airline")
+        redirect("/airlines")
     }
     return (
         <main className="text-black h-screen bg-gradient-to-b from-blue-400 to-blue-300 w-full flex flex-col items-center justify-center">

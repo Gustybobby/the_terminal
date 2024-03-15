@@ -1,25 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table"
-import type { LobbyTableData } from "@/types/airline"
-import { Session } from "next-auth"
+import type { CrewTableData } from "@/types/airline"
 
-export default function LobbyTable({ session }: { session: Session }){
-
-    const [tableData, setTableData] = useState<LobbyTableData[]>([])
-    useEffect(() => {
-        fetch("/api/airline/lobby")
-            .then(res => res.json())
-            .then(data => setTableData(data.data))
-
-        const interval = setInterval(() => {
-            fetch("/api/airline/lobby")
-                .then(res => res.json())
-                .then(data => setTableData(data.data))
-        }, 5000)
-        return () => clearInterval(interval)
-    },[])
+export default function LobbyTable({ tableData }: { tableData: CrewTableData[] }){
     return (
         <Table className="bg-white">
             <TableHeader className="font-bold">
@@ -31,8 +15,8 @@ export default function LobbyTable({ session }: { session: Session }){
             <TableBody>
                 {tableData.map((row, index) => (
                 <TableRow key={index}>
-                    <TableCell className={row.name === session.user.name? "font-bold text-blue-600" : "font-medium"}>{row.role}</TableCell>
-                    <TableCell className={row.name === session.user.name? "font-bold text-blue-600" : ""}>{row.name}</TableCell>
+                    <TableCell className="font-medium">{row.airlineRole}</TableCell>
+                    <TableCell>{row.name}</TableCell>
                 </TableRow>
                 ))}
             </TableBody>

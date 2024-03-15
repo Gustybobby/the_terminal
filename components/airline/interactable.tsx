@@ -1,17 +1,18 @@
 "use client"
 
-import { Session } from "next-auth"
 import Display from "./display"
 import LobbyTable from "./lobby-table"
 import SkillsSection from "./skills-section"
+import useAirline from "../hooks/useAirline"
 
-export default function Interactable({ session }: { session: Session }){
+export default function Interactable({ airlineId }: { airlineId: string }){
+    const { airline } = useAirline({ airlineId, refreshRate: 5000 })
     return (
         <div className="p-1">
-            <Display/>
+            <Display airline={airline}/>
             <SkillsSection/>
             <h2 className="ml-4 font-bold text-2xl mb-2">Members</h2>
-            <LobbyTable session={session}/>
+            <LobbyTable tableData={airline !== "loading"? airline.crews : []}/>
         </div>
     )
 }

@@ -1,68 +1,42 @@
+"use client"
+
 import { Gain } from "@/types/passenger"
-import { useEffect, useState } from "react"
 import { IoPeopleCircleSharp } from "react-icons/io5"
+import { LoadingSpinner } from "../ui/loading-spinner"
+import type { AirlineData, CaptureData } from "@/types/airline"
 
-const gains: Gain[] = [
-    {
-        passengerRate: 100,
-        unitTime: 10,
-        source: {
-            type: "terminal",
-            terminalTitle: "Chayen",
-            terminalId: 1,
-        }
-    },
-    {
-        passengerRate: -2000,
-        unitTime: 100,
-        source: {
-            type: "effect",
-            airlineId: 1,
-            airlineTitle: "SIIT",
-            effectId: 1,
-            effectTitle: "Explosive"
-        }
+export default function Display({ airline }: { airline: AirlineData | "loading" }){
+    if(airline === "loading"){
+        return (
+            <div className="w-full h-full flex justify-center items-center">
+                <LoadingSpinner className="size-24"/>
+            </div>
+        )
     }
-]
-
-export default function Display(){
-
-    const [passenger, setPassenger] = useState(0)
-    const [count, setCount] = useState(0)
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCount(count => count+5)
-        }, 5000)
-        return () => clearInterval(interval)
-    },[])
-
-    useEffect(() => {
-        let totalAdd = 0
-        if(count == 0){
-            return
-        }
-        for(const gain of gains){
-            if (count % gain.unitTime == 0){
-                totalAdd += gain.passengerRate
-            }
-        }
-        setPassenger(passenger => passenger + totalAdd)
-    }, [count])
-
-    const total = totalGain({ gains })
+    const total = totalGain(airline.captures)
     return (
         <div className="flex flex-col items-center">
-            <h2 className="text-xl text-center font-bold">
-                {passenger}
+            <h2 className="text-2xl text-center font-bold mt-2">
+                {airline.passengers.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
             </h2>
             <IoPeopleCircleSharp className="text-center text-5xl"/>
             <span className={textStyles.coloredText(total >= 0)+" font-semibold"}>
                 ≈ {total} passengers / 5s
             </span>
             <ul className="w-full flex flex-col items-start text-sm mt-2 ml-8">
-                {gains.map((gain, index) => (
-                    <PassengerGain gain={gain} key={index}/>
+                {airline.captures.map((capture, index) => (
+                    <PassengerGain
+                        gain={{
+                            source: {
+                                type: "terminal",
+                                terminalId: capture.id,
+                                terminalTitle: capture.title,
+                            },
+                            passengerRate: capture.passengerRate,
+                            unitTime: capture.unitTime,
+                        }}
+                        key={index}
+                    />
                 ))}
             </ul>
         </div>
@@ -88,10 +62,10 @@ export function SourceDisplay({ source }: { source: Gain["source"] }){
     }
 }
 
-export function totalGain({ gains }: { gains: Gain[] }){
+export function totalGain(captures: CaptureData[]){
     let totalGain = 0
-    for (const gain of gains){
-        totalGain += gain.passengerRate/gain.unitTime*5
+    for (const capture of captures){
+        totalGain += capture.passengerRate/capture.unitTime*5
     }
     return totalGain
 }

@@ -3,6 +3,10 @@
 import { FaMedal } from "react-icons/fa";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import useLeaderboard from "../hooks/useLeaderboard";
+import dynamic from "next/dynamic"
+const AnimatedNumbers = dynamic(() => import("react-animated-numbers"), {
+    ssr: false,
+});
 
 export default function LeaderTable(){
     const { leaderboard } = useLeaderboard({ refreshRate: 5000 })
@@ -25,7 +29,16 @@ export default function LeaderTable(){
                         <FaMedal className={styles.medalColor(index)}/>{index+1}
                     </TableCell>
                     <TableCell className="font-medium">{row.title}</TableCell>
-                    <TableCell className="font-bold">{row.passengers}</TableCell>
+                    <TableCell className="font-bold">
+                        <AnimatedNumbers
+                            includeComma
+                            transitions={() => ({
+                                type: "spring",
+                                duration: 0.2,
+                            })}
+                            animateToNumber={row.passengers}
+                        />
+                    </TableCell>
                 </TableRow>
                 ))}
             </TableBody>

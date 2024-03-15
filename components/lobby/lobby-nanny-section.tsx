@@ -2,61 +2,53 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import type { LobbyTableData } from "@/types/airline";
-
-import { Session } from "next-auth";
 import LobbyNannyTable from "./lobby-nanny-table";
-export default function LobbyNannySection({ session }: { session: Session }) {
-  // useEffect(() => {
-  //     fetch("/api/airline/lobby")
-  //         .then(res => res.json())
-  //         .then(data => setTableData(data.data))
+import useLobby from "../hooks/useLobby";
+import { sendJSONToAPI } from "@/tools/apiHandler";
+import { LoadingSpinner } from "../ui/loading-spinner";
+import { useRouter } from "next/navigation";
 
-  //     const interval = setInterval(() => {
-  //         fetch("/api/airline/lobby")
-  //             .then(res => res.json())
-  //             .then(data => setTableData(data.data))
-  //     }, 5000)
-  //     return () => clearInterval(interval)
-  // },[])
-  const [tableData, setTableData] = useState<LobbyTableData[]>([
-    { role: "Captain", name: "Napat 1" },
-    { role: "Co_Pilot", name: "Napat 2" },
-    { role: "Crew", name: "Napat 3" },
-    { role: "Crew", name: "Napat 4" },
-    { role: "Crew", name: "Napat 5" },
-    { role: "Crew", name: "Napat 6" },
-  ]);
+export default function LobbyNannySection({ airlineId }: { airlineId: number }) {
+  const router = useRouter()
+  const { airlineLobby, refetch } = useLobby({ airlineId, refreshRate: 5000 })
   const [correct, setCorrect] = useState<boolean>(
-    tableData.filter((a) => a.role === "Captain").length === 1
+    airlineLobby !== "loading" && airlineLobby.crews.filter((a) => a.airlineRole === "Captain").length === 1
   );
-  const [ready, setReady] = useState<boolean>(false);
   useEffect(() => {
-    setCorrect(tableData.filter((a) => a.role === "Captain").length === 1);
-  }, [tableData]);
+    setCorrect(airlineLobby !== "loading" && airlineLobby.crews.filter((a) => a.airlineRole === "Captain").length === 1);
+  }, [airlineLobby]);
 
-  useEffect(() => {
-    if(!correct) {
-        setReady(false);}
-  }, [correct]);
-
-  const handleClick = () => {
-    setReady(!ready);
-  };
+  if(airlineLobby === "loading"){
+    return (
+      <div className="flex justify-center py-4">
+        <LoadingSpinner className="size-36"/>
+      </div>
+    )
+  }
+  if(airlineLobby.start && airlineLobby.ready){
+    router.replace(`/airlines/${airlineId}`)
+  }
   return (
     <div className="flex flex-col ">
       <LobbyNannyTable
-        session={session}
+        airlineId={airlineId}
         className={"mb-4"}
-        tableData={tableData}
-        setTableData={setTableData}
+        tableData={airlineLobby.crews}
+        refetch={refetch}
       />
       <Button
-        className={`text-center mt-8 focus:shadow-outline `}
+        className={`text-center mt-8 focus:shadow-outline rounded-t-none ${airlineLobby.ready? "bg-green-400 hover:bg-green-300" : !correct? "bg-red-600" : ""}`}
         disabled={!correct}
-        onClick={handleClick}
+        onClick={async() => {
+          await sendJSONToAPI({
+            url: `/api/airlines/${airlineId}/lobby`,
+            method: "POST",
+            body: JSON.stringify({ data: { ready: !airlineLobby.ready }})
+          })
+          refetch({})
+        }}
       >
-        {`${!ready ? "Click when ready" : "Ready For Take Off"}`}
+        {`${!airlineLobby.ready ? (correct? "Click when ready" : "One captain only") : "Ready For Take Off"}`}
       </Button>
     </div>
   );

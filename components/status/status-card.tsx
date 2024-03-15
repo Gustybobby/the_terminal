@@ -18,10 +18,12 @@ export default function StatusCard({ terminal, className }: { terminal: UserTerm
                 <div className="flex flex-row">
                   <Image
                     className="rounded-full size-10 border-2 border-black"
-                    src={"/rsc/terminal" + terminal.id + ".jpg"}
+                    src={"/rsc/hitmeup.gif"}
+                    unoptimized
                     alt={terminal.id + " profile"}
                     width={50}
                     height={50}
+                    quality={50}
                   />
                   <div className="ml-2 flex flex-col items-start">
                     <CardTitle className=" text-xl">{terminal.title}</CardTitle>

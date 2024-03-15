@@ -9,19 +9,13 @@ import {
   TableRow,
 } from "../ui/table";
 import type { LobbyTableData } from "@/types/airline";
-import { Session } from "next-auth";
-import type { Dispatch, SetStateAction } from "react";
 
 export default function LobbyTable({
-  session,
   className,
   tableData,
-  setTableData,
 }: {
-  session: Session;
-  className: string;
+  className?: string;
   tableData: LobbyTableData[];
-  setTableData: Dispatch<SetStateAction<LobbyTableData[]>>;
 }) {
   return (
     <Table className={`bg-white ${className}`}>
@@ -35,19 +29,11 @@ export default function LobbyTable({
         {tableData.map((row, index) => (
           <TableRow key={index}>
             <TableCell
-              className={
-                row.name === session.user.name
-                  ? "font-bold text-blue-600"
-                  : "font-medium"
-              }
+              className="font-medium"
             >
-            {row.role}
+            {row.airlineRole === "Co_pilot"? "Co-pilot" : row.airlineRole}
             </TableCell>
-            <TableCell
-              className={
-                row.name === session.user.name ? "font-bold text-blue-600" : ""
-              }
-            >
+            <TableCell>
               {row.name}
             </TableCell>
           </TableRow>

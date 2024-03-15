@@ -55,6 +55,7 @@ model Airline {
   captureRecords CaptureRecord[]
   recieveEffects Effect[]        @relation(name: "applyBy")
   applyEffects   Effect[]        @relation(name: "applyTo")
+  ready          Boolean         @default(false)
 }
 
 model CaptureRecord {
@@ -79,6 +80,7 @@ model Effect {
 
 model GameState {
   id         String    @id
+  start      Boolean   @default(false)
   pause      Boolean
   clock      DateTime  @default(now())
   lastPause  DateTime?

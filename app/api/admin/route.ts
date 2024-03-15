@@ -3,6 +3,8 @@ import prisma from "@/prisma-client";
 import { getServerAuthSession } from "../auth/[...nextauth]/_utils";
 import { GAME_ID } from "@/modules/routine";
 
+export const dynamic = "force-dynamic"
+
 export async function GET(){
     const session = await getServerAuthSession()
     if(session?.user.role !== "ADMIN"){

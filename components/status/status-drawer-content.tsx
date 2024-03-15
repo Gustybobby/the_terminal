@@ -13,14 +13,12 @@ import { IoIosAlert } from "react-icons/io";
 
 // React Icon for fail, sucess
 import {
-  Drawer,
   DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
 
 import type { UserTerminalData } from "@/types/terminal";

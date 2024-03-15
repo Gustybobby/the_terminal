@@ -22,6 +22,7 @@
     "next-auth": "^4.24.7",
     "random-string-alphanumeric-generator": "^0.12.2",
     "react": "^18",
+    "react-animated-numbers": "^0.18.0",
     "react-dom": "^18",
     "react-icons": "^5.0.1",
     "tailwind-merge": "^2.2.1",

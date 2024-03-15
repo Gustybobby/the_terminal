@@ -13,7 +13,7 @@ export default function NavBar({ child }: { child: string }){
                     Terminals
                 </Link>
                 <Link
-                    href={"/airline"}
+                    href={"/airlines"}
                     className={styles.link(child === "airline")}
                 >
                     Airline

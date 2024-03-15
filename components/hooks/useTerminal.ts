@@ -16,6 +16,6 @@ export default function useTerminal({ terminalId, refreshRate }: {
                 .then(data => data.message === "SUCCESS"? setData(data.data) : setData("error"))
         }, refreshRate)
         return () => clearInterval(interval)
-    },[refreshRate])
+    },[refreshRate, terminalId])
     return { terminal: data }
 }

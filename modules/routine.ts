@@ -3,15 +3,19 @@ import prisma from "@/prisma-client";
 const GAME_ID = "game0"
 
 async function updateGameClock(){
-    const now = new Date()
     const gameState = await prisma.gameState.findUniqueOrThrow({
         where: {
             id: GAME_ID
         },
         select: {
-            clock: true
+            clock: true,
+            pause: true,
         }
     })
+    if(gameState.pause){
+        return null
+    }
+    const now = new Date()
     if(now.getTime() - gameState.clock.getTime() >= 5000){
         const updateClock = await prisma.gameState.update({
             where: {
@@ -28,7 +32,11 @@ async function updateGameClock(){
 }
 
 export async function passengerUpdate(){
-    const { clock, prevClock, updated } = await updateGameClock()
+    const gameState = await updateGameClock()
+    if(!gameState){
+        return
+    }
+    const { clock, updated } = gameState
     if(!updated){
         return
     }
@@ -36,9 +44,6 @@ export async function passengerUpdate(){
         where: {
             NOT: {
                 capturedBy: null
-            },
-            unitTime: {
-                gte: (clock.getTime() - prevClock.getTime())/1000
             }
         },
         select: {
@@ -54,27 +59,37 @@ export async function passengerUpdate(){
             },
         }
     })
+    const pCount: { [id: string]: number } = {}
+    const updatedTerminals: { id: number }[] = []
     for(const terminal of terminals){
-        const update = terminal.passengerRate*(clock.getTime() - terminal.lastPassengerUpdate.getTime())/(terminal.unitTime*1000)
-        const updatedAmount = (terminal.capturedBy?.passengers ?? 0) + update
-        const updatedTerminal = await prisma.terminal.update({
-            where: {
-                id: terminal.id
-            },
-            data: {
-                lastPassengerUpdate: clock,
-            }
-        })
+        if(clock.getTime() - terminal.lastPassengerUpdate.getTime() < terminal.unitTime*1000){
+            continue
+        }
+        const update = terminal.passengerRate*Math.floor((clock.getTime() - terminal.lastPassengerUpdate.getTime())/(terminal.unitTime*1000))
+        updatedTerminals.push({ id: terminal.id })
+        const stringId = String(terminal.capturedBy?.id) ?? ""
+        pCount[stringId] = pCount[stringId] === undefined? (terminal.capturedBy?.passengers ?? 0) : pCount[stringId]
+        pCount[stringId] += update
+    }
+    for(const [ id, count ] of Object.entries(pCount)){
         const updatedAirline = await prisma.airline.update({
             where: {
-                id: terminal.capturedBy?.id ?? 0,
+                id: +id
             },
             data: {
-                passengers: updatedAmount
+                passengers: count
             }
         })
-        console.log(updatedTerminal.lastPassengerUpdate, updatedAirline.passengers)
+        console.log(updatedAirline.passengers,"id:",updatedAirline.id)
     }
+    await prisma.terminal.updateMany({
+        where: {
+            OR: updatedTerminals
+        },
+        data: {
+            lastPassengerUpdate: clock
+        }
+    })
     //last update: Date
     //now - last > 5s, update
     //resume, last update <- now

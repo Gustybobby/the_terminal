@@ -10,13 +10,13 @@ export default async function TerminalStatusPage() {
         redirect("/status/terminals")
     }
     const terminals = [] as UserTerminalData[];
-  return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-400 to-blue-300 flex flex-col items-center">
-      <NavBar child="status" />
-      <div className="w-full px-4 h-fit flex flex-col m-2">
-        <h1 className="font-light ">Click Card to View Details</h1>
-        <StatusCardGroup terminals = {terminals} />
-      </div>
-    </main>
-  );
+    return (
+        <main className="min-h-screen bg-gradient-to-b from-blue-400 to-blue-300 flex flex-col items-center">
+            <NavBar child="status" />
+            <div className="w-full px-4 h-fit flex flex-col m-2">
+                <h1 className="font-light ">Click Card to View Details</h1>
+                <StatusCardGroup terminals = {terminals} />
+            </div>
+        </main>
+    );
 }

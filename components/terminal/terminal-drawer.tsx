@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -11,31 +10,24 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import prisma from "@/prisma-client";
+
+import { buttonVariants } from "../ui/button";
     
-export async function TerminalDrawer({terminalId} : {terminalId : number}) {
-  const terminal = await prisma.terminal.findFirst({
-    where : {
-      id: terminalId
-    },
-    select: {
-      currentFlagSecret: true
-    }
-})
-  const terminalFlag = terminal?.currentFlagSecret;
+export function TerminalDrawer({ flagSecret }: { flagSecret: string }) {
   return (
     <Drawer>
-      <DrawerTrigger className="font-light border-2 p-4 border-slate-300 rounded-lg">Check Terminal Secret</DrawerTrigger>
+      <DrawerTrigger className="font-light border-2 p-4 border-black rounded-lg hover:bg-gray-200 transition-colors text-black">
+        Check Terminal Secret
+      </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Terminal Secret</DrawerTitle>
           <DrawerDescription>Please keep this as a secret</DrawerDescription>
-          <div className = "text-4xl font-semibold leading-none tracking-tight">{terminalFlag}</div>
+          <div className = "text-4xl font-semibold leading-none tracking-tight">{flagSecret}</div>
         </DrawerHeader>
         <DrawerFooter>
-          {/* <Button>Submit</Button> */}
-          <DrawerClose>
-            <Button variant="outline">Close</Button>
+          <DrawerClose className={buttonVariants({ variant: "default" })}>
+            Close
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>

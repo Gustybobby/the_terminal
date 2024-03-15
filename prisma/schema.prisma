@@ -77,6 +77,14 @@ model Effect {
   applyToId Int
 }
 
+model GameState {
+  id         String    @id
+  pause      Boolean
+  clock      DateTime  @default(now())
+  lastPause  DateTime?
+  lastResume DateTime?
+}
+
 enum Role {
   ADMIN
   STAFF

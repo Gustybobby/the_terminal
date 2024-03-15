@@ -3,8 +3,14 @@ import prisma from "@/prisma-client";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { IoPeopleCircleSharp } from "react-icons/io5";
 import Image from "next/image";
+import { getServerAuthSession } from "../api/auth/[...nextauth]/_utils";
+import { redirect } from "next/navigation";
 
 export default async function TerminalStatusPage(){
+    const session = await getServerAuthSession()
+    if(session?.user.role === "STAFF"){
+        redirect("/status/terminals")
+    }
     const terminals = await prisma.terminal.findMany({
         select: {
             id: true,

@@ -7,3 +7,4 @@ export interface LeaderboardData {
     title: string
     passengers: number
 }
+

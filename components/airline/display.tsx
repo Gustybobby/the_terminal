@@ -4,10 +4,6 @@ import { Gain } from "@/types/passenger"
 import { IoPeopleCircleSharp } from "react-icons/io5"
 import { LoadingSpinner } from "../ui/loading-spinner"
 import type { AirlineData, CaptureData } from "@/types/airline"
-import dynamic from "next/dynamic"
-const AnimatedNumbers = dynamic(() => import("react-animated-numbers"), {
-    ssr: false,
-});
 
 export default function Display({ airline }: { airline: AirlineData | "loading" }){
     if(airline === "loading"){
@@ -21,14 +17,7 @@ export default function Display({ airline }: { airline: AirlineData | "loading" 
     return (
         <div className="flex flex-col items-center">
             <h2 className="text-2xl text-center font-bold mt-2">
-                <AnimatedNumbers
-                    includeComma
-                    transitions={() => ({
-                        type: "spring",
-                        duration: 0.2,
-                    })}
-                    animateToNumber={airline.passengers}
-                />
+                {airline.passengers.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
             </h2>
             <IoPeopleCircleSharp className="text-center text-5xl"/>
             <span className={textStyles.coloredText(total >= 0)+" font-semibold"}>

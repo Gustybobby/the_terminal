@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma-client";
-import { passengerUpdate } from "@/modules/routine";
 
 export async function GET(req: NextRequest, { params }: { params: { airline_id: string }}){
-    await passengerUpdate()
     const airline = await prisma.airline.findUniqueOrThrow({
         where: {
             id: +params.airline_id

@@ -32,30 +32,28 @@ export async function POST(req: NextRequest, { params }: { params: { airline_id:
         }
     })
     console.log("Updated User", updatedUser.name, "to airline role", updatedUser.airlineRole)
-    if(updatedUser.airlineRole === "Captain"){
-        const airline = await prisma.airline.findUniqueOrThrow({
+    const airline = await prisma.airline.findUniqueOrThrow({
+        where: {
+            id: +params.airline_id
+        },
+        select: {
+            crews: {
+                select: {
+                    airlineRole: true
+                }
+            }
+        }
+    })
+    if(airline.crews.filter((crew) => crew.airlineRole === "Captain").length !== 1){
+        await prisma.airline.update({
             where: {
                 id: +params.airline_id
             },
-            select: {
-                crews: {
-                    select: {
-                        airlineRole: true
-                    }
-                }
-            }
+            data: {
+                ready: false
+            },
         })
-        if(airline.crews.filter((crew) => crew.airlineRole === "Captain").length !== 1){
-            await prisma.airline.update({
-                where: {
-                    id: +params.airline_id
-                },
-                data: {
-                    ready: false
-                },
-            })
-            console.log("Unready airline",params.airline_id,"for invalid captain count")
-        }
+        console.log("Unready airline",params.airline_id,"for invalid captain count")
     }
     return NextResponse.json({ message: "SUCCESS" }, { status: 200 })
 }

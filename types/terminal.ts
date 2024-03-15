@@ -13,4 +13,3 @@ export interface UserTerminalData {
 export interface StaffTerminalData extends UserTerminalData{
     currentFlagSecret: string;
 }
-

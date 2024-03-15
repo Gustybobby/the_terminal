@@ -8,6 +8,9 @@ export default async function JoinPage(){
     if(!session?.user.id){
         redirect("/")
     }
+    if(session.user.role === "STAFF"){
+        redirect("/status/terminals")
+    }
     const user = await prisma.user.findUniqueOrThrow({
         where: {
             id: session.user.id

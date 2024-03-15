@@ -35,7 +35,7 @@ export default function StatusCard({ terminal, className }: { terminal: UserTerm
               </div>
             </CardHeader>
             <CardContent className="flex p-3 pb-1">
-                <p>Owned by: {terminal.capturedBy?.id ?? "None"}</p>
+                <p>Owned by: {terminal.capturedBy?.title ?? "None"}</p>
               </CardContent>
           </Card>
   );

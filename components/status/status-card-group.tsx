@@ -1,40 +1,44 @@
 "use client";
 
-import { Button, buttonVariants } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import * as React from "react";
 import StatusCard from "@/components/status/status-card";
-import StatusOTP from "@/components/status/status-otp";
 import StatusDrawerContent from "@/components/status/status-drawer-content";
 
 import {
   Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import type { UserTerminalData } from "@/types/terminal"
+import useAllTerminals from "../hooks/useAllTerminals";
+import { LoadingSpinner } from "../ui/loading-spinner";
 
-export default function StatusCardGroup({ terminals }: { terminals: UserTerminalData[] }) {
-  // Send Request to there
-  const [clickedTerminalIndex, setClickedTerminalIndex] = useState<number>(0);
+export default function StatusCardGroup() {
+  const [clickedTerminalIndex, setClickedTerminalIndex] = useState<number | null>(null);
+  const { terminals } = useAllTerminals({ refreshRate: 5000 })
+  if(terminals === "error"){
+    return <></>
+  }
+  if(terminals === "loading"){
+    return (
+      <div className="w-full h-full flex justify-center items-center">
+          <LoadingSpinner className="size-24"/>
+      </div>
+    )
+  }
   return (
     <Drawer>
       {terminals.map((terminal: UserTerminalData, i:number) => (
         <DrawerTrigger
           key={`trigger-${terminal.id}`}
-          className=""
+          className="mb-2"
           onClick = {() => {setClickedTerminalIndex(i)}}
         >
-          <StatusCard key={terminal.id} terminal={terminal} className="mb-4" />
+          <StatusCard key={terminal.id} terminal={terminal} className="hover:bg-gray-200 transition-colors" />
         </DrawerTrigger>
       ))}
-      <StatusDrawerContent terminal={terminals[clickedTerminalIndex]}  className = ""/>
+      { clickedTerminalIndex !== null && <StatusDrawerContent terminal={terminals[clickedTerminalIndex]}  className = ""/>}
     </Drawer>
   );
 }

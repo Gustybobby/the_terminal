@@ -3,6 +3,7 @@ import NavBar from "@/components/navbar/nav-bar";
 import { getServerAuthSession } from "../../api/auth/[...nextauth]/_utils";
 import { redirect } from "next/navigation";
 import prisma from "@/prisma-client";
+import { AirlineRole } from "@prisma/client";
 
 export default async function Airline({ params }: { params: { airline_id: string }}){
     const session = await getServerAuthSession()

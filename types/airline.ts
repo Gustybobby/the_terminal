@@ -23,3 +23,7 @@ export interface AirlineData {
     captures: CaptureData[];
 }
 
+export interface LobbyTableData{
+    role : string
+    name : string
+}

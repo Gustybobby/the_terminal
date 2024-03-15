@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -10,23 +11,30 @@ import {
 } from "../ui/table";
 import type { LobbyTableData } from "@/types/airline";
 import { Session } from "next-auth";
-import LobbyDropDownMenu from "./lobby-dropdown-role";
-import type { Dispatch, SetStateAction} from "react";
 
-export default function LobbyTable({
-  session,
-  className,
-  tableData,
-  setTableData,
-}: {
-  session: Session;
-  className: string;
-  tableData: LobbyTableData[];
-  setTableData: Dispatch<SetStateAction<LobbyTableData[]>>;
-}) {
+export default function LobbyTable({ session }: { session: Session }) {
+  const [tableData, setTableData] = useState<LobbyTableData[]>([
+    { role: "Captain", name: "Napat 1" },
+    { role: "Co-Pilot", name: "Napat 2" },
+    { role: "Crew", name: "Napat 3" },
+    { role: "Crew", name: "Napat 4" },
+    { role: "Crew", name: "Napat 5" },
+    { role: "Crew", name: "Napat 6" },
+  ]);
+  // useEffect(() => {
+  //     fetch("/api/airline/lobby")
+  //         .then(res => res.json())
+  //         .then(data => setTableData(data.data))
 
+  //     const interval = setInterval(() => {
+  //         fetch("/api/airline/lobby")
+  //             .then(res => res.json())
+  //             .then(data => setTableData(data.data))
+  //     }, 5000)
+  //     return () => clearInterval(interval)
+  // },[])
   return (
-    <Table className={`bg-white ${className}`}>
+    <Table className="bg-white">
       <TableHeader className="font-bold">
         <TableRow>
           <TableHead className="w-1/3">Role</TableHead>
@@ -43,11 +51,7 @@ export default function LobbyTable({
                   : "font-medium"
               }
             >
-              <LobbyDropDownMenu
-                role={row.role}
-                setTableData={setTableData}
-                index={index}
-              />
+              {row.role}
             </TableCell>
             <TableCell
               className={

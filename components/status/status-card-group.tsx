@@ -22,7 +22,7 @@ import type { UserTerminalData } from "@/types/terminal"
 
 export default function StatusCardGroup({ terminals }: { terminals: UserTerminalData[] }) {
   // Send Request to there
-  const [clickedTerminalIndex, setClickedTerminalIndex] = useState<number>(0);
+  const [clickedTerminalIndex, setClickedTerminalIndex] = useState<number | null>(null );
   return (
     <Drawer>
       {terminals.map((terminal: UserTerminalData, i:number) => (
@@ -34,7 +34,7 @@ export default function StatusCardGroup({ terminals }: { terminals: UserTerminal
           <StatusCard key={terminal.id} terminal={terminal} className="mb-4" />
         </DrawerTrigger>
       ))}
-      <StatusDrawerContent terminal={terminals[clickedTerminalIndex]}  className = ""/>
+      {clickedTerminalIndex != null && <StatusDrawerContent terminal={terminals[clickedTerminalIndex]}  className = ""/> }
     </Drawer>
   );
 }

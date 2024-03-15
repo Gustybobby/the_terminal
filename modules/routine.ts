@@ -1,6 +1,6 @@
 import prisma from "@/prisma-client";
 
-const GAME_ID = "game0"
+export const GAME_ID = "game0"
 
 async function updateGameClock(){
     const gameState = await prisma.gameState.findUniqueOrThrow({

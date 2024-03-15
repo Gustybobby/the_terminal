@@ -16,7 +16,7 @@ export default async function Terminal({ params }: { params: { id: string } }) {
       passengerRate: true,
       lastPassengerUpdate: true,
 
-      caturedBy: {
+      capturedBy: {
         select: {
           id: true,
         },
@@ -64,7 +64,7 @@ export default async function Terminal({ params }: { params: { id: string } }) {
         <div className="w-full flex flex-col justify-center items-center">
           <h2 className=" text-3xl font-bold mb-2">Terminal Owner</h2>
           <h3 className=" text-3xl font-semibold mb-2">
-            Airline {terminal?.caturedBy?.id}
+            Airline {terminal?.capturedBy?.id}
           </h3>
           <h4 className=" text-xl font-semibold mb-2">Airline Name</h4>
           <h2 className=" text-3xl font-bold mb-2">Last Flight Departure</h2>

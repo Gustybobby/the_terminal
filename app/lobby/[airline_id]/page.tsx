@@ -1,14 +1,17 @@
 import LobbyWaitSection from "@/components/lobby/lobby-wait-section";
 import LobbyNannySection from "@/components/lobby/lobby-nanny-section";
 import LobbyClassGroupSection from "@/components/lobby/lobby-class-section";
-
+import LobbySecretDrawer from "@/components/lobby/lobby-secret-drawer";
 
 import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/_utils";
 import { redirect } from "next/navigation";
 import prisma from "@/prisma-client";
 import { AirlineRole } from "@prisma/client";
-
-export default async function Airline({ params }: { params: { airline_id: string } }) {
+export default async function Airline({
+  params,
+}: {
+  params: { airline_id: string };
+}) {
   const session = await getServerAuthSession();
   if (!session?.user.id) {
     redirect("/");
@@ -22,10 +25,11 @@ export default async function Airline({ params }: { params: { airline_id: string
       airline: {
         select: {
           title: true,
+          airlineSecret: true,
         },
       },
     },
-  })
+  });
   return (
     <main className="w-full min-h-screen bg-gradient-to-b from-blue-400 to-blue-300 flex flex-col items-center">
       <div className="w-11/12 my-4 md:w-1/2 flex flex-col rounded-lg shadow-lg bg-white">
@@ -34,13 +38,19 @@ export default async function Airline({ params }: { params: { airline_id: string
         </h1>
         {user.airlineRole == AirlineRole.Co_pilot ||
         session.user.role == "ADMIN" ? (
-          <LobbyNannySection airlineId={+params.airline_id}/>
+          <div>
+            <LobbyNannySection airlineId={+params.airline_id} />
+          </div>
         ) : (
-          <LobbyWaitSection airlineId={+params.airline_id}/>
+          <LobbyWaitSection airlineId={+params.airline_id} />
         )}
       </div>
-      <div className="flex flex-col items-center">
-        <LobbyClassGroupSection/>
+      <div className="w-11/12 flex flex-col items-center">
+        <LobbySecretDrawer
+          className="mb-4 w-full font-normal py-2 rounded-lg bg-black hover:bg-black hover:text-black transition-colors text-white"
+          flagSecret={user.airline?.airlineSecret}
+        />
+        <LobbyClassGroupSection airlineRole={user.airlineRole} />
       </div>
     </main>
   );

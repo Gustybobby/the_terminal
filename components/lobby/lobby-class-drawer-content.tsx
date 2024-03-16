@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, buttonVariants } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import * as React from "react";
 import StatusCard from "@/components/status/status-card";
@@ -25,25 +25,55 @@ import {
 
 import type { Faction } from "@/types/terminal";
 import { sendJSONToAPI } from "@/tools/apiHandler";
+import { Session } from "next-auth";
+import { AirlineRole } from "@prisma/client";
 
 export default function LobbyDrawerContent({
   faction,
   className,
+  airlineRole,
+  setSelectedClass,
 }: {
-    faction: Faction;
+  faction: Faction;
   className: string;
+  airlineRole: AirlineRole;
+  setSelectedClass: Dispatch<SetStateAction<string | null>>;
 }) {
-
+  const handleClick = () => {
+    // Add API to update chosen faction and 
+    setSelectedClass(faction.abbreviation);
+  };
   return (
     <DrawerContent className={` ${className}`}>
       <DrawerHeader>
         <DrawerTitle>{faction.name}</DrawerTitle>
         <DrawerDescription className="flex flex-col">
-            <div className="items-center">{faction.ability_name}</div>
-            <div className="items-center">{faction.type}</div>
-            <div className="items-center mb-2">{`${faction.use} per phase`}</div>
+          <div className="items-center font-medium">
+            Ability Name : {faction.ability_name}
+          </div>
+          <div className="items-center font-medium">
+            Ability Type : {faction.type}
+          </div>
+          <div className="items-center font-medium mb-2">
+            Usage : {`${faction.use} per phase`}
+          </div>
+          <div className="mb-2 ">
+            <div className="items-center font-medium mb-2">Description</div>
             {faction.description}
-            </DrawerDescription>
+          </div>
+          {airlineRole === AirlineRole.Co_pilot ? (
+            <DrawerClose
+              className={`${buttonVariants({
+                variant: "default",
+              })} my-2 border-2 border-black w-full`}
+              onClick={handleClick}
+            >
+              Select This Class
+            </DrawerClose>
+          ) : (
+            <></>
+          )}
+        </DrawerDescription>
       </DrawerHeader>
     </DrawerContent>
   );

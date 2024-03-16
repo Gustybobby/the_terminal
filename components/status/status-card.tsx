@@ -18,8 +18,7 @@ export default function StatusCard({ terminal, className }: { terminal: UserTerm
                 <div className="flex flex-row">
                   <Image
                     className="rounded-full size-10 border-2 border-black"
-                    src={"/rsc/hitmeup.gif"}
-                    unoptimized
+                    src={`/rsc/terminal-${terminal.title}.png`}
                     alt={terminal.id + " profile"}
                     width={50}
                     height={50}

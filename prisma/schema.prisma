@@ -87,6 +87,7 @@ model Effect {
 model GameState {
   id         String    @id
   start      Boolean   @default(false)
+  phase      Int       @default(1)
   pause      Boolean
   clock      DateTime  @default(now())
   lastPause  DateTime?

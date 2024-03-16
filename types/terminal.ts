@@ -22,11 +22,11 @@ export interface UserTerminalData {
 
 export interface Faction {
     id:number
-   name : string,
-   ability_name : string,
-   use : number,
-   description : string,
-   type:string
+    name : string,
+    ability_name : string,
+    use : number,
+    description : string,
+    type:string
 }
 
 export interface StaffTerminalData extends UserTerminalData{

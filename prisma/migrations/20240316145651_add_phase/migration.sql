@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "GameState" ADD COLUMN     "phase" INTEGER NOT NULL DEFAULT 1;

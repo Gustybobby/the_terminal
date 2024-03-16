@@ -39,4 +39,5 @@ export interface CasinoTableData{
     airline_name : string
     initial_cost : number
     player_id : number
+    this_pot : number
 }

@@ -4,38 +4,38 @@ import { Button } from "@/components/ui/button";
 import type { CasinoTableData } from "@/types/terminal";
 import type { Dispatch, SetStateAction } from "react";
 
-export default function CheckboxDemo({
-  budget_inc,
+export default function CasinoButton({
+  multiplier,
+  pot,
   index,
   setTableData,
   className,
 }: {
-  budget_inc: number;
+  multiplier: number;
+  pot: number;
   index: number;
   setTableData: Dispatch<SetStateAction<CasinoTableData[]>>;
-  className:string
+  className: string;
 }) {
   return (
-    <div className={`flex items-center space-x-2 ${className}`}>
+    <div className={`flex items-center space-x-2 `}>
       <Button
+        className={className}
         id="checkbox"
         onClick={() =>
           setTableData((tableData) => {
             const newTableData = tableData.map((row, i) => {
               return i === index
-                ? { ...row, budget: row.budget + budget_inc }
+                ? { ...row, initial_cost: row.initial_cost + pot * multiplier }
                 : { ...row };
             });
-            // newTableData.sort((a, b) => {
-            //   return (
-            //     roles.findIndex((role) => a.role === role.value) -
-            //     roles.findIndex((role) => b.role === role.value)
-            //   );
-            // });
+            newTableData.forEach((row) => {
+              row.this_pot = 0;
+            });
             return newTableData;
           })
         }
-      />
+      >{`${multiplier}X`}</Button>
     </div>
   );
 }

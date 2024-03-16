@@ -16,6 +16,7 @@ export default function CasinoInput({
   return (
     <div className="flex items-center space-x-2">
       <Input
+        className="outline "
         type="number"
         placeholder="Number"
         value={initialCost}
@@ -23,7 +24,7 @@ export default function CasinoInput({
           setTableData((tableData) => {
             const newTableData = tableData.map((row, i) => {
               return i === index
-                ? { ...row, initial_cost: +(e.target.value)}
+                ? { ...row, initial_cost: +e.target.value }
                 : { ...row };
             });
             // newTableData.sort((a, b) => {

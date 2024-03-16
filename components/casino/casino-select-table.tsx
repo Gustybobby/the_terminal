@@ -31,10 +31,10 @@ export default function LobbyTable({
     <Table className={`bg-white ${className}`}>
       <TableHeader className="font-bold">
         <TableRow>
-          <TableHead className="w-1/4">Airline</TableHead>
-          <TableHead className="w-1/4">Player</TableHead>
-          <TableHead className="w-1/4">Initial Cost</TableHead>
-          <TableHead className="w-1/4">Playing</TableHead>
+          <TableHead className="w-1/12">Airline</TableHead>
+          <TableHead className="w-1/12">P_ID</TableHead>
+          <TableHead className="w-2/12">Initial_P</TableHead>
+          <TableHead className="w-1/12">Play</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -49,7 +49,7 @@ export default function LobbyTable({
                 index={index}
               />
             </TableCell>
-            <TableCell className="font-medium">
+            <TableCell className="flex flex-col font-medium items-center">
               <CasinoCheckbox
                 is_playing={row.is_playing}
                 setTableData={setTableData}

@@ -15,7 +15,7 @@ export default function Interactable({ airlineId, session, isCaptain }: {
 }){
     const { airline } = useAirline({ airlineId, refreshRate: 5000 })
     useCaptureToast()
-    
+
     if(airline === "loading"){
         return (
             <div className="w-full h-full flex justify-center items-center">
@@ -26,7 +26,7 @@ export default function Interactable({ airlineId, session, isCaptain }: {
     return (
         <div className="p-1">
             <Display airline={airline}/>
-            <SkillsSection airline={airline} isCaptain={isCaptain}/>
+            <SkillsSection airlineId={+airlineId} airline={airline} isCaptain={isCaptain}/>
             <h2 className="ml-4 font-bold text-2xl mb-2">Members</h2>
             <LobbyTable tableData={airline.crews} session={session}/>
         </div>

@@ -59,25 +59,70 @@ export async function passengerUpdate(){
             },
         }
     })
+    const effects = await prisma.effect.findMany({
+        where: {
+            from: {
+                lte: new Date()
+            },
+            to: {
+                gte: new Date()
+            }
+        },
+        select: {
+            type: true,
+            applyById: true,
+            applyToId: true,
+            terminalId: true,
+        }
+    })
+    const pStart: { [id: string]: number } = {}
     const pCount: { [id: string]: number } = {}
     const updatedTerminals: { id: number }[] = []
     for(const terminal of terminals){
-        if(clock.getTime() - terminal.lastPassengerUpdate.getTime() < terminal.unitTime*1000){
+        const terminalEffects = effects.filter((effect) => effect.terminalId === terminal.id)
+        //half interval for MSME limit >= 5s
+        let modTime = terminal.unitTime*1000
+        for(const effect of terminalEffects){
+            switch(effect.type){
+                case "MSME":
+                    modTime = Math.max(5000, modTime/2)
+            }
+        }
+        const timeDiff = clock.getTime() - terminal.lastPassengerUpdate.getTime()
+        if(timeDiff < modTime){
             continue
         }
-        const update = terminal.passengerRate*Math.floor((clock.getTime() - terminal.lastPassengerUpdate.getTime())/(terminal.unitTime*1000))
         updatedTerminals.push({ id: terminal.id })
+        const update = terminal.passengerRate*Math.floor(timeDiff/modTime)
+        //modify terminal update for MT case 2 and CET passive condition
+        let modUpdate = update
+        for(const effect of terminalEffects){
+            switch(effect.type){
+                case "MT":
+                case "CET":
+                    modUpdate = modUpdate*3
+            }
+        }
         const stringId = String(terminal.capturedBy?.id) ?? ""
-        pCount[stringId] = pCount[stringId] === undefined? (terminal.capturedBy?.passengers ?? 0) : pCount[stringId]
-        pCount[stringId] += update
+        pCount[stringId] = pCount[stringId] === undefined? 0 : pCount[stringId]
+        pCount[stringId] += modUpdate
     }
     for(const [ id, count ] of Object.entries(pCount)){
+        const recievedEffects = effects.filter((effect) => effect.applyToId === +id)
+        //modify total passenger rate
+        let modCount = count
+        for(const effect of recievedEffects){
+            switch(effect.type){
+                case "ICT":
+                    modCount = Math.floor(modCount*0.8)
+            }
+        }
         const updatedAirline = await prisma.airline.update({
             where: {
                 id: +id
             },
             data: {
-                passengers: count
+                passengers: pStart[id] + modCount
             }
         })
         console.log(updatedAirline.passengers,"id:",updatedAirline.id)

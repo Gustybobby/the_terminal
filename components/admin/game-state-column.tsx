@@ -80,7 +80,7 @@ export default function GameStateColumn({ admin, refetch }: {
                 }
                 {admin.gameState.lastResume &&
                 <h2 className="col-span-3">
-                    Last Pause: {(new Date(admin.gameState.lastResume)).toLocaleString()}
+                    Last Resume: {(new Date(admin.gameState.lastResume)).toLocaleString()}
                 </h2>
                 }
             </div>

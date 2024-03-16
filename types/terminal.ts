@@ -1,3 +1,5 @@
+import type { AirlineClass } from "@prisma/client";
+
 export interface CapturedByRecord {
   title: string;
   airline: {
@@ -21,11 +23,13 @@ export interface UserTerminalData {
 }
 
 export interface Faction {
-    id:number
-    name : string,
-    abbreviation: string,
-    ability_name : string,
-    use : number,
+    id: number
+    name: string,
+    duration: number,
+    duration_factor: number,
+    abbreviation: AirlineClass,
+    ability_name: string,
+    use: number,
     description : string,
     type:string
 }

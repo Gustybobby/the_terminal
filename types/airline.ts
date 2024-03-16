@@ -25,11 +25,15 @@ export interface EffectData {
 
 export interface AirlineData {
     passengers: number;
-    class: AirlineClass
+    class: AirlineClass;
     crews: CrewTableData[];
     captures: CaptureData[];
-    effects: EffectData[],
-    stock: number,
+    effects: EffectData[];
+    stock: number;
+    allAirlines: {
+        id: number;
+        title: string;
+    }[];
 }
 
 export interface LobbyTableData{

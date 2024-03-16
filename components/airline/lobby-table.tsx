@@ -1,9 +1,13 @@
 "use client"
 
+import type { Session } from "next-auth"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table"
 import type { CrewTableData } from "@/types/airline"
 
-export default function LobbyTable({ tableData }: { tableData: CrewTableData[] }){
+export default function LobbyTable({ tableData, session }: {
+    tableData: CrewTableData[]
+    session: Session
+}){
     return (
         <Table className="bg-white">
             <TableHeader className="font-bold">
@@ -15,11 +19,21 @@ export default function LobbyTable({ tableData }: { tableData: CrewTableData[] }
             <TableBody>
                 {tableData.map((row, index) => (
                 <TableRow key={index}>
-                    <TableCell className="font-medium">{row.airlineRole === "Co_pilot"? "Co-pilot" : row.airlineRole}</TableCell>
-                    <TableCell>{row.name}</TableCell>
+                    <TableCell className={styles.cell(row.name === session.user.name)}>
+                        {row.airlineRole === "Co_pilot"? "Co-pilot" : row.airlineRole}
+                    </TableCell>
+                    <TableCell className={styles.cell(row.name === session.user.name)}>
+                        {row.name}
+                    </TableCell>
                 </TableRow>
                 ))}
             </TableBody>
         </Table>
     )
+}
+
+const styles = {
+    cell: (highlight: boolean) => [
+       highlight? "font-bold text-blue-500" : "font-medium"
+    ].join(" ")
 }

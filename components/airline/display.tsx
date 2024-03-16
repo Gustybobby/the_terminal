@@ -15,7 +15,7 @@ export default function Display({ airline }: { airline: AirlineData }){
             </h2>
             <IoPeopleCircleSharp className="text-center text-5xl"/>
             <span className={textStyles.coloredText(total >= 0)+" font-semibold"}>
-                ≈ {total} passengers / 5s
+                ≈ {total.toFixed(2)} passengers / 5s
             </span>
             <ul className="w-full flex flex-col items-start text-sm mt-2 ml-8">
                 {airline.captures.map((capture, index) => (

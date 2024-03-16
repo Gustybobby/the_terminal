@@ -5,8 +5,13 @@ import LobbyTable from "./lobby-table"
 import SkillsSection from "./skills-section"
 import useAirline from "../hooks/useAirline"
 import { LoadingSpinner } from "../ui/loading-spinner"
+import type { Session } from "next-auth"
 
-export default function Interactable({ airlineId }: { airlineId: string }){
+export default function Interactable({ airlineId, session, isCaptain }: {
+    airlineId: string
+    session: Session
+    isCaptain: boolean
+}){
     const { airline } = useAirline({ airlineId, refreshRate: 5000 })
     if(airline === "loading"){
         return (
@@ -18,9 +23,9 @@ export default function Interactable({ airlineId }: { airlineId: string }){
     return (
         <div className="p-1">
             <Display airline={airline}/>
-            <SkillsSection airline={airline}/>
+            <SkillsSection airline={airline} isCaptain={isCaptain}/>
             <h2 className="ml-4 font-bold text-2xl mb-2">Members</h2>
-            <LobbyTable tableData={airline.crews}/>
+            <LobbyTable tableData={airline.crews} session={session}/>
         </div>
     )
 }

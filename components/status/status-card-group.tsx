@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import * as React from "react";
 import StatusCard from "@/components/status/status-card";
 import StatusDrawerContent from "@/components/status/status-drawer-content";
 
@@ -20,7 +19,7 @@ export default function StatusCardGroup() {
   const [clickedTerminalIndex, setClickedTerminalIndex] = useState<number | null>(null);
   const { terminals } = useAllTerminals({ refreshRate: 5000 })
   const { toast } = useToast()
-  React.useEffect(() => {
+  useEffect(() => {
     if(typeof terminals === "string"){
       return
     }

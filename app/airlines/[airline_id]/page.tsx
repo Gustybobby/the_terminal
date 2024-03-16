@@ -3,7 +3,7 @@ import NavBar from "@/components/navbar/nav-bar";
 import { getServerAuthSession } from "../../api/auth/[...nextauth]/_utils";
 import { redirect } from "next/navigation";
 import prisma from "@/prisma-client";
-import { AirlineRole } from "@prisma/client";
+import EffectWrapper from "@/components/effects/effect-wrapper";
 
 export default async function Airline({ params }: { params: { airline_id: string }}){
     const session = await getServerAuthSession()
@@ -15,6 +15,7 @@ export default async function Airline({ params }: { params: { airline_id: string
             id: session.user.id
         },
         select: {
+            airlineRole: true,
             airlineId: true,
             airline: {
                 select: {
@@ -31,7 +32,13 @@ export default async function Airline({ params }: { params: { airline_id: string
             <NavBar child="airline"/>
             <div className="w-11/12 my-4 md:w-1/2 flex flex-col rounded-lg shadow-lg bg-white">
                 <h1 className="text-center font-extrabold text-3xl bg-gray-200 rounded-t-lg py-2">{user.airline?.title} Airline</h1>
-                <Interactable airlineId={params.airline_id}/>
+                <EffectWrapper className="flex flex-col">
+                    <Interactable
+                        airlineId={params.airline_id}
+                        session={session}
+                        isCaptain={user.airlineRole === "Captain"}
+                    />
+                </EffectWrapper>
             </div>
         </main>
     )

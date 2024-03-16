@@ -1,3 +1,12 @@
+export interface CapturedByRecord {
+    title: string,
+    airline: {
+        id: number;
+        title: string;
+    };
+    capturedAt: Date,
+};
+
 export interface UserTerminalData {
   id: number;
   title: string;
@@ -8,15 +17,15 @@ export interface UserTerminalData {
   capturedBy: {
     id: number;
     title: string;
-  } | null;
-  capturedByRecords: {
-    airline: {
-      id: number;
-      title: string;
-    };
-    capturedAt: Date;
-  }[];
-}
+    description: string;
+    passengerRate: number;
+    unitTime: number;
+    lastPassengerUpdate: Date;
+    capturedBy: {
+        id: number;
+        title: string;
+    } | null;}
+};
 
 export interface Faction {
   id: number;

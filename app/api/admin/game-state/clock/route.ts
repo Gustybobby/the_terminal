@@ -1,6 +1,6 @@
 import { passengerUpdate } from "@/modules/routine";
 import { NextRequest, NextResponse } from "next/server";
-import { getServerAuthSession } from "../../auth/[...nextauth]/_utils";
+import { getServerAuthSession } from "../../../auth/[...nextauth]/_utils";
 
 export const dynamic = "force-dynamic"
 

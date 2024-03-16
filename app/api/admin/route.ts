@@ -15,5 +15,10 @@ export async function GET(){
             id: GAME_ID
         }
     })
-    return NextResponse.json({ message: "SUCCESS", data: gameState }, { status: 200 })
+    const airlines = await prisma.airline.findMany({
+        orderBy: {
+            id: "asc"
+        }
+    })
+    return NextResponse.json({ message: "SUCCESS", data: { gameState, airlines } }, { status: 200 })
 }

@@ -1,9 +1,10 @@
+import type { AdminData } from "@/types/admin"
 import { useEffect, useState } from "react"
 
 export default function useAdmin({ refreshRate }: {
     refreshRate: number
 }){
-    const [data, setData] = useState<any | "loading" | "error">("loading")
+    const [data, setData] = useState<AdminData | "loading" | "error">("loading")
     const [shouldRefetch, refetch] = useState({})
     useEffect(() => {
         fetch(`/api/admin`)

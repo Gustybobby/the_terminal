@@ -59,7 +59,14 @@ export async function POST(req: NextRequest, { params }: { params: { terminal_id
             currentFlagSecret: randomSixDigits(),
         }
     })
-    console.log(airline.title,"Airline","captures terminal",captures.title)
+    const record = await prisma.captureRecord.create({
+        data: {
+            airlineId: airline.id,
+            terminalId: captures.id,
+            capturedAt: new Date()
+        }
+    })
+    console.log(record)
     console.log("new secret is",captures.currentFlagSecret)
     return NextResponse.json({ message: "SUCCESS" }, { status: 200 })
 }

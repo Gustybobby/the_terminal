@@ -1,5 +1,7 @@
 import LobbyWaitSection from "@/components/lobby/lobby-wait-section";
 import LobbyNannySection from "@/components/lobby/lobby-nanny-section";
+import LobbyClassGroupSection from "@/components/lobby/lobby-class-section";
+
 
 import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/_utils";
 import { redirect } from "next/navigation";
@@ -44,6 +46,7 @@ export default async function Airline({ params }: { params: { id: string } }) {
           <LobbyWaitSection session={session} />
         )}
       </div>
+      <LobbyClassGroupSection/>
     </main>
   );
 }

@@ -24,6 +24,13 @@ export interface AirlineData {
 }
 
 export interface LobbyTableData{
-    role : string
-    name : string
+    id: string
+    airlineRole: AirlineRole
+    name : string | null
+}
+
+export interface AirlineLobby {
+    start: boolean;
+    ready: boolean;
+    crews: LobbyTableData[];
 }

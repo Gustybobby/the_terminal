@@ -6,24 +6,25 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { LobbyTableData } from "@/types/airline";
+import { sendJSONToAPI } from "@/tools/apiHandler";
 import type { Dispatch, SetStateAction } from "react";
 import { FaChevronDown } from "react-icons/fa";
 
 const roles = [
   { name: "Captain", value: "Captain" },
-  { name: "Co-Pilot", value: "Co_Pilot" },
   { name: "Crew", value: "Crew" },
 ];
 
 export default function DropdownMenuDemo({
-  role,
-  index,
-  setTableData,
+  airlineId,
+  userId,
+  airlineRole,
+  refetch,
 }: {
-  role: string;
-  index: number;
-  setTableData: Dispatch<SetStateAction<LobbyTableData[]>>;
+  airlineId: number,
+  userId: string,
+  airlineRole: string;
+  refetch: Dispatch<SetStateAction<{}>>;
 }) {
   return (
     <DropdownMenu>
@@ -31,30 +32,28 @@ export default function DropdownMenuDemo({
         <Button
           variant="outline"
           className="min-w-32 flex flex-row justify-between border-black"
+          disabled={airlineRole === "Co_pilot"}
         >
-          <div>{role}</div> <FaChevronDown />
+          <div>{roles.find((role) => role.value === airlineRole)?.name ?? "Co-pilot"}</div> <FaChevronDown />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-32 border-black">
         <DropdownMenuGroup>
-          {roles.map((role) => (
+          {roles.map((role, index) => (
             <DropdownMenuItem
+              key={index}
               className="border-b last:border-0 border-black rounded-none"
-              onClick={() =>
-                setTableData((tableData) => {
-                  const newTableData = tableData.map((row, i) => {
-                    return i === index
-                      ? { ...row, role: role.value }
-                      : { ...row };
-                  });
-                  newTableData.sort((a, b) => {
-                    return (
-                      roles.findIndex((role) => a.role === role.value) -
-                      roles.findIndex((role) => b.role === role.value)
-                    );
-                  });
-                  return newTableData;
+              onClick={async() =>{
+                if(role.value === airlineRole){
+                  return
+                }
+                await sendJSONToAPI({
+                  url: `/api/airlines/${airlineId}/lobby/${userId}`,
+                  method: "POST",
+                  body: JSON.stringify({ data: role.value })
                 })
+                refetch({})
+              }                
               }
             >
               {role.name}

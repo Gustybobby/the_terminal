@@ -2,12 +2,7 @@ import NavBar from "@/components/navbar/nav-bar";
 import { getServerAuthSession } from "../api/auth/[...nextauth]/_utils";
 import { redirect } from "next/navigation";
 import StatusCardGroup from "@/components/status/status-card-group";
-import {AirlineRole} from "@prisma/client"
-// enum AirlineRole {
-//     Captain
-//     Crew
-//     Co_pilot //map to Co-pilot
-//   }
+
 export default async function TerminalStatusPage() {
     const session = await getServerAuthSession()
     if(session?.user.role === "STAFF"){

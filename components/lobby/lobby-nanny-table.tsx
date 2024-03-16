@@ -9,20 +9,19 @@ import {
   TableRow,
 } from "../ui/table";
 import type { LobbyTableData } from "@/types/airline";
-import { Session } from "next-auth";
 import LobbyDropDownMenu from "./lobby-dropdown-role";
-import type { Dispatch, SetStateAction} from "react";
+import type { Dispatch, SetStateAction } from "react";
 
-export default function LobbyTable({
-  session,
+export default function LobbyNannyTable({
+  airlineId,
   className,
   tableData,
-  setTableData,
+  refetch,
 }: {
-  session: Session;
+  airlineId: number
   className: string;
   tableData: LobbyTableData[];
-  setTableData: Dispatch<SetStateAction<LobbyTableData[]>>;
+  refetch: Dispatch<SetStateAction<{}>>;
 }) {
 
   return (
@@ -38,22 +37,17 @@ export default function LobbyTable({
           <TableRow key={index}>
             <TableCell
               className={
-                row.name === session.user.name
-                  ? "font-bold text-blue-600"
-                  : "font-medium"
+                   "font-medium"
               }
             >
               <LobbyDropDownMenu
-                role={row.role}
-                setTableData={setTableData}
-                index={index}
+                airlineId={airlineId}
+                airlineRole={row.airlineRole}
+                userId={row.id}
+                refetch={refetch}
               />
             </TableCell>
-            <TableCell
-              className={
-                row.name === session.user.name ? "font-bold text-blue-600" : ""
-              }
-            >
+            <TableCell>
               {row.name}
             </TableCell>
           </TableRow>

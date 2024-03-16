@@ -42,6 +42,7 @@ model Terminal {
   capturedByRecords   CaptureRecord[]
   lastPassengerUpdate DateTime
   currentFlagSecret   String
+  effects             Effect[]
 }
 
 model Airline {
@@ -55,6 +56,7 @@ model Airline {
   captureRecords CaptureRecord[]
   recieveEffects Effect[]        @relation(name: "applyBy")
   applyEffects   Effect[]        @relation(name: "applyTo")
+  ready          Boolean         @default(false)
 }
 
 model CaptureRecord {
@@ -67,18 +69,24 @@ model CaptureRecord {
 }
 
 model Effect {
-  id        Int          @id @default(autoincrement())
-  type      AirlineClass
-  from      DateTime
-  to        DateTime
-  applyBy   Airline      @relation(name: "applyBy", fields: [applyById], references: [id], onUpdate: Restrict, onDelete: Restrict)
-  applyById Int
-  applyTo   Airline      @relation(name: "applyTo", fields: [applyToId], references: [id], onUpdate: Restrict, onDelete: Restrict)
-  applyToId Int
+  id            Int          @id @default(autoincrement())
+  type          AirlineClass
+  from          DateTime
+  to            DateTime
+  multiplier    Float?
+  flatRate      Int?
+  unitTime      Int?
+  applyBy       Airline      @relation(name: "applyBy", fields: [applyById], references: [id], onUpdate: Restrict, onDelete: Restrict)
+  applyById     Int
+  applyTo       Airline?     @relation(name: "applyTo", fields: [applyToId], references: [id], onUpdate: Restrict, onDelete: Restrict)
+  applyToId     Int?
+  applyTerminal Terminal?    @relation(fields: [terminalId], references: [id], onUpdate: Restrict, onDelete: Restrict)
+  terminalId    Int?
 }
 
 model GameState {
   id         String    @id
+  start      Boolean   @default(false)
   pause      Boolean
   clock      DateTime  @default(now())
   lastPause  DateTime?

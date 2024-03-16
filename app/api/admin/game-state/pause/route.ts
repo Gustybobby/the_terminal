@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma-client";
-import { getServerAuthSession } from "../../auth/[...nextauth]/_utils";
+import { getServerAuthSession } from "../../../auth/[...nextauth]/_utils";
 import { GAME_ID } from "@/modules/routine";
 
 export async function POST(req: NextRequest){
     const session = await getServerAuthSession()
     if(session?.user.role !== "ADMIN"){
-        return NextResponse.json({ message: "ERROR " }, { status: 400 })
+        return NextResponse.json({ message: "ERROR" }, { status: 400 })
     }
     const request = await req.json()
     const pause = request.data

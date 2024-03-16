@@ -9,6 +9,13 @@ export interface UserTerminalData {
         id: number;
         title: string;
     } | null;
+    capturedByRecords: {
+        airline: {
+            id: number;
+            title: string;
+        };
+        capturedAt: Date,
+    }[];
 }
 
 export interface Faction {

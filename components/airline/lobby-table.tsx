@@ -15,7 +15,7 @@ export default function LobbyTable({ tableData }: { tableData: CrewTableData[] }
             <TableBody>
                 {tableData.map((row, index) => (
                 <TableRow key={index}>
-                    <TableCell className="font-medium">{row.airlineRole}</TableCell>
+                    <TableCell className="font-medium">{row.airlineRole === "Co_pilot"? "Co-pilot" : row.airlineRole}</TableCell>
                     <TableCell>{row.name}</TableCell>
                 </TableRow>
                 ))}

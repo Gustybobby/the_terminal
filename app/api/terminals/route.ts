@@ -19,6 +19,22 @@ export async function GET(){
                         title: true,
                     },
                 },
+                capturedByRecords: {
+                    where: {
+                        capturedAt: {
+                            gt: new Date((new Date()).getTime()-5000)
+                        }
+                    },
+                    select: {
+                        airline: {
+                            select: {
+                                id: true,
+                                title: true
+                            }
+                        },
+                        capturedAt: true,
+                    }
+                }
             },
             orderBy: {
                 id: "asc"

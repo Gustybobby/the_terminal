@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation"
 import { getServerAuthSession } from "../api/auth/[...nextauth]/_utils"
 import prisma from "@/prisma-client"
+import { GAME_ID } from "@/modules/routine"
 
 export default async function AirlinesPage(){
     const session = await getServerAuthSession()
@@ -15,11 +16,27 @@ export default async function AirlinesPage(){
             id: session.user.id
         },
         select: {
-            airlineId: true
+            airlineId: true,
+            airline: {
+                select: {
+                    ready: true
+                }
+            }
         }
     })
     if(user.airlineId === null){
         redirect("/join")
     }
-    redirect(`/airlines/${user.airlineId}`)
+    const gameState = await prisma.gameState.findUniqueOrThrow({
+        where: {
+            id: GAME_ID
+        },
+        select: {
+            start: true
+        }
+    })
+    if(user.airline?.ready && gameState.start){
+        redirect(`/airlines/${user.airlineId}`)
+    }
+    redirect(`/lobby/${user.airlineId}`)
 }

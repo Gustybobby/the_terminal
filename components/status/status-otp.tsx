@@ -6,7 +6,7 @@ import {
     InputOTPSlot,
 } from "@/components/ui/input-otp"
 
-import { REGEXP_ONLY_DIGITS_AND_CHARS  } from "input-otp"
+import { REGEXP_ONLY_DIGITS } from "input-otp"
 import type { Dispatch, SetStateAction } from "react"
 
 export default function StatusOTP({ value, setValue, className }: {
@@ -23,7 +23,7 @@ export default function StatusOTP({ value, setValue, className }: {
                 setValue(value)
             }}
             maxLength={6}
-            pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+            pattern={REGEXP_ONLY_DIGITS}
             render={({ slots }) => (
                 <>
                     <InputOTPGroup>

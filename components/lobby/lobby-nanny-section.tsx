@@ -25,9 +25,9 @@ export default function LobbyNannySection({ airlineId }: { airlineId: number }) 
       </div>
     )
   }
-  if(airlineLobby.start && airlineLobby.ready){
-    router.replace(`/airlines/${airlineId}`)
-  }
+  // if(airlineLobby.start && airlineLobby.ready){
+  //   router.replace(`/airlines/${airlineId}`)
+  // }
   return (
     <div className="flex flex-col ">
       <LobbyNannyTable

@@ -2,6 +2,7 @@ import type { AirlineClass } from "@prisma/client";
 
 export interface AdminGameState {
     id: string;
+    phase: number
     start: boolean;
     pause: boolean;
     clock: Date;

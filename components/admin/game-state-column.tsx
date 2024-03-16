@@ -4,13 +4,14 @@ import type { AdminData } from "@/types/admin"
 import { Button } from "../ui/button"
 import { sendJSONToAPI } from "@/tools/apiHandler"
 import type { Dispatch, SetStateAction } from "react"
+import GamePhaseDropdown from "./game-phase-dropdown"
 
 export default function GameStateColumn({ admin, refetch }: {
     admin: AdminData
     refetch: Dispatch<SetStateAction<{}>>
 }){
     return (
-        <div className="h-full border border-black shadow-lg rounded-lg p-2 flex flex-col items-center">
+        <div className="h-full border border-black shadow-lg rounded-lg p-2 flex flex-col items-center space-y-2">
             <div className="w-full h-fit p-1 grid grid-cols-3 gap-1 items-center rounded-lg shadow-lg">
                 <h1 className="col-span-3 font-bold text-2xl">Game State Control</h1>
                 <Button
@@ -82,6 +83,9 @@ export default function GameStateColumn({ admin, refetch }: {
                     Last Pause: {(new Date(admin.gameState.lastResume)).toLocaleString()}
                 </h2>
                 }
+            </div>
+            <div className="w-full h-12 p-1 flex flex-col justify-center items-center rounded-lg shadow-lg">
+                <GamePhaseDropdown phase={admin.gameState.phase} refetch={refetch}/>
             </div>
         </div>
     )

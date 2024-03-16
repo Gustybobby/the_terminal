@@ -6,6 +6,7 @@ import SkillsSection from "./skills-section"
 import useAirline from "../hooks/useAirline"
 import { LoadingSpinner } from "../ui/loading-spinner"
 import type { Session } from "next-auth"
+import useCaptureToast from "../hooks/useCaptureToast"
 
 export default function Interactable({ airlineId, session, isCaptain }: {
     airlineId: string
@@ -13,6 +14,8 @@ export default function Interactable({ airlineId, session, isCaptain }: {
     isCaptain: boolean
 }){
     const { airline } = useAirline({ airlineId, refreshRate: 5000 })
+    useCaptureToast()
+    
     if(airline === "loading"){
         return (
             <div className="w-full h-full flex justify-center items-center">

@@ -4,12 +4,15 @@ import { FaMedal } from "react-icons/fa";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import useLeaderboard from "../hooks/useLeaderboard";
 import dynamic from "next/dynamic"
+import useCaptureToast from "../hooks/useCaptureToast";
 const AnimatedNumbers = dynamic(() => import("react-animated-numbers"), {
     ssr: false,
 });
 
 export default function LeaderTable(){
     const { leaderboard } = useLeaderboard({ refreshRate: 5000 })
+    useCaptureToast()
+    
     if(leaderboard === "loading"){
         return <></>
     }

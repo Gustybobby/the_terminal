@@ -1,12 +1,15 @@
 "use client"
 
 import useAdmin from "../hooks/useAdmin"
+import useCaptureToast from "../hooks/useCaptureToast"
 import { LoadingSpinner } from "../ui/loading-spinner"
 import AirlinesColumn from "./airlines-column"
 import GameStateColumn from "./game-state-column"
 
 export default function Dashboard(){
     const { admin, refetch } = useAdmin({ refreshRate: 5000 })
+    useCaptureToast()
+
     if(admin === "loading" || admin === "error"){
         return (
             <div className="w-full h-screen flex justify-center items-center">

@@ -19,7 +19,7 @@ export default function EffectWrapper({ children, className }: {
     const isDisabled = !!effects.find((effect) => effect.type === "CPE")
     return (
         <div className={className}>
-            {!isDisabled?
+            {isDisabled?
             <>
                 <Image
                     className="absolute w-full h-full top-0 left-0 overflow-hidden z-20"

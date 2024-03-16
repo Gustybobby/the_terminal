@@ -1,12 +1,8 @@
-import LobbyWaitSection from "@/components/lobby/lobby-wait-section";
-import LobbyNannySection from "@/components/lobby/lobby-nanny-section";
-import LobbyClassGroupSection from "@/components/lobby/lobby-class-section";
-import LobbySecretDrawer from "@/components/lobby/lobby-secret-drawer";
-
 import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/_utils";
 import { redirect } from "next/navigation";
 import prisma from "@/prisma-client";
-import { AirlineRole } from "@prisma/client";
+import MainLobby from "@/components/lobby/main-lobby";
+
 export default async function Airline({
   params,
 }: {
@@ -19,6 +15,7 @@ export default async function Airline({
   const user = await prisma.user.findUniqueOrThrow({
     where: {
       id: session.user.id,
+      airlineId: session.user.role === "ADMIN"? undefined : +params.airline_id,
     },
     select: {
       airlineRole: true,
@@ -26,32 +23,25 @@ export default async function Airline({
         select: {
           title: true,
           airlineSecret: true,
+          class: true,
         },
       },
     },
   });
+  if(!user.airline){
+    redirect("/join")
+  }
+  const secret = user.airlineRole === "Co_pilot"? user.airline.airlineSecret : null
   return (
     <main className="w-full min-h-screen bg-gradient-to-b from-blue-400 to-blue-300 flex flex-col items-center">
-      <div className="w-11/12 my-4 md:w-1/2 flex flex-col rounded-lg shadow-lg bg-white">
-        <h1 className="text-center font-extrabold text-3xl bg-gray-200 rounded-t-lg py-2">
-          {`${user.airline?.title} Airline`}
-        </h1>
-        {user.airlineRole == AirlineRole.Co_pilot ||
-        session.user.role == "ADMIN" ? (
-          <div>
-            <LobbyNannySection airlineId={+params.airline_id} />
-          </div>
-        ) : (
-          <LobbyWaitSection airlineId={+params.airline_id} />
-        )}
-      </div>
-      <div className="w-11/12 flex flex-col items-center">
-        <LobbySecretDrawer
-          className="mb-4 w-full font-normal py-2 rounded-lg bg-black hover:bg-black hover:text-black transition-colors text-white"
-          flagSecret={user.airline?.airlineSecret}
-        />
-        <LobbyClassGroupSection airlineRole={user.airlineRole} />
-      </div>
+      <MainLobby
+        editable={user.airlineRole === "Co_pilot"}
+        secret={secret}
+        airline={{
+          id: +params.airline_id,
+          title: session.user.role === "ADMIN"? `Airline ${params.airline_id}` : user.airline.title,
+        }}
+      />
     </main>
   );
 }

@@ -16,7 +16,7 @@ export default function EffectWrapper({ children, className }: {
           </div>
         )
       }
-    const isDisabled = !!effects.find((effect) => effect.type === "CPE")
+    const isDisabled = !!effects.find((effect) => effect.type === "ICT")
     return (
         <div className={className}>
             {isDisabled?

@@ -101,14 +101,11 @@ enum AirlineRole {
 }
 
 enum AirlineClass {
-  CPE
-  DE
-  ChE
-  CE
-  IE
-  ME
-  EE
-  BA
+  ICT
+  MSME
+  BCET
+  MT
+  CET
   None
 }
 

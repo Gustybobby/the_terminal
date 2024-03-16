@@ -41,5 +41,6 @@ export interface LobbyTableData{
 export interface AirlineLobby {
     start: boolean;
     ready: boolean;
+    class: AirlineClass;
     crews: LobbyTableData[];
 }

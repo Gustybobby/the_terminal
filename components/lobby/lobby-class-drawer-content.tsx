@@ -1,52 +1,42 @@
 "use client";
 
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-
-import * as React from "react";
-import StatusCard from "@/components/status/status-card";
-import StatusOTP from "@/components/status/status-otp";
-import { useToast } from "@/components/ui/use-toast";
-
-import { FaCheckCircle } from "react-icons/fa";
-import { IoIosAlert } from "react-icons/io";
-
-// React Icon for fail, sucess
+import { buttonVariants } from "@/components/ui/button";
+import type { Dispatch, SetStateAction } from "react";
 import {
-  Drawer,
   DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
-
 import type { Faction } from "@/types/terminal";
 import { sendJSONToAPI } from "@/tools/apiHandler";
-import { Session } from "next-auth";
-import { AirlineRole } from "@prisma/client";
 
 export default function LobbyDrawerContent({
   faction,
   className,
-  airlineRole,
-  setSelectedClass,
+  editable,
+  airlineId,
+  refetch,
 }: {
+  airlineId: number
   faction: Faction;
-  className: string;
-  airlineRole: AirlineRole;
-  setSelectedClass: Dispatch<SetStateAction<string | null>>;
+  className?: string;
+  editable: boolean
+  refetch: Dispatch<SetStateAction<{}>>
 }) {
-  const handleClick = () => {
-    // Add API to update chosen faction and 
-    setSelectedClass(faction.abbreviation);
+  const handleClick = async() => {
+    await sendJSONToAPI({
+      url: `/api/airlines/${airlineId}`,
+      method: "PATCH",
+      body: JSON.stringify({ data: { class: faction.abbreviation }})
+    })
+    refetch({})
   };
   return (
-    <DrawerContent className={` ${className}`}>
+    <DrawerContent className={className}>
       <DrawerHeader>
-        <DrawerTitle>{faction.name}</DrawerTitle>
+        <DrawerTitle>{faction.abbreviation}</DrawerTitle>
         <DrawerDescription className="flex flex-col">
           <div className="items-center font-medium">
             Ability Name : {faction.ability_name}
@@ -61,7 +51,7 @@ export default function LobbyDrawerContent({
             <div className="items-center font-medium mb-2">Description</div>
             {faction.description}
           </div>
-          {airlineRole === AirlineRole.Co_pilot ? (
+          {editable? (
             <DrawerClose
               className={`${buttonVariants({
                 variant: "default",

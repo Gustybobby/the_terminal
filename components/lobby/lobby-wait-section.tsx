@@ -1,20 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import useLobby from "../hooks/useLobby";
-import { LoadingSpinner } from "../ui/loading-spinner";
 import LobbyWaitTable from "./lobby-wait-table";
+import { AirlineLobby } from "@/types/airline";
 
-export default function LobbyWait({ airlineId }: { airlineId: number }) {
+export default function LobbyWaitSection({ airlineId, airlineLobby }: {
+  airlineId: number
+  airlineLobby: AirlineLobby
+}) {
   const router = useRouter()
-  const { airlineLobby } = useLobby({ airlineId, refreshRate: 5000 })
-  if(airlineLobby === "loading"){
-    return (
-      <div className="flex justify-center py-4">
-        <LoadingSpinner className="size-36"/>
-      </div>
-    )
-  }
+  
   if(airlineLobby.start && airlineLobby.ready){
     router.replace(`/airlines/${airlineId}`)
   }

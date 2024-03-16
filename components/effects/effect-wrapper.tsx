@@ -22,7 +22,7 @@ export default function EffectWrapper({ children, className }: {
             {isDisabled?
             <>
                 <Image
-                    className="absolute w-full h-full top-0 left-0 overflow-hidden z-20"
+                    className="absolute w-full h-screen top-0 left-0 overflow-hidden z-20"
                     src="/rsc/hitmeup.gif"
                     alt="hitmeup"
                     width={200}

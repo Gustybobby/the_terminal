@@ -1,6 +1,5 @@
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -30,7 +29,7 @@ export default function StatusCard({
             <div className="ml-2 flex flex-col items-start">
               <CardTitle className=" text-xl">{faction.name}</CardTitle>
               <CardDescription className="">
-                <div className="w-full flex flex-row justify-between">
+                <div className="w-full flex flex-row justify-between space-x-2">
                   <div className="text-left font-bold ">{faction.ability_name}</div>
                   <div className="font-bold ">{faction.type}</div>
                 </div>

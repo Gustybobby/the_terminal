@@ -5,17 +5,11 @@ import { IoPeopleCircleSharp } from "react-icons/io5"
 import { LoadingSpinner } from "../ui/loading-spinner"
 import type { AirlineData, CaptureData } from "@/types/airline"
 
-export default function Display({ airline }: { airline: AirlineData | "loading" }){
-    if(airline === "loading"){
-        return (
-            <div className="w-full h-full flex justify-center items-center">
-                <LoadingSpinner className="size-24"/>
-            </div>
-        )
-    }
+export default function Display({ airline }: { airline: AirlineData }){
     const total = totalGain(airline.captures)
     return (
         <div className="flex flex-col items-center">
+            <h2 className="text-xl text-center font-bold mt-2">Class: {airline.class}</h2>
             <h2 className="text-2xl text-center font-bold mt-2">
                 {airline.passengers.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
             </h2>

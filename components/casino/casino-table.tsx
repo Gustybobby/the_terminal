@@ -8,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import type { LobbyTableData } from "@/types/airline";
 import { CasinoTableData } from "@/types/terminal";
 import { Session } from "next-auth";
 // import LobbyDropDownMenu from "./lobby-dropdown-role";
@@ -17,13 +16,11 @@ import CasinoButton from "./casino-button-inc";
 import CasinoWinButton from "./casino-button-multi";
 
 export default function LobbyTable({
-  session,
   className,
   tableData,
   setTableData,
   currentPot,
 }: {
-  session: Session;
   className: string;
   tableData: CasinoTableData[];
   setTableData: Dispatch<SetStateAction<CasinoTableData[]>>;
@@ -79,9 +76,9 @@ export default function LobbyTable({
                   className="w-12 bg-red-400 mb-1"
                 />
                 <div>
-                  {winConditions.map((winCondition) => {
+                  {winConditions.map((winCondition,index) => {
                     return (
-                      <CasinoWinButton
+                      <CasinoWinButton key={winCondition.name+"_"+index}
                         multiplier={winCondition.multiplier}
                         pot={currentPot}
                         index={index}

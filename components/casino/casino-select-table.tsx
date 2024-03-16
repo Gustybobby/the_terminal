@@ -9,7 +9,6 @@ import {
   TableRow,
 } from "../ui/table";
 
-import { Session } from "next-auth";
 import type { Dispatch, SetStateAction } from "react";
 import CasinoCheckbox from "./casino-checkbox";
 import CasinoInput from "./casino-input";
@@ -17,12 +16,10 @@ import CasinoInput from "./casino-input";
 import { CasinoSelectData } from "@/types/terminal";
 
 export default function LobbyTable({
-  session,
   className,
   tableData,
   setTableData,
 }: {
-  session: Session;
   className: string;
   tableData: CasinoSelectData[];
   setTableData: Dispatch<SetStateAction<CasinoSelectData[]>>;

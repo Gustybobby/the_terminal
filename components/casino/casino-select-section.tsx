@@ -3,104 +3,14 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
-import { Session } from "next-auth";
 import CasinoSelectTable from "./casino-select-table";
 import CasinoTable from "./casino-table";
 
 import { CasinoSelectData, CasinoTableData } from "@/types/terminal";
-export default function LobbyNannySection({ session }: { session: Session }) {
-  // useEffect(() => {
-  //     fetch("/api/airline/lobby")
-  //         .then(res => res.json())
-  //         .then(data => setTableData(data.data))
-
-  //     const interval = setInterval(() => {
-  //         fetch("/api/airline/lobby")
-  //             .then(res => res.json())
-  //             .then(data => setTableData(data.data))
-  //     }, 5000)
-  //     return () => clearInterval(interval)
-  // },[])
-
-  //   id : number
-  //   airline_id : number
-  //   airline_name : string
-  //   initial_cost : number
-  //   player_id : number
-  //   is_playing : boolean
-  const [tableData, setTableData] = useState<CasinoSelectData[]>([
-    {
-      id: 1,
-      airline_id: 1,
-      airline_name: "Airline 1",
-      initial_cost: 100,
-      player_id: 0,
-      is_playing: false,
-    },
-    {
-      id: 2,
-      airline_id: 1,
-      airline_name: "Airline 1",
-      initial_cost: 100,
-      player_id: 1,
-      is_playing: false,
-    },
-    {
-      id: 3,
-      airline_id: 2,
-      airline_name: "Airline 2",
-      initial_cost: 100,
-      player_id: 2,
-      is_playing: false,
-    },
-    {
-      id: 4,
-      airline_id: 2,
-      airline_name: "Airline 2",
-      initial_cost: 100,
-      player_id: 3,
-      is_playing: false,
-    },
-    {
-      id: 5,
-      airline_id: 3,
-      airline_name: "Airline 3",
-      initial_cost: 100,
-      player_id: 4,
-      is_playing: false,
-    },
-    {
-      id: 6,
-      airline_id: 3,
-      airline_name: "Airline 3",
-      initial_cost: 100,
-      player_id: 5,
-      is_playing: false,
-    },
-    {
-      id: 7,
-      airline_id: 4,
-      airline_name: "Airline 4",
-      initial_cost: 100,
-      player_id: 6,
-      is_playing: false,
-    },
-    {
-      id: 8,
-      airline_id: 4,
-      airline_name: "Airline 4",
-      initial_cost: 100,
-      player_id: 7,
-      is_playing: false,
-    },
-  ]);
-
-  const [runningTableData, setRunningTableData] = useState<CasinoTableData[]>(
-    []
-  );
-  const [playable, setPlayable] = useState<boolean>(
-    tableData.filter((a) => a.is_playing).length <= 4
-  );
+export default function LobbyNannySection({ airlines }: { airlines: { title: string, id: number }[] }) {
+  const [tableData, setTableData] = useState<CasinoSelectData[]>(initializeSelectTable({ airlines }));
+  const [runningTableData, setRunningTableData] = useState<CasinoTableData[]>([]);
+  const [playable, setPlayable] = useState<boolean>(tableData.filter((a) => a.is_playing).length <= 4);
   const [casinoRunning, setCasinoRunning] = useState<boolean>(false);
   const [ready, setReady] = useState<boolean>(false);
   const [totalPot, setTotalPot] = useState<number>(0);
@@ -115,7 +25,7 @@ export default function LobbyNannySection({ session }: { session: Session }) {
       });
       setTotalPot(temp);
     }
-  }, [tableData]);
+  }, [tableData, casinoRunning, runningTableData]);
 
   useEffect(() => {
     if (casinoRunning) {
@@ -129,7 +39,7 @@ export default function LobbyNannySection({ session }: { session: Session }) {
     //       runningTableData.filter((row) => row.initial_cost > 0)[0].airline_id
     //     );
     }
-  }, [runningTableData]);
+  }, [runningTableData, casinoRunning]);
   //   useEffect(() => {
   //     if(!correct) {
   //         setReady(false);}
@@ -138,15 +48,7 @@ export default function LobbyNannySection({ session }: { session: Session }) {
   const handleStart = () => {
     setReady(!ready);
     setCasinoRunning(!casinoRunning);
-    setRunningTableData(() => {
-      const playingTableData = tableData.filter((a) => a.is_playing);
-      const newTableData = playingTableData.map((row, i) => {
-        const { ["is_playing"]: propToRemove, ...rest } = row;
-        return { ...rest, ["this_pot"]: 0 };
-      });
-      return newTableData;
-    });
-
+    setRunningTableData(tableData.filter((a) => a.is_playing).map((row) => ({ ...row, this_pot: 0 })));
     // API update passengers at the start.
   };
 
@@ -184,7 +86,6 @@ export default function LobbyNannySection({ session }: { session: Session }) {
       {!casinoRunning ? (
         <>
           <CasinoSelectTable
-            session={session}
             className={"mb-4"}
             tableData={tableData}
             setTableData={setTableData}
@@ -193,7 +94,6 @@ export default function LobbyNannySection({ session }: { session: Session }) {
       ) : (
         <>
           <CasinoTable
-            session={session}
             className={"mb-4"}
             tableData={runningTableData}
             setTableData={setRunningTableData}
@@ -241,4 +141,25 @@ function checkWinner(tableData: CasinoTableData[]) {
   const filteredTable = tableData.filter((row) => row.initial_cost > 0);
   const airline_id = filteredTable[0].airline_id;
   return filteredTable.every((row) => row.airline_id == airline_id);
+}
+
+function initializeSelectTable({ airlines }: { airlines: { title: string, id: number }[] }){
+  const selectData: CasinoSelectData[] = []
+  for(const airline of airlines){
+    selectData.push({
+      airline_id: airline.id,
+      airline_name: airline.title,
+      player_id: 0,
+      initial_cost: 100,
+      is_playing: false,
+    })
+    selectData.push({
+      airline_id: airline.id,
+      airline_name: airline.title,
+      player_id: 1,
+      initial_cost: 100,
+      is_playing: false,
+    })
+  }
+  return selectData
 }

@@ -40,7 +40,7 @@ export default function StatusCardGroup() {
         })
       }
     }
-  },[terminals])
+  },[terminals, toast])
   if(terminals === "error"){
     return <></>
   }

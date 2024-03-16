@@ -59,7 +59,7 @@ const factions = [
   {
     id: 7,
     name: "ME | Mechanical Engineering",
-    ability_name: "Machine sabotage",
+    ability_name: "Machine Sabotage",
     use: 1,
     type: "Debuff",
     description:
@@ -95,7 +95,7 @@ export default function ClassCardGroup() {
       {factions.map((faction: Faction, i) => (
         <DrawerTrigger
           key={`trigger-${faction.name}`}
-          className="w-11/12 mb-2"
+          className="mb-2"
           onClick={() => {
             setClickedFactionIndex(i);
           }}

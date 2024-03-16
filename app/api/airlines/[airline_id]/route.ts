@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma-client";
+import { classEffect } from "@/game/effect";
 
 export async function GET(req: NextRequest, { params }: { params: { airline_id: string }}){
     const airline = await prisma.airline.findUniqueOrThrow({
@@ -24,8 +25,18 @@ export async function GET(req: NextRequest, { params }: { params: { airline_id: 
                 orderBy: {
                     id: "asc"
                 }
+            },
+            class: true,
+            applyEffects: {
+                select: {
+                    type: true
+                }
             }
         }
     })
-    return NextResponse.json({ message: "SUCCESS", data: airline }, { status: 200 })
+    const classEffectCount = airline.applyEffects.filter((effect) => effect.type === airline.class).length
+    return NextResponse.json({ message: "SUCCESS", data: {
+        ...airline,
+        stock: (classEffect[airline.class as keyof typeof classEffect].limit ?? 0) - classEffectCount
+    } }, { status: 200 })
 }

@@ -39,7 +39,9 @@ export default async function Airline({ params }: { params: { airline_id: string
           <LobbyWaitSection airlineId={+params.airline_id}/>
         )}
       </div>
-      <LobbyClassGroupSection/>
+      <div className="flex flex-col items-center">
+        <LobbyClassGroupSection/>
+      </div>
     </main>
   );
 }

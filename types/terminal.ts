@@ -32,7 +32,6 @@ export interface StaffTerminalData extends UserTerminalData{
 }
 
 export interface CasinoSelectData{
-    id : number
     airline_id : number
     airline_name : string
     initial_cost : number
@@ -40,11 +39,6 @@ export interface CasinoSelectData{
     is_playing : boolean
 }
 
-export interface CasinoTableData{
-    id : number
-    airline_id : number
-    airline_name : string
-    initial_cost : number
-    player_id : number
+export interface CasinoTableData extends CasinoSelectData {
     this_pot : number
 }

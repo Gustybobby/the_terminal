@@ -54,8 +54,8 @@ model Airline {
   crews          User[]
   captures       Terminal[]
   captureRecords CaptureRecord[]
-  recieveEffects Effect[]        @relation(name: "applyBy")
-  applyEffects   Effect[]        @relation(name: "applyTo")
+  recieveEffects Effect[]        @relation(name: "applyTo")
+  applyEffects   Effect[]        @relation(name: "applyBy")
   ready          Boolean         @default(false)
 }
 

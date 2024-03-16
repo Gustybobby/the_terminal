@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LobbyTableData } from "@/types/airline";
+import type { LobbyTableData } from "@/types/airline";
 import type { Dispatch, SetStateAction } from "react";
 import { FaChevronDown } from "react-icons/fa";
 

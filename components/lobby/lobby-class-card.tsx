@@ -5,7 +5,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Image from "next/image";
 import * as React from "react";
 import type { Faction } from "@/types/terminal";
 

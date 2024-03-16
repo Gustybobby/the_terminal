@@ -86,7 +86,6 @@ model GameState {
   clock      DateTime  @default(now())
   lastPause  DateTime?
   lastResume DateTime?
-  start      Boolean   @default(false)
 }
 
 enum Role {

@@ -16,7 +16,7 @@ import { buttonVariants } from "../ui/button";
 export function TerminalDrawer({ flagSecret }: { flagSecret: string }) {
   return (
     <Drawer>
-      <DrawerTrigger className="font-light border-2 p-4 border-black rounded-lg hover:bg-gray-200 transition-colors text-black">
+      <DrawerTrigger className="font-light border-2 p-4 border-black rounded-lg hover:bg-gray-200 transition-colors text-black mb-4">
         Check Terminal Secret
       </DrawerTrigger>
       <DrawerContent>

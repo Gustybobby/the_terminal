@@ -7,10 +7,21 @@ import CasinoSelectTable from "./casino-select-table";
 import CasinoTable from "./casino-table";
 
 import { CasinoSelectData, CasinoTableData } from "@/types/terminal";
-export default function LobbyNannySection({ airlines }: { airlines: { title: string, id: number }[] }) {
-  const [tableData, setTableData] = useState<CasinoSelectData[]>(initializeSelectTable({ airlines }));
-  const [runningTableData, setRunningTableData] = useState<CasinoTableData[]>([]);
-  const [playable, setPlayable] = useState<boolean>(tableData.filter((a) => a.is_playing).length <= 4);
+import { sendJSONToAPI } from "@/tools/apiHandler";
+export default function LobbyNannySection({
+  airlines,
+}: {
+  airlines: { title: string; id: number, passengers : number }[];
+}) {
+  const [tableData, setTableData] = useState<CasinoSelectData[]>(
+    initializeSelectTable({ airlines })
+  );
+  const [runningTableData, setRunningTableData] = useState<CasinoTableData[]>(
+    []
+  );
+  const [playable, setPlayable] = useState<boolean>(
+    tableData.filter((a) => a.is_playing).length <= 4
+  );
   const [casinoRunning, setCasinoRunning] = useState<boolean>(false);
   const [ready, setReady] = useState<boolean>(false);
   const [totalPot, setTotalPot] = useState<number>(0);
@@ -34,10 +45,10 @@ export default function LobbyNannySection({ airlines }: { airlines: { title: str
         temp = temp + row.this_pot;
       });
       setTotalPot(temp);
-    //   if (checkWinner(runningTableData))
-    //     setWonAirlineId(
-    //       runningTableData.filter((row) => row.initial_cost > 0)[0].airline_id
-    //     );
+      //   if (checkWinner(runningTableData))
+      //     setWonAirlineId(
+      //       runningTableData.filter((row) => row.initial_cost > 0)[0].airline_id
+      //     );
     }
   }, [runningTableData, casinoRunning]);
   //   useEffect(() => {
@@ -45,10 +56,27 @@ export default function LobbyNannySection({ airlines }: { airlines: { title: str
   //         setReady(false);}
   //   }, [correct]);
 
-  const handleStart = () => {
+  const handleStart = async () => {
     setReady(!ready);
     setCasinoRunning(!casinoRunning);
-    setRunningTableData(tableData.filter((a) => a.is_playing).map((row) => ({ ...row, this_pot: 0 })));
+    setRunningTableData(
+      tableData
+        .filter((a) => a.is_playing)
+        .map((row) => ({ ...row, this_pot: 0 }))
+    );
+
+    tableData
+      .filter((a) => a.is_playing)
+      .map(async (row) => {
+        const res = await sendJSONToAPI({
+          url: "/api/casino",
+          method: "POST",
+          body: JSON.stringify({ data: {airline_id : row.airline_id,passengerAmount : -row.initial_cost} }),
+        });
+
+        console.log(res);
+        // Do something with res if needed
+      });
     // API update passengers at the start.
   };
 
@@ -72,12 +100,20 @@ export default function LobbyNannySection({ airlines }: { airlines: { title: str
     setCasinoRunning(false);
 
     // API update passengers at the end.
-    // const filteredTable = tableData.filter((row) => row.initial_cost > 0);
-    // var winningPot = 0;
-    // filteredTable.map((row) => {
-    //   winningPot += row.initial_cost;
-    // });
-    // console.log(winningPot);
+    var filteredTable = runningTableData.filter((row) => row.initial_cost > 0);
+    var maxPot = 0; 
+    runningTableData.map((row) => (row.this_pot > maxPot ? maxPot = row.this_pot : maxPot = maxPot));
+    var winningPot = 0;
+    {(filteredTable.length >= 1) ? winningPot = maxPot : winningPot = filteredTable[0].this_pot}
+    filteredTable.map(async (row) => {
+      const res = await sendJSONToAPI({
+        url: "/api/casino",
+        method: "POST",
+        body: JSON.stringify({ data: {airline_id : row.airline_id,passengerAmount : row.this_pot} }),
+      });
+    });
+    
+    console.log(winningPot);
     setRunningTableData([]);
     // setWonAirlineId(0);
   };
@@ -143,23 +179,28 @@ function checkWinner(tableData: CasinoTableData[]) {
   return filteredTable.every((row) => row.airline_id == airline_id);
 }
 
-function initializeSelectTable({ airlines }: { airlines: { title: string, id: number }[] }){
-  const selectData: CasinoSelectData[] = []
-  for(const airline of airlines){
+function initializeSelectTable({
+  airlines,
+}: {
+  airlines: { title: string; id: number, passengers:number }[];
+}) {
+  const selectData: CasinoSelectData[] = [];
+  for (const airline of airlines) {
     selectData.push({
       airline_id: airline.id,
       airline_name: airline.title,
       player_id: 0,
       initial_cost: 100,
       is_playing: false,
-    })
-    selectData.push({
-      airline_id: airline.id,
-      airline_name: airline.title,
-      player_id: 1,
-      initial_cost: 100,
-      is_playing: false,
-    })
+      available_cost: airline.passengers
+    });
+    // selectData.push({
+    //   airline_id: airline.id,
+    //   airline_name: airline.title,
+    //   player_id: 1,
+    //   initial_cost: 100,
+    //   is_playing: false,
+    // })
   }
-  return selectData
+  return selectData;
 }

@@ -2,9 +2,11 @@ import SelectCasinoSection from "@/components/casino/casino-select-section";
 import prisma from "@/prisma-client";
 import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/_utils";
 import { redirect } from "next/navigation";
+import { sendJSONToAPI } from "@/tools/apiHandler";
 
 export default async function Casino() {
   const session = await getServerAuthSession();
+  
   if (!session?.user.id) {
     redirect("/");
   }
@@ -15,6 +17,7 @@ export default async function Casino() {
     select: {
       id: true,
       title: true,
+      passengers: true
     }
   })
   return (

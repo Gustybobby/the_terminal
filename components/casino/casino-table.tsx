@@ -70,7 +70,7 @@ export default function LobbyTable({
               /> */}
               <div className="flex flex-col">
                 <CasinoButton
-                  budget_inc={50}
+                  budget_inc={10}
                   index={index}
                   setTableData={setTableData}
                   className="w-12 bg-red-400 mb-1"

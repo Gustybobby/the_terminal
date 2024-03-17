@@ -19,7 +19,7 @@ function MyTimer({ expiryTimestamp }: { expiryTimestamp: Date }) {
   });
 
   return (
-    <div className="flex flex-row text-center border border-2 border-black rounded-lg p-2">
+    <div className="flex flex-row text-center border-2 border-black rounded-lg p-2">
       <div className="text-6xl">
         <span>{minutes < 10 ? `0${minutes}` : `${minutes}`}</span>:
         <span>{seconds < 10 ? `0${seconds}` : `${seconds}`}</span>

@@ -19,6 +19,7 @@ export default function CasinoInput({
         className="outline "
         type="number"
         placeholder="Number"
+        step = "50"
         value={initialCost}
         onChange={(e) =>
           setTableData((tableData) => {

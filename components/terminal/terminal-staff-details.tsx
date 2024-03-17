@@ -2,6 +2,8 @@
 
 import { IoPeopleCircleSharp } from "react-icons/io5"
 import { TerminalDrawer } from "./terminal-drawer"
+import  TerminalTimer  from "./terminal-timer"
+
 import useTerminal from "../hooks/useTerminal"
 import { LoadingSpinner } from "../ui/loading-spinner"
 import { useRouter } from "next/navigation"
@@ -53,6 +55,8 @@ export default function TerminalStaffDetails({ terminalId }: { terminalId: numbe
                 <h1 className="text-base mb-4">No one have claimed this terminal yet</h1>
                 }
                 <TerminalDrawer flagSecret={terminal.currentFlagSecret}/>
+                {/* <TerminalTimer/>
+                <TerminalTimer/> */}
             </div>
         </div>
     )

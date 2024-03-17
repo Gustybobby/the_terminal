@@ -41,6 +41,7 @@ export interface StaffTerminalData extends UserTerminalData {
 export interface CasinoSelectData {
   airline_id: number;
   airline_name: string;
+  available_cost: number;
   initial_cost: number;
   player_id: number;
   is_playing: boolean;

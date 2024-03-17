@@ -29,7 +29,7 @@ export default function LobbyTable({
       <TableHeader className="font-bold">
         <TableRow>
           <TableHead className="w-1/12">Airline</TableHead>
-          <TableHead className="w-1/12">P_ID</TableHead>
+          <TableHead className="w-1/12">Available_P</TableHead>
           <TableHead className="w-2/12">Initial_P</TableHead>
           <TableHead className="w-1/12">Play</TableHead>
         </TableRow>
@@ -38,7 +38,7 @@ export default function LobbyTable({
         {tableData.map((row, index) => (
           <TableRow key={index}>
             <TableCell>{row.airline_name}</TableCell>
-            <TableCell>{row.player_id}</TableCell>
+            <TableCell>{row.available_cost}</TableCell>
             <TableCell>
               <CasinoInput
                 initialCost={row.initial_cost}

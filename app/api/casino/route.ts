@@ -44,7 +44,6 @@ export async function POST(
       passengers: airline.passengers + passengerAmountInt,
     },
   });
-
   console.log("prev passengers is", airline.passengers);
   console.log("increment by", passengerAmountInt);
   console.log("new passengers is", updateAirline.passengers);

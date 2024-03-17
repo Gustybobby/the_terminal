@@ -41,18 +41,18 @@ const factions = [
     description:
       "ทำให้ทุกเกมที่มี Crew จาก Class School of BCET ต้องนำ 1 คนจากทีมอื่นๆ  ออกไปจากการเล่นกิจกรรมครั้งนั้น ทำให้ไม่สามารถที่จะเข้าร่วมในการเล่นกิจกรรมนั้นได้",
   },
+  // {
+  //   id: 4,
+  //   name: "School of MT",
+  //   ability_name: "Decision Making",
+  //   abbreviation: "MT",
+  //   use: 2,
+  //   type: "Terminal Buff/Protection",
+  //   description:
+  //     "ธุรกิจมีทั้งข้อดีข้อเสียขอให้เลือกชอยส์ที่ถูกโดยจะมีสองชอยส์เป็น 1. สามารถป้องกัน Terminal ตัวเองได้ 1 ครั้ง เมื่อแพ้ แต่ต้องสูญเสีย 10% passengers rate  2. สามารถ 3x passengers rate กับ terminal ให้เป็น buff ชั่วคราวได้โดยจะมีผลเป็นระยะเวลา 1 นาทีของเฟสนั้นๆ",
+  // },
   {
     id: 4,
-    name: "School of MT",
-    ability_name: "Decision Making",
-    abbreviation: "MT",
-    use: 2,
-    type: "Terminal Buff/Protection",
-    description:
-      "ธุรกิจมีทั้งข้อดีข้อเสียขอให้เลือกชอยส์ที่ถูกโดยจะมีสองชอยส์เป็น 1. สามารถป้องกัน Terminal ตัวเองได้ 1 ครั้ง เมื่อแพ้ แต่ต้องสูญเสีย 10% passengers rate  2. สามารถ 3x passengers rate กับ terminal ให้เป็น buff ชั่วคราวได้โดยจะมีผลเป็นระยะเวลา 1 นาทีของเฟสนั้นๆ",
-  },
-  {
-    id: 5,
     name: "School of CET",
     abbreviation: "CET",
     ability_name: "Foundation Matters",

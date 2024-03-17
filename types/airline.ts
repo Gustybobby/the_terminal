@@ -1,4 +1,4 @@
-import type { AirlineClass, AirlineRole } from "@prisma/client";
+import type { AirlineClass, AirlineRole, Effect } from "@prisma/client";
 
 export interface LeaderboardData {
     title: string
@@ -15,6 +15,7 @@ export interface CaptureData {
     title: string,
     passengerRate: number;
     unitTime: number;
+    effects: Effect[];
 }
 
 export interface EffectData {

@@ -10,6 +10,7 @@ async function updateGameClock(){
         select: {
             clock: true,
             pause: true,
+            phase: true,
         }
     })
     if(gameState.pause){
@@ -26,9 +27,9 @@ async function updateGameClock(){
             }
         })
         console.log("updated game clock",updateClock.clock)
-        return { clock: updateClock.clock, prevClock: gameState.clock, updated: true }
+        return { clock: updateClock.clock, prevClock: gameState.clock, updated: true, phase: gameState.phase }
     }
-    return { clock: gameState.clock, prevClock: gameState.clock, updated: false }
+    return { clock: gameState.clock, prevClock: gameState.clock, updated: false, phase: gameState.phase }
 }
 
 export async function passengerUpdate(){
@@ -36,7 +37,7 @@ export async function passengerUpdate(){
     if(!gameState){
         return
     }
-    const { clock, updated } = gameState
+    const { clock, updated, phase } = gameState
     if(!updated){
         return
     }
@@ -54,9 +55,13 @@ export async function passengerUpdate(){
             capturedBy: {
                 select: {
                     id: true,
-                    passengers: true
+                    passengers: true,
+                    class: true,
                 }
             },
+            capturedByRecords: {
+                take: 1
+            }
         }
     })
     const effects = await prisma.effect.findMany({
@@ -86,7 +91,24 @@ export async function passengerUpdate(){
             switch(effect.type){
                 case "MSME":
                     modTime = Math.max(5000, modTime/2)
+                    console.log("MSME modify intervals", modTime)
             }
+        }
+        if(terminal.capturedBy?.class === "CET" && !effects.find((effect) => effect.applyById === terminal.capturedBy?.id)){
+            const capturedAt = terminal.capturedByRecords[0]?.capturedAt ?? clock
+            if(clock.getTime() - capturedAt.getTime() >= Math.floor(configValue.CETDurationReq*phase*10*60*1000)){
+                await prisma.effect.create({
+                    data: {
+                        applyById: terminal.capturedBy.id,
+                        applyToId: terminal.capturedBy.id,
+                        terminalId: terminal.id,
+                        type: "CET",
+                        from: clock,
+                        to: new Date(clock.getTime()+100*10*60*1000)
+                    }
+                })
+                console.log("50% of phase passed, applying passive buff")
+            }   
         }
         const timeDiff = clock.getTime() - terminal.lastPassengerUpdate.getTime()
         if(timeDiff < modTime){
@@ -104,6 +126,7 @@ export async function passengerUpdate(){
             }
         }
         const stringId = String(terminal.capturedBy?.id) ?? ""
+        pStart[stringId] = terminal.capturedBy?.passengers ?? 0
         pCount[stringId] = pCount[stringId] === undefined? 0 : pCount[stringId]
         pCount[stringId] += modUpdate
     }
@@ -150,5 +173,9 @@ function floorUnitDate(date: Date){
         date.getHours(),
         date.getMinutes(), date.getSeconds() - date.getSeconds()%5
     )
+}
+
+const configValue = {
+    CETDurationReq: 0.5
 }
 

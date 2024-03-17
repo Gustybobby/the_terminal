@@ -31,23 +31,11 @@ export const FACTION_MAP = {
       abbreviation: "BCET",
       ability_name: "Lab Explosion",
       use: 1,
-      duration: 5,
+      duration: 5000,
       duration_factor: 1,
       type: "Global Sabotage",
       description:
         "ทำให้ทุกเกมที่มี Crew จาก Class School of BCET ต้องนำ 1 คนจากทีมอื่นๆ  ออกไปจากการเล่นกิจกรรมครั้งนั้น ทำให้ไม่สามารถที่จะเข้าร่วมในการเล่นกิจกรรมนั้นได้",
-    },
-    MT: {
-      id: 4,
-      name: "School of MT",
-      ability_name: "Decision Making",
-      abbreviation: "MT",
-      use: 2,
-      duration: 1,
-      duration_factor: 1,
-      type: "Terminal Buff/Protection",
-      description:
-        "ธุรกิจมีทั้งข้อดีข้อเสียขอให้เลือกชอยส์ที่ถูกโดยจะมีสองชอยส์เป็น 1. สามารถป้องกัน Terminal ตัวเองได้ 1 ครั้ง เมื่อแพ้ แต่ต้องสูญเสีย 10% passengers rate  2. สามารถ 3x passengers rate กับ terminal ให้เป็น buff ชั่วคราวได้โดยจะมีผลเป็นระยะเวลา 1 นาทีของเฟสนั้นๆ",
     },
     CET: {
       id: 5,
@@ -78,6 +66,18 @@ export const FACTIONS = [
     FACTION_MAP["ICT"],
     FACTION_MAP["MSME"],
     FACTION_MAP["BCET"],
-    FACTION_MAP["MT"],
     FACTION_MAP["CET"],
 ]
+
+/**MT: {
+      id: 4,
+      name: "School of MT",
+      ability_name: "Decision Making",
+      abbreviation: "MT",
+      use: 2,
+      duration: 60000,
+      duration_factor: 1,
+      type: "Terminal Buff/Protection",
+      description:
+        "ธุรกิจมีทั้งข้อดีข้อเสียขอให้เลือกชอยส์ที่ถูกโดยจะมีสองชอยส์เป็น 1. สามารถป้องกัน Terminal ตัวเองได้ 1 ครั้ง เมื่อแพ้ แต่ต้องสูญเสีย 10% passengers rate  2. สามารถ 3x passengers rate กับ terminal ให้เป็น buff ชั่วคราวได้โดยจะมีผลเป็นระยะเวลา 1 นาทีของเฟสนั้นๆ",
+    }, */

@@ -6,6 +6,8 @@ import type { AirlineData } from "@/types/airline";
 import { FACTION_MAP } from "@/game/faction";
 import { DropdownMenu, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import ICTContent from "./target-selection/ict-content";
+import MSMEContent from "./target-selection/msme-content";
+import BCETContent from "./target-selection/bcet-content";
 
 export default function SkillsSection({ airlineId, airline, isCaptain }: {
     airlineId: number
@@ -24,12 +26,18 @@ export default function SkillsSection({ airlineId, airline, isCaptain }: {
                             <DropdownMenu>
                                 <DropdownMenuTrigger
                                     className={buttonVariants({ variant: "outline", className: "bg-green-300 hover:bg-green-400" })}
-                                    disabled={!isCaptain}
+                                    disabled={!isCaptain || airline.class === "CET" || (airline.class === "MSME" && airline.captures.length === 0)}
                                 >
-                                    Use
+                                    {airline.class === "CET"? "Passive" : "Use"}
                                 </DropdownMenuTrigger>
                                 {airline.class === "ICT" &&
                                 <ICTContent airlineId={airlineId} allAirlines={airline.allAirlines}/>
+                                }
+                                {airline.class === "MSME" &&
+                                <MSMEContent airlineId={airlineId} captures={airline.captures}/>
+                                }
+                                {airline.class === "BCET" &&
+                                <BCETContent airlineId={airlineId}/>
                                 }
                             </DropdownMenu>
                         </Card>

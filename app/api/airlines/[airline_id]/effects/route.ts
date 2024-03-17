@@ -53,6 +53,7 @@ export async function POST(req: NextRequest, { params }: { params: { airline_id:
             from: new Date(),
             to: new Date((new Date()).getTime()+interpretDuration(faction, gameState.phase)),
             applyToId: interpretApplyTo(faction, data.applyToId),
+            terminalId: interpretTerminal(faction, data.terminalId),
         }
     })
     console.log(newEffect)
@@ -71,6 +72,15 @@ function interpretApplyTo(faction: Faction, applyToId: number){
         case "ICT":
             return applyToId
         default:
-            throw "unimplemented"
+            return null
+    }
+}
+
+function interpretTerminal(faction: Faction, terminalId: number){
+    switch(faction.abbreviation){
+        case "MSME":
+            return terminalId
+        default:
+            return null
     }
 }

@@ -22,6 +22,13 @@ export async function GET(req: NextRequest, { params }: { params: { airline_id: 
                     title: true,
                     passengerRate: true,
                     unitTime: true,
+                    effects: {
+                        where: {
+                            to: {
+                                gte: new Date()
+                            }
+                        }
+                    },
                 },
                 orderBy: {
                     id: "asc"

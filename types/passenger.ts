@@ -4,10 +4,7 @@ export type Source = {
     terminalId: number,
 } | {
     type: "effect",
-    airlineTitle: string,
-    airlineId: number,
     effectTitle: string,
-    effectId: number,
 }
 
 export interface Gain {

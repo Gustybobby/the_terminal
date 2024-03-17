@@ -50,6 +50,19 @@ export async function POST(req: NextRequest, { params }: { params: { terminal_id
         })
         return NextResponse.json({ message: "ERROR" }, { status: 400 })
     }
+    const prevCapture = await prisma.terminal.findUniqueOrThrow({
+        where: {
+            id: +params.terminal_id
+        },
+        select: {
+            capturedBy: {
+                select: {
+                    id: true,
+                    class: true,
+                }
+            }
+        }
+    })
     const captures = await prisma.terminal.update({
         where: {
             id: +params.terminal_id
@@ -57,8 +70,22 @@ export async function POST(req: NextRequest, { params }: { params: { terminal_id
         data: {
             airlineId: airline.id,
             currentFlagSecret: randomSixDigits(),
+            lastPassengerUpdate: new Date(),
         }
     })
+    if(prevCapture.capturedBy){
+        switch(prevCapture.capturedBy.class){
+            case "CET":
+            case "MSME":
+                await prisma.effect.deleteMany({
+                    where: {
+                        applyById: prevCapture.capturedBy.id,
+                        type: prevCapture.capturedBy.class,
+                    }
+                })
+                console.log("Deleted",prevCapture.capturedBy,"effect")
+        }
+    }
     const record = await prisma.captureRecord.create({
         data: {
             airlineId: airline.id,

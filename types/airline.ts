@@ -1,4 +1,4 @@
-import type { AirlineClass, AirlineRole } from "@prisma/client";
+import type { AirlineClass, AirlineRole, Effect } from "@prisma/client";
 
 export interface LeaderboardData {
     title: string
@@ -15,6 +15,7 @@ export interface CaptureData {
     title: string,
     passengerRate: number;
     unitTime: number;
+    effects: Effect[];
 }
 
 export interface EffectData {
@@ -25,11 +26,15 @@ export interface EffectData {
 
 export interface AirlineData {
     passengers: number;
-    class: AirlineClass
+    class: AirlineClass;
     crews: CrewTableData[];
     captures: CaptureData[];
-    effects: EffectData[],
-    stock: number,
+    effects: EffectData[];
+    stock: number;
+    allAirlines: {
+        id: number;
+        title: string;
+    }[];
 }
 
 export interface LobbyTableData{
@@ -41,5 +46,6 @@ export interface LobbyTableData{
 export interface AirlineLobby {
     start: boolean;
     ready: boolean;
+    class: AirlineClass;
     crews: LobbyTableData[];
 }

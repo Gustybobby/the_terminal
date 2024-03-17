@@ -26,13 +26,13 @@ export default function StatusCard({ terminal, className }: { terminal: UserTerm
                   />
                   <div className="ml-2 flex flex-col items-start">
                     <CardTitle className=" text-xl">{terminal.title}</CardTitle>
-                    <CardDescription>{terminal.description}</CardDescription>
+                    <CardDescription className="flex flex-col items-start">{terminal.description.slice(0,16)+"..."}</CardDescription>
                   </div>
                 </div>
-                <p className="flex items-center font-bold">
+                <div className="flex items-center font-bold">
                   {terminal.passengerRate}&nbsp;
                   <IoPeopleCircleSharp />/ {terminal.unitTime}s
-                </p>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="flex p-3 pb-1">

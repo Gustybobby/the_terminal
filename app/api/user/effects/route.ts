@@ -6,6 +6,7 @@ export const dynamic = "force-dynamic"
 
 export async function GET(){
     const session = await getServerAuthSession()
+    const now = new Date()
     const user = await prisma.user.findUniqueOrThrow({
         where: {
             id: session?.user.id ?? ""
@@ -16,7 +17,7 @@ export async function GET(){
                     recieveEffects: {
                         where: {
                             to: {
-                                gte: new Date()
+                                gte: now
                             }
                         }
                     }
@@ -24,5 +25,14 @@ export async function GET(){
             }
         }
     })
-    return NextResponse.json({ message: "SUCCESS", data: user.airline?.recieveEffects ?? [] }, { status: 200 })
+    const effects = await prisma.effect.findMany({
+        where: {
+            type: "BCET",
+            to: {
+                gte: now
+            }
+        }
+    })
+    const allEffects = (user.airline?.recieveEffects ?? []).concat(effects)
+    return NextResponse.json({ message: "SUCCESS", data: allEffects }, { status: 200 })
 }

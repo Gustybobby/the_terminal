@@ -3,12 +3,37 @@
 import Image from "next/image"
 import useRecieveEffects from "../hooks/useRecieveEffects"
 import { LoadingSpinner } from "../ui/loading-spinner"
+import { ReactElement, cloneElement, useEffect } from "react"
+import { useToast } from "../ui/use-toast"
+import { FaExplosion } from "react-icons/fa6";
 
 export default function EffectWrapper({ children, className }: {
-    children: React.ReactNode
+    children: ReactElement
     className?: string
 }){
     const { effects } = useRecieveEffects({ refreshRate: 5000 })
+    const { toast } = useToast()
+    useEffect(() => {
+        if(effects === "loading"){
+            return
+        }
+        const labExplosion = effects.find((effect) => effect.type === "BCET")
+        if(labExplosion){
+            toast({
+                description: (
+                    <div className="flex flex-col">
+                        <div className="flex items-center space-x-2">
+                            <FaExplosion className="text-lg"/>
+                            <span className="font-bold text-lg">There was a lab explosion</span>
+                        </div>
+                        <span className="font-normal text-sm">{}</span>
+                    </div>
+                ),
+                variant: "destructive",
+                duration: 3000,
+            })
+        }
+    }, [effects, toast])
     if(effects === "loading"){
         return (
           <div className="w-full h-full flex justify-center items-center">
@@ -16,7 +41,10 @@ export default function EffectWrapper({ children, className }: {
           </div>
         )
       }
-    const isDisabled = !!effects.find((effect) => effect.type === "CPE")
+    const isDisabled = !!effects.find((effect) => effect.type === "ICT")
+    const renderChildren = () => {
+        return cloneElement(children, { effects: effects.filter((effect) => effect.type !== "BCET") })
+    }
     return (
         <div className={className}>
             {isDisabled?
@@ -25,6 +53,7 @@ export default function EffectWrapper({ children, className }: {
                     className="absolute w-full h-screen top-0 left-0 overflow-hidden z-20"
                     src="/rsc/hitmeup.gif"
                     alt="hitmeup"
+                    unoptimized
                     width={200}
                     height={200}
                     quality={20}
@@ -34,7 +63,7 @@ export default function EffectWrapper({ children, className }: {
                 </div>
             </>
             :
-            <>{children}</>
+            <>{renderChildren()}</>
             }
         </div>
     )

@@ -1,30 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import LobbyNannyTable from "./lobby-nanny-table";
-import useLobby from "../hooks/useLobby";
 import { sendJSONToAPI } from "@/tools/apiHandler";
-import { LoadingSpinner } from "../ui/loading-spinner";
 import { useRouter } from "next/navigation";
+import type { AirlineLobby } from "@/types/airline";
 
-export default function LobbyNannySection({ airlineId }: { airlineId: number }) {
+export default function LobbyNannySection({ airlineId, airlineLobby, refetch }: {
+  airlineId: number
+  airlineLobby: AirlineLobby
+  refetch: Dispatch<SetStateAction<{}>>
+}) {
   const router = useRouter()
-  const { airlineLobby, refetch } = useLobby({ airlineId, refreshRate: 5000 })
-  const [correct, setCorrect] = useState<boolean>(
-    airlineLobby !== "loading" && airlineLobby.crews.filter((a) => a.airlineRole === "Captain").length === 1
-  );
+  const [correct, setCorrect] = useState<boolean>(airlineLobby.crews.filter((a) => a.airlineRole === "Captain").length === 1);
   useEffect(() => {
-    setCorrect(airlineLobby !== "loading" && airlineLobby.crews.filter((a) => a.airlineRole === "Captain").length === 1);
+    setCorrect(airlineLobby.crews.filter((a) => a.airlineRole === "Captain").length === 1);
   }, [airlineLobby]);
 
-  if(airlineLobby === "loading"){
-    return (
-      <div className="flex justify-center py-4">
-        <LoadingSpinner className="size-36"/>
-      </div>
-    )
-  }
   if(airlineLobby.start && airlineLobby.ready){
     router.replace(`/airlines/${airlineId}`)
   }

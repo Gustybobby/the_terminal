@@ -10,6 +10,7 @@ export async function GET(req: NextRequest, { params }: { params: { airline_id: 
         },
         select: {
             ready: true,
+            class: true,
             crews: {
                 select: {
                     id: true,

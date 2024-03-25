@@ -1,17 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import StatusCard from "@/components/status/status-card";
-import StatusDrawerContent from "@/components/status/status-drawer-content";
-import { Drawer, DrawerTrigger } from "@/components/ui/drawer";
-import type { UserTerminalData } from "@/types/terminal"
+import type { TerminalData } from "@/types/terminal"
 import useAllTerminals from "../hooks/useAllTerminals";
 import { LoadingSpinner } from "../ui/loading-spinner";
 import useCaptureToast from "../hooks/useCaptureToast";
+import { TICKUNIT } from "@/modules/routine";
+import { Color } from "@prisma/client";
 
 export default function StatusCardGroup() {
-  const [clickedTerminalIndex, setClickedTerminalIndex] = useState<number | null>(null);
-  const { terminals } = useAllTerminals({ refreshRate: 5000 })
+  const { terminals } = useAllTerminals({ refreshRate: TICKUNIT })
   useCaptureToast()
   
   if(terminals === "error"){
@@ -25,17 +23,27 @@ export default function StatusCardGroup() {
     )
   }
   return (
-    <Drawer>
-      {terminals.map((terminal: UserTerminalData, i:number) => (
-        <DrawerTrigger
-          key={`trigger-${terminal.id}`}
-          className="mb-2"
-          onClick = {() => {setClickedTerminalIndex(i)}}
-        >
-          <StatusCard key={terminal.id} terminal={terminal} className="hover:bg-gray-200 transition-colors" />
-        </DrawerTrigger>
+    <div className="grid grid-cols-2 gap-2">
+      {terminals.map((terminal: TerminalData, i:number) => (
+        <StatusCard
+          key={terminal.id}
+          terminal={terminal}
+          className={terminal.capturedBy? styles[terminal.capturedBy.color] : ""}
+        />
       ))}
-      { clickedTerminalIndex !== null && <StatusDrawerContent terminal={terminals[clickedTerminalIndex]}  className = ""/>}
-    </Drawer>
+    </div>
   );
+}
+
+const styles: { [key in Color]: string } = {
+  RED: "bg-red-400",
+  PINK: "bg-pink-400",
+  YELLOW: "bg-yellow-400",
+  ORANGE: "bg-orange-400",
+  GREEN: "bg-green-400",
+  BLUE: "bg-blue-500",
+  PURPLE: "bg-purple-400",
+  BROWN: "bg-yellow-600",
+  AQUA: "bg-cyan-400",
+  BEIGE: "bg-orange-200",
 }

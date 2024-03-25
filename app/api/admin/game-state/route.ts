@@ -9,13 +9,35 @@ export async function PATCH(req: NextRequest){
         return NextResponse.json({ message: "ERROR" }, { status: 400 })
     }
     const request = await req.json()
-    const data = request.data
+    const { reset, ...data } = request.data
     const update = await prisma.gameState.update({
         where: {
             id: GAME_ID
         },
         data,
     })
+    if(update.currentTick === 0){
+        await prisma.terminal.updateMany({
+            data: {
+                lastUpdateTick: 0
+            }
+        })
+        console.log("reset all terminals")
+    }
+    if(!update.start || reset){
+        await prisma.captureRecord.deleteMany()
+        await prisma.effect.deleteMany()
+        await prisma.terminal.updateMany({
+            data: {
+                airlineId: null
+            }
+        })
+        await prisma.airline.updateMany({
+            data: {
+                skillUse: 0
+            },
+        })
+    }
     console.log(update)
     return NextResponse.json({ message: "SUCCESS" }, { status: 200 })
 }

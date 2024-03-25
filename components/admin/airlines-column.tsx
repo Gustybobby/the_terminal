@@ -1,26 +1,30 @@
 "use client"
 
 import type { AdminData } from "@/types/admin"
-import type { Dispatch, SetStateAction } from "react"
+import { useState, type Dispatch, type SetStateAction } from "react"
 import { Card, CardContent, CardDescription, CardFooter, CardTitle } from "../ui/card"
 import { IoPeopleCircleSharp } from "react-icons/io5"
 import { FaCheckCircle, FaStopCircle } from "react-icons/fa"
-import AirlineDropdown from "./airline-dropdown"
+import AirlineEditDropdown from "./airline-edit-dropdown"
+import PassengersEditDialog from "./passengers-edit-dialog"
+import EffectsDialog from "./effects-dialog"
+import type { Color } from "@prisma/client"
 
 export default function AirlinesColumn({ admin, refetch }: {
     admin: AdminData
     refetch: Dispatch<SetStateAction<{}>>
 }){
+    const [selected, setSelected] = useState<{ id: number, item: "P" | "E" } | null>(null)
     return (
         <div className="h-full border border-black shadow-lg rounded-lg p-2 flex flex-col items-center overflow-y-auto">
             <div className="w-full h-fit p-1 grid grid-cols-1 gap-1 items-center rounded-lg shadow-lg">
                 <h1 className="font-bold text-2xl">Airlines</h1>
                 {admin.airlines.map((airline) => (
-                    <Card key={airline.id+"_CARD"} className="p-2">
+                    <Card key={airline.id+"_CARD"} className={`p-2 ${styles[airline.color]}`}>
                         <CardTitle className="text-lg">
-                            {airline.title}
+                            {airline.id}. {airline.title}
                         </CardTitle>
-                        <CardDescription>
+                        <CardDescription className="text-black">
                             {airline.class}
                         </CardDescription>
                         <CardContent className="flex items-center justify-between space-x-1 text-lg py-1">
@@ -28,7 +32,7 @@ export default function AirlinesColumn({ admin, refetch }: {
                                 <IoPeopleCircleSharp/>
                                 <span className="font-semibold">{airline.passengers}</span>
                             </div>
-                            <AirlineDropdown airline={airline}/>
+                            <AirlineEditDropdown airline={airline} setSelected={setSelected}/>
                         </CardContent>
                         <CardFooter className="py-1 flex justify-between">
                             {airline.ready?
@@ -47,6 +51,29 @@ export default function AirlinesColumn({ admin, refetch }: {
                     </Card>
                 ))}
             </div>
+            <PassengersEditDialog
+                open={selected?.item === "P"}
+                close={()=>setSelected(null)}
+                airline={admin.airlines.find((airline) => airline.id === selected?.id)}
+            />
+            <EffectsDialog
+                open={selected?.item === "E"}
+                close={()=>setSelected(null)}
+                airline={admin.airlines.find((airline) => airline.id === selected?.id)}
+            />
         </div>
     )
 }
+
+const styles: { [key in Color]: string } = {
+    RED: "bg-red-200",
+    PINK: "bg-pink-200",
+    YELLOW: "bg-yellow-200",
+    ORANGE: "bg-orange-200",
+    GREEN: "bg-green-200",
+    BLUE: "bg-blue-300",
+    PURPLE: "bg-purple-200",
+    BROWN: "bg-yellow-300",
+    AQUA: "bg-cyan-200",
+    BEIGE: "bg-orange-100",
+  }

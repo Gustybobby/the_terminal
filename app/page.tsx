@@ -15,7 +15,7 @@ export default function Home() {
                 }}
                 quality={100}
             />
-            <div className="h-full flex flex-col justify-center items-center -translate-y-4">
+            <div className="h-full flex flex-col justify-center items-center -translate-y-10">
                 <h1 className="text-6xl md:text-8xl text-center font-extrabold leading-tight tracking-tighter drop-shadow-2xl">
                     The Terminal
                 </h1>

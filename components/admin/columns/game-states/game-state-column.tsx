@@ -1,7 +1,7 @@
 "use client"
 
 import type { AdminData } from "@/types/admin"
-import { Button } from "../ui/button"
+import { Button } from "../../../ui/button"
 import { sendJSONToAPI } from "@/tools/apiHandler"
 import type { Dispatch, SetStateAction } from "react"
 import GamePhaseDropdown from "./game-phase-dropdown"

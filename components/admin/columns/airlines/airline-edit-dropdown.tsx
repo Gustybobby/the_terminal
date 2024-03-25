@@ -1,7 +1,7 @@
 "use client"
 
 import type { Airline } from "@prisma/client"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../../../ui/dropdown-menu"
 import type { Dispatch, SetStateAction } from "react"
 
 export default function AirlineEditDropdown({ airline, setSelected }: {

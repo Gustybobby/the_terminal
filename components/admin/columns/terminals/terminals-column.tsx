@@ -2,10 +2,10 @@
 
 import type { AdminData } from "@/types/admin"
 import type { Dispatch, SetStateAction } from "react"
-import { Card, CardContent, CardDescription, CardTitle } from "../ui/card"
+import { Card, CardContent, CardDescription, CardTitle } from "../../../ui/card"
 import { IoPeopleCircleSharp } from "react-icons/io5"
 import { TICKUNIT } from "@/modules/routine"
-import AirlinesDropdown from "../terminals/airlines-dropdown"
+import AirlinesDropdown from "../../../terminals/airlines-dropdown"
 
 export default function TerminalsColumn({ admin, refetch }: {
     admin: AdminData

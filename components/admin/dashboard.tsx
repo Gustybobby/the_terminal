@@ -4,9 +4,9 @@ import { TICKUNIT } from "@/modules/routine"
 import useAdmin from "../hooks/useAdmin"
 import useCaptureToast from "../hooks/useCaptureToast"
 import { LoadingSpinner } from "../ui/loading-spinner"
-import AirlinesColumn from "./airlines-column"
-import GameStateColumn from "./game-state-column"
-import TerminalsColumn from "./terminals-column"
+import AirlinesColumn from "./columns/airlines/airlines-column"
+import GameStateColumn from "./columns/game-states/game-state-column"
+import TerminalsColumn from "./columns/terminals/terminals-column"
 
 export default function Dashboard(){
     const { admin, refetch } = useAdmin({ refreshRate: TICKUNIT })

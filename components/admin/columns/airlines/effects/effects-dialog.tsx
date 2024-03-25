@@ -1,8 +1,8 @@
 "use client"
 
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog"
-import { buttonVariants } from "../ui/button"
-import EffectsEditFields from "../effects/effects-edit-fields"
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogHeader, AlertDialogTitle } from "../../../../ui/alert-dialog"
+import { buttonVariants } from "../../../../ui/button"
+import EffectsEditFields from "./effects-edit-fields"
 import type { Airline } from "@prisma/client"
 
 export default function EffectsDialog({ open, close, airline }: {

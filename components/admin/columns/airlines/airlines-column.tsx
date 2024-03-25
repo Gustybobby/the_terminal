@@ -2,12 +2,12 @@
 
 import type { AdminData } from "@/types/admin"
 import { useState, type Dispatch, type SetStateAction } from "react"
-import { Card, CardContent, CardDescription, CardFooter, CardTitle } from "../ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardTitle } from "../../../ui/card"
 import { IoPeopleCircleSharp } from "react-icons/io5"
 import { FaCheckCircle, FaStopCircle } from "react-icons/fa"
 import AirlineEditDropdown from "./airline-edit-dropdown"
-import PassengersEditDialog from "./passengers-edit-dialog"
-import EffectsDialog from "./effects-dialog"
+import PassengersEditDialog from "./passengers/passengers-edit-dialog"
+import EffectsDialog from "./effects/effects-dialog"
 import type { Color } from "@prisma/client"
 
 export default function AirlinesColumn({ admin, refetch }: {

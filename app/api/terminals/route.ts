@@ -11,12 +11,13 @@ export async function GET(){
                 title: true,
                 description: true,
                 passengerRate: true,
-                unitTime: true,
-                lastPassengerUpdate: true,
+                unitTick: true,
+                lastUpdateTick: true,
                 capturedBy: {
                     select: {
                         id: true,
                         title: true,
+                        color: true,
                     },
                 },
             },

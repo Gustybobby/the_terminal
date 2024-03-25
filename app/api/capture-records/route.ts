@@ -1,3 +1,4 @@
+import { TICKUNIT } from "@/modules/routine"
 import prisma from "@/prisma-client"
 import { NextResponse } from "next/server"
 
@@ -11,7 +12,7 @@ export async function GET(){
                 capturedByRecords: {
                     where: {
                         capturedAt: {
-                            gt: new Date((new Date()).getTime()-5000)
+                            gt: new Date((new Date()).getTime()-TICKUNIT)
                         }
                     },
                     select: {

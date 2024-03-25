@@ -6,12 +6,13 @@ import { LoadingSpinner } from "../ui/loading-spinner"
 import { ReactElement, cloneElement, useEffect } from "react"
 import { useToast } from "../ui/use-toast"
 import { FaExplosion } from "react-icons/fa6";
+import { TICKUNIT } from "@/modules/routine"
 
 export default function EffectWrapper({ children, className }: {
     children: ReactElement
     className?: string
 }){
-    const { effects } = useRecieveEffects({ refreshRate: 5000 })
+    const { effects } = useRecieveEffects({ refreshRate: TICKUNIT })
     const { toast } = useToast()
     useEffect(() => {
         if(effects === "loading"){

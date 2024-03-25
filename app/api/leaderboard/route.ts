@@ -5,16 +5,16 @@ import { NextResponse } from "next/server"
 export const dynamic = "force-dynamic"
 
 export async function GET(){
-    const { phase } = await prisma.gameState.findUniqueOrThrow({
+    const { showLeaderboard } = await prisma.gameState.findUniqueOrThrow({
         where: {
             id: GAME_ID
         },
         select: {
-            phase: true
+            showLeaderboard: true
         }
     })
-    if(phase === 3){
-        const hidden = Array(5).fill(0).map(() => ({
+    if(!showLeaderboard){
+        const hidden = Array(10).fill(0).map(() => ({
             title: "???",
             passengers: 88888
         }))

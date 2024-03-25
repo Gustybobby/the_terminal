@@ -14,7 +14,7 @@ export interface CaptureData {
     id: number
     title: string,
     passengerRate: number;
-    unitTime: number;
+    unitTick: number;
     effects: Effect[];
 }
 
@@ -48,4 +48,9 @@ export interface AirlineLobby {
     ready: boolean;
     class: AirlineClass;
     crews: LobbyTableData[];
+}
+
+export interface SelectAirline {
+    id: number | null
+    title: string
 }

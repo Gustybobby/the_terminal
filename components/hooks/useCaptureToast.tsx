@@ -4,9 +4,10 @@ import { useEffect } from "react"
 import { useToast } from "../ui/use-toast"
 import useCaptureRecords from "./useCaptureRecords"
 import { FaFlag } from "react-icons/fa"
+import { TICKUNIT } from "@/modules/routine"
 
 export default function useCaptureToast(){
-    const { captureRecords } = useCaptureRecords({ refreshRate: 5000 })
+    const { captureRecords } = useCaptureRecords({ refreshRate: TICKUNIT })
     const { toast } = useToast()
     useEffect(() => {
         if(typeof captureRecords === "string"){

@@ -5,6 +5,7 @@ import { IoPeopleCircleSharp } from "react-icons/io5"
 import type { AirlineData, CaptureData } from "@/types/airline"
 import type { Effect } from "@prisma/client"
 import { FACTION_MAP } from "@/game/faction"
+import { TICKUNIT } from "@/modules/routine"
 
 export default function Display({ airline, effects }: { airline: AirlineData, effects: Effect[] }){
     const total = totalGain(
@@ -19,7 +20,7 @@ export default function Display({ airline, effects }: { airline: AirlineData, ef
             </h2>
             <IoPeopleCircleSharp className="text-center text-5xl"/>
             <span className={textStyles.coloredText(total >= 0)+" font-semibold"}>
-                ≈ {total.toFixed(2)} passengers / 5s
+                ≈ {total.toFixed(2)} passengers / 2s
             </span>
             <ul className="w-full flex flex-col items-start text-sm mt-2 ml-8">
                 {airline.captures.map((capture, index) => (
@@ -42,7 +43,7 @@ export default function Display({ airline, effects }: { airline: AirlineData, ef
 function PassengerGain({ gain }: { gain: Gain }){
     return (
         <li className={textStyles.coloredText(gain.passengerRate >= 0)}>
-            {gain.passengerRate < 0? "-" : "+"} {Math.abs(gain.passengerRate)} / {gain.unitTime}s from <SourceDisplay source={gain.source}/>
+            {gain.passengerRate < 0? "-" : "+"} {Math.abs(gain.passengerRate)} / {gain.unitTick*TICKUNIT/1000}s from <SourceDisplay source={gain.source}/>
         </li>
     )
 }
@@ -61,7 +62,7 @@ function SourceDisplay({ source }: { source: Gain["source"] }){
 function totalGain(gains: Gain[]){
     let totalGain = 0
     for(const gain of gains){
-        totalGain += gain.passengerRate/gain.unitTime*5
+        totalGain += gain.passengerRate/gain.unitTick
     }
     return totalGain
 }
@@ -81,7 +82,7 @@ function getTerminalGain(capture: CaptureData): Gain{
             terminalTitle: capture.title + (boost? " (Logistics Boost)" : ""),
         },
         passengerRate: capture.passengerRate,
-        unitTime: capture.unitTime / (boost? 2: 1),
+        unitTick: capture.unitTick / (boost? 2: 1),
     }
 }
 
@@ -96,7 +97,7 @@ function getEffectGain(effect: Effect, airline: AirlineData): Gain{
             return {
                 source,
                 passengerRate: (appliedTerminal?.passengerRate ?? 0) * 2,
-                unitTime: appliedTerminal?.unitTime ?? 1
+                unitTick: appliedTerminal?.unitTick ?? 1
             }
         default:
             throw "unhandled"

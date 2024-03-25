@@ -1,10 +1,10 @@
-import type { UserTerminalData } from "@/types/terminal"
+import type { TerminalData } from "@/types/terminal"
 import { useEffect, useState } from "react"
 
 export default function useAllTerminals({ refreshRate }: {
     refreshRate: number
 }){
-    const [data, setData] = useState<UserTerminalData[] | "loading" | "error">("loading")
+    const [data, setData] = useState<TerminalData[] | "loading" | "error">("loading")
     useEffect(() => {
         fetch(`/api/terminals`)
             .then(res => res.json())

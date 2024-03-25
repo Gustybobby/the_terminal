@@ -1,11 +1,11 @@
-import type { StaffTerminalData } from "@/types/terminal"
+import type { TerminalData } from "@/types/terminal"
 import { useEffect, useState } from "react"
 
 export default function useTerminal({ terminalId, refreshRate }: {
     terminalId: number
     refreshRate: number
 }){
-    const [data, setData] = useState<StaffTerminalData | "loading" | "error">("loading")
+    const [data, setData] = useState<TerminalData | "loading" | "error">("loading")
     useEffect(() => {
         fetch(`/api/terminals/${terminalId}`)
             .then(res => res.json())

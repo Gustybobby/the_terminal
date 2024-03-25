@@ -1,4 +1,4 @@
-import type { AirlineClass } from "@prisma/client";
+import type { AirlineClass, Color } from "@prisma/client";
 
 export interface CapturedByRecord {
   title: string;
@@ -9,16 +9,17 @@ export interface CapturedByRecord {
   capturedAt: Date;
 }
 
-export interface UserTerminalData {
+export interface TerminalData {
   id: number;
   title: string;
   description: string;
   passengerRate: number;
-  unitTime: number;
-  lastPassengerUpdate: Date;
+  unitTick: number;
+  lastUpdateTick: number;
   capturedBy: {
     id: number;
     title: string;
+    color: Color;
   } | null;
 }
 
@@ -32,10 +33,6 @@ export interface Faction {
     use: number,
     description : string,
     type:string
-}
-
-export interface StaffTerminalData extends UserTerminalData {
-  currentFlagSecret: string;
 }
 
 export interface CasinoSelectData {

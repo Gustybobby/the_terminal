@@ -9,6 +9,6 @@ export type Source = {
 
 export interface Gain {
     passengerRate: number
-    unitTime: number
+    unitTick: number
     source: Source
 }

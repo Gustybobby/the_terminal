@@ -1,25 +1,8 @@
-import type { AirlineClass } from "@prisma/client";
-
-export interface AdminGameState {
-    id: string;
-    phase: number
-    start: boolean;
-    pause: boolean;
-    clock: Date;
-    lastPause: Date | null;
-    lastResume: Date | null;
-}
-
-export interface AdminAirline {
-    id: number;
-    title: string;
-    airlineSecret: string;
-    passengers: number;
-    class: AirlineClass;
-    ready: boolean;
-}
+import type { Airline, GameState } from "@prisma/client";
+import { TerminalData } from "./terminal";
 
 export interface AdminData {
-    gameState: AdminGameState
-    airlines: AdminAirline[]
+    gameState: GameState
+    airlines: Airline[]
+    terminals: TerminalData[]
 }

@@ -23,12 +23,12 @@ export default function BCETContent({ airlineId }: {
             <AlertDialog open={open}>
                 <AlertDialogContent className="w-5/6 rounded-lg">
                     <AlertDialogHeader>
-                    <AlertDialogTitle>
-                        Use Lab Explosion?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                        This action cannot be undone.
-                    </AlertDialogDescription>
+                        <AlertDialogTitle>
+                            Use Lab Explosion?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone.
+                        </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                     <AlertDialogCancel

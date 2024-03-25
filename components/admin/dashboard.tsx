@@ -1,13 +1,15 @@
 "use client"
 
+import { TICKUNIT } from "@/modules/routine"
 import useAdmin from "../hooks/useAdmin"
 import useCaptureToast from "../hooks/useCaptureToast"
 import { LoadingSpinner } from "../ui/loading-spinner"
 import AirlinesColumn from "./airlines-column"
 import GameStateColumn from "./game-state-column"
+import TerminalsColumn from "./terminals-column"
 
 export default function Dashboard(){
-    const { admin, refetch } = useAdmin({ refreshRate: 5000 })
+    const { admin, refetch } = useAdmin({ refreshRate: TICKUNIT })
     useCaptureToast()
 
     if(admin === "loading" || admin === "error"){
@@ -18,12 +20,10 @@ export default function Dashboard(){
         )
     }
     return (
-        <div className="h-screen grid grid-cols-1 lg:grid-cols-3 p-4 gap-2">
+        <div className="h-screen grid grid-cols-1 lg:grid-cols-4 p-4 gap-2">
             <GameStateColumn admin={admin} refetch={refetch}/>
             <AirlinesColumn admin={admin} refetch={refetch}/>
-            <div className="h-full border border-black shadow-lg rounded-lg">
-
-            </div>
+            <TerminalsColumn admin={admin} refetch={refetch}/>
         </div>
     )
 }

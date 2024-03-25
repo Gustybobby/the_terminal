@@ -18,22 +18,16 @@ export async function POST(req: NextRequest){
     if(gameState.pause === pause){
         return NextResponse.json({ message: "ERROR" }, { status: 400 })
     }
-    const updatedGameState = await prisma.gameState.update({
+    await prisma.gameState.update({
         where: {
             id: GAME_ID
         },
         data: {
             pause,
             lastPause: pause? new Date() : undefined,
-            lastResume: pause? undefined : new Date()
+            lastResume: pause? undefined : new Date(),
+            lastTickUpdate: new Date()
         }
     })
-    if(!pause){
-        await prisma.terminal.updateMany({
-            data: {
-                lastPassengerUpdate: updatedGameState.lastResume ?? new Date()
-            }
-        })
-    }
     return NextResponse.json({ message: "SUCCESS" }, { status: 200 })
 }

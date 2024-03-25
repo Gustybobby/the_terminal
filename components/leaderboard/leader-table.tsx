@@ -5,12 +5,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import useLeaderboard from "../hooks/useLeaderboard";
 import dynamic from "next/dynamic"
 import useCaptureToast from "../hooks/useCaptureToast";
+import { TICKUNIT } from "@/modules/routine";
 const AnimatedNumbers = dynamic(() => import("react-animated-numbers"), {
     ssr: false,
 });
 
 export default function LeaderTable(){
-    const { leaderboard } = useLeaderboard({ refreshRate: 5000 })
+    const { leaderboard } = useLeaderboard({ refreshRate: TICKUNIT })
     useCaptureToast()
     
     if(leaderboard === "loading"){

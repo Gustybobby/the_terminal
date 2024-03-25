@@ -1,6 +1,6 @@
 "use client"
 
-import type { AdminAirline } from "@/types/admin"
+import type { Airline } from "@prisma/client"
 import EditFields from "../passengers/edit-fields"
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog"
 import { buttonVariants } from "../ui/button"
@@ -8,7 +8,7 @@ import { buttonVariants } from "../ui/button"
 export default function PassengersEditDialog({ open, close, airline }: {
     open: boolean
     close: () => void
-    airline: AdminAirline | undefined
+    airline: Airline | undefined
 }){
     return (
         <AlertDialog open={open}>

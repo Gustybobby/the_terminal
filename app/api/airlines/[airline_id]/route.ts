@@ -2,8 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma-client";
 import { getServerAuthSession } from "../../auth/[...nextauth]/_utils";
 import { FACTION_MAP } from "@/game/faction";
+import { GAME_ID } from "@/modules/routine";
 
 export async function GET(req: NextRequest, { params }: { params: { airline_id: string }}){
+    const gameState = await prisma.gameState.findUniqueOrThrow({
+        where: {
+            id: GAME_ID
+        },
+        select: {
+            currentTick: true
+        }
+    })
     const airline = await prisma.airline.findUniqueOrThrow({
         where: {
             id: +params.airline_id
@@ -21,11 +30,11 @@ export async function GET(req: NextRequest, { params }: { params: { airline_id: 
                     id: true,
                     title: true,
                     passengerRate: true,
-                    unitTime: true,
+                    unitTick: true,
                     effects: {
                         where: {
-                            to: {
-                                gte: new Date()
+                            toTick: {
+                                gte: gameState.currentTick
                             }
                         }
                     },
@@ -61,19 +70,20 @@ export async function PATCH(req: NextRequest, { params }: { params: { airline_id
     await prisma.user.findUniqueOrThrow({
         where: {
             id: session?.user.id ?? "",
-            airlineRole: "Co_pilot",
+            OR: [
+                { role: "ADMIN" },
+                { role: "STAFF" },
+            ]
         }
     })
     const request = await req.json()
-    const { class: airlineClass } = request.data
-    const updateClass = await prisma.airline.update({
+    const data = request.data
+    const update = await prisma.airline.update({
         where: {
             id: +params.airline_id
         },
-        data: {
-            class: airlineClass
-        }
+        data
     })
-    console.log(updateClass)
+    console.log(update)
     return NextResponse.json({ message: "SUCCESS" }, { status: 200 })
 }

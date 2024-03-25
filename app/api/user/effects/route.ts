@@ -1,12 +1,20 @@
 import { NextResponse } from "next/server";
 import prisma from "@/prisma-client";
 import { getServerAuthSession } from "../../auth/[...nextauth]/_utils";
+import { GAME_ID } from "@/modules/routine";
 
 export const dynamic = "force-dynamic"
 
 export async function GET(){
     const session = await getServerAuthSession()
-    const now = new Date()
+    const gameState = await prisma.gameState.findUniqueOrThrow({
+        where: {
+            id: GAME_ID
+        },
+        select: {
+            currentTick: true
+        }
+    })
     const user = await prisma.user.findUniqueOrThrow({
         where: {
             id: session?.user.id ?? ""
@@ -16,8 +24,8 @@ export async function GET(){
                 select: {
                     recieveEffects: {
                         where: {
-                            to: {
-                                gte: now
+                            toTick: {
+                                gte: gameState.currentTick
                             }
                         }
                     }
@@ -28,8 +36,8 @@ export async function GET(){
     const effects = await prisma.effect.findMany({
         where: {
             type: "BCET",
-            to: {
-                gte: now
+            toTick: {
+                gte: gameState.currentTick
             }
         }
     })

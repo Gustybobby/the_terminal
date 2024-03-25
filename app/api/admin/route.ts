@@ -20,5 +20,25 @@ export async function GET(){
             id: "asc"
         }
     })
-    return NextResponse.json({ message: "SUCCESS", data: { gameState, airlines } }, { status: 200 })
+    const terminals = await prisma.terminal.findMany({
+        select: {
+            id: true,
+            title: true,
+            description: true,
+            passengerRate: true,
+            unitTick: true,
+            lastUpdateTick: true,
+            capturedBy: {
+                select: {
+                    id: true,
+                    title: true,
+                    color: true,
+                },
+            },
+        },
+        orderBy: {
+            id: "asc"
+        }
+    })
+    return NextResponse.json({ message: "SUCCESS", data: { gameState, airlines, terminals } }, { status: 200 })
 }

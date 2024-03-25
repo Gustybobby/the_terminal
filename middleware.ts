@@ -7,7 +7,6 @@ export default withAuth(
 
 export const config = {
     matcher: [
-        "/join",
         "/admin/:path*"
     ]
 }

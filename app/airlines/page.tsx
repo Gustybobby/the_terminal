@@ -25,7 +25,7 @@ export default async function AirlinesPage(){
         }
     })
     if(user.airlineId === null){
-        redirect("/join")
+        redirect("/")
     }
     const gameState = await prisma.gameState.findUniqueOrThrow({
         where: {

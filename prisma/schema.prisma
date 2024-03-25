@@ -9,34 +9,31 @@ datasource db {
 }
 
 model User {
-  id                String      @id @default(cuid())
-  email             String      @unique
-  name              String?
-  role              Role        @default(USER)
-  airlineRole       AirlineRole @default(Crew)
-  terminalId        Int?
-  airlineId         Int?
-  lastSecretAttempt DateTime?
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
-  airline           Airline?    @relation(fields: [airlineId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  terminal          Terminal?   @relation(fields: [terminalId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  id          String      @id @default(cuid())
+  email       String      @unique
+  name        String?
+  role        Role        @default(USER)
+  airlineRole AirlineRole @default(Crew)
+  terminalId  Int?
+  airlineId   Int?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  airline     Airline?    @relation(fields: [airlineId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  terminal    Terminal?   @relation(fields: [terminalId], references: [id], onDelete: Restrict, onUpdate: Restrict)
 }
 
 model Terminal {
-  id                  Int             @id
-  title               String
-  description         String
-  passengerRate       Int
-  unitTime            Int             @default(5)
-  game                Game            @default(None)
-  airlineId           Int?
-  lastPassengerUpdate DateTime
-  currentFlagSecret   String
-  capturedByRecords   CaptureRecord[]
-  effects             Effect[]
-  capturedBy          Airline?        @relation(fields: [airlineId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  staffs              User[]
+  id                Int             @id
+  title             String
+  description       String
+  passengerRate     Int
+  unitTick          Int             @default(1)
+  airlineId         Int?
+  lastUpdateTick    Int             @default(0)
+  capturedByRecords CaptureRecord[]
+  effects           Effect[]
+  capturedBy        Airline?        @relation(fields: [airlineId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  staffs            User[]
 }
 
 model Airline {
@@ -44,8 +41,10 @@ model Airline {
   title          String          @default("Untitled")
   airlineSecret  String          @unique
   passengers     Int
+  color          Color
   class          AirlineClass    @default(None)
   ready          Boolean         @default(false)
+  skillUse       Int             @default(0)
   captureRecords CaptureRecord[]
   applyEffects   Effect[]        @relation("applyBy")
   recieveEffects Effect[]        @relation("applyTo")
@@ -54,38 +53,41 @@ model Airline {
 }
 
 model CaptureRecord {
-  id         Int      @id @default(autoincrement())
-  capturedAt DateTime
-  terminalId Int
-  airlineId  Int
-  airline    Airline  @relation(fields: [airlineId], references: [id], onUpdate: Restrict)
-  terminal   Terminal @relation(fields: [terminalId], references: [id], onUpdate: Restrict)
+  id           Int      @id @default(autoincrement())
+  capturedAt   DateTime
+  capturedTick Int
+  terminalId   Int
+  airlineId    Int
+  airline      Airline  @relation(fields: [airlineId], references: [id], onUpdate: Restrict)
+  terminal     Terminal @relation(fields: [terminalId], references: [id], onUpdate: Restrict)
 }
 
 model Effect {
   id            Int          @id @default(autoincrement())
   type          AirlineClass
-  from          DateTime
-  to            DateTime
-  applyById     Int
-  applyToId     Int?
+  fromTick      Int
+  toTick        Int
   flatRate      Int?
   multiplier    Float?
-  terminalId    Int?
-  unitTime      Int?
+  unitTick      Int?
   applyBy       Airline      @relation("applyBy", fields: [applyById], references: [id], onUpdate: Restrict)
+  applyById     Int
   applyTo       Airline?     @relation("applyTo", fields: [applyToId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  applyToId     Int?
   applyTerminal Terminal?    @relation(fields: [terminalId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  terminalId    Int?
 }
 
 model GameState {
-  id         String    @id
-  pause      Boolean
-  clock      DateTime  @default(now())
-  lastPause  DateTime?
-  lastResume DateTime?
-  start      Boolean   @default(false)
-  phase      Int       @default(1)
+  id              String    @id
+  pause           Boolean
+  currentTick     Int
+  lastTickUpdate  DateTime  @default(now())
+  lastPause       DateTime?
+  lastResume      DateTime?
+  showLeaderboard Boolean   @default(true)
+  start           Boolean   @default(false)
+  phase           Int       @default(1)
 }
 
 enum Role {
@@ -109,8 +111,15 @@ enum AirlineClass {
   None
 }
 
-enum Game {
-  Chayen
-  Wordle
-  None
+enum Color {
+  RED
+  PINK
+  ORANGE
+  YELLOW
+  GREEN
+  BLUE
+  PURPLE
+  BROWN
+  AQUA
+  BEIGE
 }

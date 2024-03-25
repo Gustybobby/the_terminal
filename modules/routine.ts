@@ -1,6 +1,10 @@
 import prisma from "@/prisma-client";
+import type { AirlineGainData, TerminalGainRoutineData, TerminalUpdateData } from "@/types/routine-update";
+import type { Effect } from "@prisma/client";
+import classConfig from "./class-config";
 
 export const GAME_ID = "game0"
+export const TICKUNIT = 2000
 
 async function updateGameClock(){
     const gameState = await prisma.gameState.findUniqueOrThrow({
@@ -8,39 +12,59 @@ async function updateGameClock(){
             id: GAME_ID
         },
         select: {
-            clock: true,
+            currentTick: true,
             pause: true,
             phase: true,
+            lastTickUpdate: true,
         }
     })
     if(gameState.pause){
         return null
     }
     const now = new Date()
-    if(now.getTime() - gameState.clock.getTime() >= 5000){
+    //Tick only increments one at a time now
+    if(now.getTime() - gameState.lastTickUpdate.getTime() >= TICKUNIT){
         const updateClock = await prisma.gameState.update({
             where: {
                 id: GAME_ID
             },
             data: {
-                clock: floorUnitDate(now)
+                lastTickUpdate: floorUnitDate(now),
+                currentTick: { increment: 1 }
             }
         })
-        console.log("updated game clock",updateClock.clock)
-        return { clock: updateClock.clock, prevClock: gameState.clock, updated: true, phase: gameState.phase }
+        console.log("updated game tick",updateClock.currentTick,"at",updateClock.lastTickUpdate)
+        return { currentTick: updateClock.currentTick, updated: true, phase: gameState.phase }
     }
-    return { clock: gameState.clock, prevClock: gameState.clock, updated: false, phase: gameState.phase }
+    return { currentTick: gameState.currentTick, updated: false, phase: gameState.phase }
 }
 
-export async function passengerUpdate(){
+export async function gameCycle(){
     const gameState = await updateGameClock()
     if(!gameState){
         return
     }
-    const { clock, updated, phase } = gameState
+    const { currentTick, updated, phase } = gameState
     if(!updated){
         return
     }
+    const terminals = await getTerminals()
+    const effects = await getActiveEffects(currentTick)
+    const gainData = calculateAllTerminalGains(terminals, currentTick, effects)
+    const airlineGains = groupGainsByAirline(gainData)
+    await applyGainToAirlines(airlineGains, effects, currentTick)
+    await prisma.terminal.updateMany({
+        where: {
+            OR: Object.values(gainData).filter((data) => data.tickUpdated).map((data) => ({ id: data.terminalId }))
+        },
+        data: {
+            lastUpdateTick: currentTick
+        }
+    })
+    await effectCycle(terminals, effects, currentTick, phase)
+}
+
+async function getTerminals(): Promise<TerminalUpdateData[]>{
     const terminals = await prisma.terminal.findMany({
         where: {
             NOT: {
@@ -49,9 +73,9 @@ export async function passengerUpdate(){
         },
         select: {
             id: true,
-            lastPassengerUpdate: true,
+            lastUpdateTick: true,
             passengerRate: true,
-            unitTime: true,
+            unitTick: true,
             capturedBy: {
                 select: {
                     id: true,
@@ -64,105 +88,152 @@ export async function passengerUpdate(){
             }
         }
     })
+    return terminals as TerminalUpdateData[]
+}
+
+async function getActiveEffects(currentTick: number){
     const effects = await prisma.effect.findMany({
         where: {
-            from: {
-                lte: new Date()
+            fromTick: {
+                lte: currentTick
             },
-            to: {
-                gte: new Date()
+            toTick: {
+                gte: currentTick
             }
-        },
-        select: {
-            type: true,
-            applyById: true,
-            applyToId: true,
-            terminalId: true,
         }
     })
-    const pStart: { [id: string]: number } = {}
-    const pCount: { [id: string]: number } = {}
-    const updatedTerminals: { id: number }[] = []
+    return effects
+}
+
+function calculateAllTerminalGains(terminals: TerminalUpdateData[], currentTick: number, effects: Effect[]){
+    const gainData: { [id: string]: TerminalGainRoutineData } = {}
     for(const terminal of terminals){
-        const terminalEffects = effects.filter((effect) => effect.terminalId === terminal.id)
-        //half interval for MSME limit >= 5s
-        let modTime = terminal.unitTime*1000
-        for(const effect of terminalEffects){
-            switch(effect.type){
-                case "MSME":
-                    modTime = Math.max(5000, modTime/2)
-                    console.log("MSME modify intervals", modTime)
-            }
-        }
-        if(terminal.capturedBy?.class === "CET" && !effects.find((effect) => effect.applyById === terminal.capturedBy?.id)){
-            const capturedAt = terminal.capturedByRecords[0]?.capturedAt ?? clock
-            if(clock.getTime() - capturedAt.getTime() >= Math.floor(configValue.CETDurationReq*phase*10*60*1000)){
-                await prisma.effect.create({
-                    data: {
-                        applyById: terminal.capturedBy.id,
-                        applyToId: terminal.capturedBy.id,
-                        terminalId: terminal.id,
-                        type: "CET",
-                        from: clock,
-                        to: new Date(clock.getTime()+100*10*60*1000)
-                    }
-                })
-                console.log("50% of phase passed, applying passive buff")
-            }   
-        }
-        const timeDiff = clock.getTime() - terminal.lastPassengerUpdate.getTime()
-        if(timeDiff < modTime){
-            continue
-        }
-        updatedTerminals.push({ id: terminal.id })
-        const update = terminal.passengerRate*Math.floor(timeDiff/modTime)
-        //modify terminal update for MT case 2 and CET passive condition
-        let modUpdate = update
-        for(const effect of terminalEffects){
-            switch(effect.type){
-                case "MT":
-                case "CET":
-                    modUpdate = modUpdate*3
-            }
-        }
-        const stringId = String(terminal.capturedBy?.id) ?? ""
-        pStart[stringId] = terminal.capturedBy?.passengers ?? 0
-        pCount[stringId] = pCount[stringId] === undefined? 0 : pCount[stringId]
-        pCount[stringId] += modUpdate
+        const terminalEffects = effects.filter((fx) => fx.terminalId === terminal.id)
+        const gainRoutine = calculateTerminalGain(terminal, currentTick, terminalEffects)
+        gainData[terminal.id] = gainRoutine
     }
-    for(const [ id, count ] of Object.entries(pCount)){
-        const recievedEffects = effects.filter((effect) => effect.applyToId === +id)
-        //modify total passenger rate
-        let modCount = count
-        for(const effect of recievedEffects){
-            switch(effect.type){
-                case "ICT":
-                    modCount = Math.floor(modCount*0.8)
-            }
-        }
-        const updatedAirline = await prisma.airline.update({
-            where: {
-                id: +id
-            },
-            data: {
-                passengers: pStart[id] + modCount
-            }
-        })
-        console.log(updatedAirline.passengers,"id:",updatedAirline.id)
+    return gainData
+}
+
+function calculateTerminalGain(terminal: TerminalUpdateData, currentTick: number, terminalEffects: Effect[]): TerminalGainRoutineData{
+    let gain = 0
+    let tickUpdated = false
+    const modifiedTick = getModifiedTick(terminal.unitTick, terminalEffects)
+    if(currentTick - terminal.lastUpdateTick >= modifiedTick){
+        gain += terminal.passengerRate
+        tickUpdated = true
     }
-    await prisma.terminal.updateMany({
+    for(const fx of terminalEffects){
+        if(fx.unitTick && (currentTick - fx.fromTick)%fx.unitTick === 0){
+            gain = Math.floor((fx.multiplier ?? 1)*(( fx.flatRate ?? 0 ) + gain))
+        }
+        //extends special effects here
+    }
+    return {
+        gain,
+        airlineId: terminal.capturedBy.id,
+        terminalId: terminal.id,
+        tickUpdated,
+    }
+}
+
+function getModifiedTick(originalTick: number, terminalEffects: Effect[]){
+    let modTick = originalTick
+    for(const fx of terminalEffects){
+        if(fx.type === "MSME"){
+            modTick = Math.max(modTick/4, 1)
+        }
+    }
+    return modTick
+}
+
+function groupGainsByAirline(gainData: { [id: string]: TerminalGainRoutineData }){
+    const airlineGains: { [id: string]: AirlineGainData } = {}
+    for(const [terminalId, data] of Object.entries(gainData)){
+        airlineGains[data.airlineId] = airlineGains[data.airlineId] ?? { terminals: {} }
+        airlineGains[data.airlineId].terminals[terminalId] = data
+    }
+    return airlineGains
+}
+
+async function applyGainToAirlines(airlineGains: { [id: string]: AirlineGainData }, effects: Effect[], currentTick: number){
+    for(const [id,data] of Object.entries(airlineGains)){
+        const recievedEffects = effects.filter((fx) => fx.applyToId === +id)
+        await applyGainToAirline(+id, data, recievedEffects, currentTick)
+    }
+}
+
+async function applyGainToAirline(airlineId: number, data: AirlineGainData, recievedEffects: Effect[], currentTick: number){
+    let gain = sumGains(data)
+    let steal = 0
+    for(const fx of recievedEffects){
+        if(fx.unitTick && (currentTick - fx.fromTick)%fx.unitTick === 0){
+            //steal passengers from ICT hack
+            if(fx.type === "ICT"){
+                steal = Math.round((1 - (fx.multiplier ?? 1))*gain)
+                if(steal !== 0){
+                    await prisma.airline.update({
+                        where: {
+                            id: fx.applyById,
+                        },
+                        data: {
+                            passengers: { increment: steal }
+                        }
+                    })
+                    console.log(fx.applyById,"stolen",steal,"out of",gain,"passengers")
+                }
+            }
+            gain = Math.floor((fx.multiplier ?? 1)*(( fx.flatRate ?? 0 ) + gain))
+        }
+    }
+    if(gain === 0){
+        return
+    }
+    const airline = await prisma.airline.update({
         where: {
-            OR: updatedTerminals
+            id: airlineId
         },
         data: {
-            lastPassengerUpdate: clock
+            passengers: { increment: gain }
         }
     })
-    //last update: Date
-    //now - last > 5s, update
-    //resume, last update <- now
-    //pause date, resume date
-    //lastupdate <- now - (pause - last update)
+    console.log(data.terminals)
+    console.log("incremented",airline.title,"passengers by",gain,"current:",airline.passengers)
+}
+
+async function effectCycle(terminals: TerminalUpdateData[], effects: Effect[], currentTick: number, phase: number){
+    for(const terminal of terminals){
+        if(terminal.capturedBy.class === "CET" && terminal.capturedByRecords.length > 0){
+            if(effects.find((fx) => fx.applyById === terminal.capturedBy.id && fx.terminalId === terminal.id)){
+                continue
+            }
+            const capturedTick = terminal.capturedByRecords[0].capturedTick
+            if(currentTick - capturedTick >= classConfig.CET.reqDurationScale*totalPhaseTick(phase)){
+                const foundationMatters = await prisma.effect.create({
+                    data: {
+                        applyById: terminal.capturedBy.id,
+                        terminalId: terminal.id,
+                        fromTick: currentTick,
+                        toTick: totalPhaseTick(phase),
+                        multiplier: 3,
+                        unitTick: 1,
+                        type: "CET"
+                    }
+                })
+                console.log("Applied passive",foundationMatters,"to",terminal.capturedBy.id,"terminal",terminal.id)
+            }
+        }
+    }
+}
+
+const totalPhaseTick = (phase: number) => phase*10*60*1000/TICKUNIT
+
+function sumGains(data: AirlineGainData){
+    let sum = 0
+    for(const terminalData of Object.values(data.terminals)){
+        sum+=terminalData.gain
+    }
+    return sum
 }
 
 function floorUnitDate(date: Date){
@@ -171,11 +242,7 @@ function floorUnitDate(date: Date){
         date.getMonth(),
         date.getDate(),
         date.getHours(),
-        date.getMinutes(), date.getSeconds() - date.getSeconds()%5
+        date.getMinutes(), date.getSeconds() - date.getSeconds()%(TICKUNIT/1000)
     )
-}
-
-const configValue = {
-    CETDurationReq: 0.5
 }
 

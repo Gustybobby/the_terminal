@@ -53,10 +53,18 @@ export async function POST(req: NextRequest, { params }: { params: { terminal_id
         await prisma.effect.deleteMany({
             where: {
                 terminalId: capture.id,
-                type: {
-                    not: "BCET",
-                },
-            }
+                AND: [
+                    {
+                        type: {
+                            not: "BCET"
+                        },
+                    }, {
+                        type: {
+                            not: "MT"
+                        },
+                    }
+                ],
+            },
         })
     }
     const gameState = await prisma.gameState.findUniqueOrThrow({
@@ -68,11 +76,34 @@ export async function POST(req: NextRequest, { params }: { params: { terminal_id
         }
     })
     if(airlineId !== null){
+        const now = new Date()
+        const lastestRecord = await prisma.captureRecord.findFirst({
+            where: {
+                terminalId: capture.id
+            },
+            select: {
+                id: true
+            },
+            orderBy: {
+                capturedAt: "desc"
+            }
+        })
+        if(lastestRecord){
+            await prisma.captureRecord.update({
+                where: {
+                    id: lastestRecord.id
+                },
+                data: {
+                    endAt: now,
+                    endTick: gameState.currentTick,
+                }
+            })
+        }
         const record = await prisma.captureRecord.create({
             data: {
                 airlineId,
                 terminalId: capture.id,
-                capturedAt: new Date(),
+                capturedAt: now,
                 capturedTick: gameState?.currentTick,
             }
         })

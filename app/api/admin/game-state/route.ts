@@ -25,16 +25,15 @@ export async function PATCH(req: NextRequest){
         console.log("reset all terminals")
     }
     if(!update.start || reset){
-        await prisma.captureRecord.deleteMany()
         await prisma.effect.deleteMany()
-        await prisma.terminal.updateMany({
-            data: {
-                airlineId: null
-            }
-        })
         await prisma.airline.updateMany({
             data: {
                 skillUse: 0
+            },
+        })
+        await prisma.captureRecord.updateMany({
+            data: {
+                capturedTick: 0
             },
         })
     }

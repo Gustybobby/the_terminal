@@ -84,6 +84,9 @@ async function getTerminals(): Promise<TerminalUpdateData[]>{
                 }
             },
             capturedByRecords: {
+                orderBy: {
+                    capturedAt: "desc"
+                },
                 take: 1
             }
         }

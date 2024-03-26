@@ -43,11 +43,10 @@ export interface LobbyTableData{
     name : string | null
 }
 
-export interface AirlineLobby {
-    start: boolean;
-    ready: boolean;
-    class: AirlineClass;
-    crews: LobbyTableData[];
+export interface AirlineClassAuction {
+    id: number
+    title: string
+    class: AirlineClass
 }
 
 export interface SelectAirline {

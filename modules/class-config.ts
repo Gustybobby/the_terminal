@@ -1,6 +1,6 @@
 const classConfig = {
     CET: {
-        reqDurationScale: 0.2
+        reqDurationScale: 0.5
     }
 }
 export default classConfig

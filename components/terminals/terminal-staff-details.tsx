@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 import { TICKUNIT } from "@/modules/routine"
 import type { SelectAirline } from "@/types/airline"
 import AirlinesDropdown from "./airlines-dropdown"
+import { sendJSONToAPI } from "@/tools/apiHandler"
 
 export default function TerminalStaffDetails({ terminalId, airlines }: {
     terminalId: number
@@ -49,7 +50,18 @@ export default function TerminalStaffDetails({ terminalId, airlines }: {
                 <h1 className="text-base mb-4">No one have claimed this terminal yet</h1>
                 }
                 <h2 className=" text-xl font-bold mb-2">Select New Owner</h2>
-                <AirlinesDropdown airlines={airlines} ownerId={terminal.capturedBy?.id ?? -1} terminalId={terminalId}/>
+                <AirlinesDropdown
+                    airlines={airlines}
+                    ownerId={terminal.capturedBy?.id ?? -1}
+                    terminalId={terminalId}
+                    onClick={async(airlineId, terminalId) => {
+                        await sendJSONToAPI({
+                            url: `/api/terminals/${terminalId}`,
+                            method: "POST",
+                            body: JSON.stringify({ data: airlineId })
+                        })
+                    }}
+                />
             </div>
         </div>
     )

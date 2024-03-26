@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardTitle } from "../../../ui/card"
 import { IoPeopleCircleSharp } from "react-icons/io5"
 import { TICKUNIT } from "@/modules/routine"
 import AirlinesDropdown from "../../../terminals/airlines-dropdown"
+import { sendJSONToAPI } from "@/tools/apiHandler"
 
 export default function TerminalsColumn({ admin, refetch }: {
     admin: AdminData
@@ -32,7 +33,14 @@ export default function TerminalsColumn({ admin, refetch }: {
                                 airlines={admin.airlines}
                                 ownerId={-1}
                                 terminalId={terminal.id}
-                                onSuccess={() => refetch({})}
+                                onClick={async(airlineId, terminalId) => {
+                                    await sendJSONToAPI({
+                                        url: `/api/terminals/${terminalId}`,
+                                        method: "POST",
+                                        body: JSON.stringify({ data: airlineId })
+                                    })
+                                    refetch({})
+                                }}
                             />
                         </CardContent>
                     </Card>

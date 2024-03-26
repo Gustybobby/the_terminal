@@ -53,13 +53,15 @@ model Airline {
 }
 
 model CaptureRecord {
-  id           Int      @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   capturedAt   DateTime
+  endAt        DateTime?
   capturedTick Int
+  endTick      Int?
   terminalId   Int
   airlineId    Int
-  airline      Airline  @relation(fields: [airlineId], references: [id], onUpdate: Restrict)
-  terminal     Terminal @relation(fields: [terminalId], references: [id], onUpdate: Restrict)
+  airline      Airline   @relation(fields: [airlineId], references: [id], onUpdate: Restrict)
+  terminal     Terminal  @relation(fields: [terminalId], references: [id], onUpdate: Restrict)
 }
 
 model Effect {

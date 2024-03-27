@@ -59,7 +59,7 @@ export const FACTION_MAP = {
       duration_factor: 1,
       type: "Terminal Buff/Protection",
       description:
-        "ธุรกิจมีทั้งข้อดีข้อเสีย ให้เลือก 1 อย่าง\n1. ป้องกัน Terminal ตัวเองได้ 1 ครั้ง เมื่อแพ้ แต่ต้องสูญเสีย 10% passenger rate\n2. 3x passenger rate กับ terminal เป็นระยะเวลา 5 นาทีของ phase\n*** ผลของสกิลจะหยุดทันทีเมื่อถูก airline อื่นยึดไป",
+        "ธุรกิจมีทั้งข้อดีข้อเสีย ให้เลือก 1 อย่าง\n1. ป้องกัน Terminal ตัวเองได้ 1 ครั้ง เมื่อแพ้ แต่ต้องสูญเสีย 10% passenger rate\n2. 3x passenger rate กับ terminal เป็นระยะเวลา 5 นาทีของ phase",
     },
     None: {
         id: 999,

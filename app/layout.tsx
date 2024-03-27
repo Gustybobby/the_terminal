@@ -20,7 +20,6 @@ export default async function RootLayout({ children }: Readonly<{
         <html lang="en">
             <body className={inter.className}>
                 <AuthProvider session={session}>
-                    <ForceSignOut/>
                     {children}
                 </AuthProvider>
             </body>

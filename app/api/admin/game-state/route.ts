@@ -34,7 +34,7 @@ export async function PATCH(req: NextRequest){
         await prisma.captureRecord.updateMany({
             data: {
                 capturedTick: 0
-            },
+            }
         })
     }
     console.log(update)

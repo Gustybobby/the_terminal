@@ -144,7 +144,7 @@ function getModifiedTick(originalTick: number, terminalEffects: Effect[]){
     let modTick = originalTick
     for(const fx of terminalEffects){
         if(fx.type === "MSME"){
-            modTick = Math.max(modTick/4, 1)
+            modTick = Math.max(Math.round(modTick/4), 1)
         }
     }
     return modTick

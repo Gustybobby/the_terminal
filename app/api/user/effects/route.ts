@@ -22,12 +22,26 @@ export async function GET(){
         select: {
             airline: {
                 select: {
+                    id: true,
                     recieveEffects: {
                         where: {
+                            fromTick: {
+                                lte: gameState.currentTick
+                            },
                             toTick: {
                                 gte: gameState.currentTick
                             }
                         }
+                    },
+                    applyEffects: {
+                        where: {
+                            fromTick: {
+                                lte: gameState.currentTick
+                            },
+                            toTick: {
+                                gte: gameState.currentTick
+                            }
+                        },
                     }
                 }
             }
@@ -41,6 +55,10 @@ export async function GET(){
             }
         }
     })
-    const allEffects = (user.airline?.recieveEffects ?? []).concat(effects)
-    return NextResponse.json({ message: "SUCCESS", data: allEffects }, { status: 200 })
+    const allEffects = (user.airline?.recieveEffects ?? []).concat(effects).concat(user.airline?.applyEffects ?? [])
+    return NextResponse.json({ message: "SUCCESS", data: {
+        allEffects,
+        id: user.airline?.id,
+        currentTick: gameState.currentTick
+    }}, { status: 200 })
 }

@@ -19,6 +19,7 @@ export async function GET(req: NextRequest, { params }: { params: { airline_id: 
         },
         select: {
             passengers: true,
+            skillUse: true,
             crews: {
                 select: {
                     airlineRole: true,
@@ -57,10 +58,9 @@ export async function GET(req: NextRequest, { params }: { params: { airline_id: 
             title: true,
         }
     })
-    const classEffectCount = airline.applyEffects.filter((effect) => effect.type === airline.class).length
     return NextResponse.json({ message: "SUCCESS", data: {
         ...airline,
-        stock: FACTION_MAP[airline.class].use - classEffectCount,
+        stock: FACTION_MAP[airline.class].use - airline.skillUse,
         allAirlines,
     } }, { status: 200 })
 }

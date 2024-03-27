@@ -12,7 +12,7 @@ export default function EffectWrapper({ children, className }: {
     children: ReactElement
     className?: string
 }){
-    const { effects } = useRecieveEffects({ refreshRate: TICKUNIT })
+    const { effects, id, currentTick } = useRecieveEffects({ refreshRate: TICKUNIT })
     const { toast } = useToast()
     useEffect(() => {
         if(effects === "loading"){
@@ -42,9 +42,9 @@ export default function EffectWrapper({ children, className }: {
           </div>
         )
       }
-    const isDisabled = !!effects.find((effect) => effect.type === "ICT")
+    const isDisabled = !!effects.find((effect) => effect.type === "ICT" && effect.applyToId === id)
     const renderChildren = () => {
-        return cloneElement(children, { effects: effects.filter((effect) => effect.type !== "BCET") })
+        return cloneElement(children, { effects: effects.filter((effect) => effect.type !== "BCET"), currentTick })
     }
     return (
         <div className={className}>

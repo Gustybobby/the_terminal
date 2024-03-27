@@ -6,7 +6,7 @@ import StatusCardGroup from "@/components/status/status-card-group";
 export default async function TerminalStatusPage() {
     const session = await getServerAuthSession()
     if(session?.user.role === "STAFF"){
-        redirect("/status/terminals")
+        redirect("/terminals")
     }
     if(session?.user.role !== "ADMIN"){
         redirect("/airlines")

@@ -41,6 +41,13 @@ export default function Display({ airline, effects }: { airline: AirlineData, ef
 }
 
 function PassengerGain({ gain }: { gain: Gain }){
+    if(gain.passengerRate === "unknown"){
+        return (
+            <li className={textStyles.coloredText(true)}>
+                + ?? / ??s from <SourceDisplay source={gain.source}/>
+            </li>
+        )
+    }
     return (
         <li className={textStyles.coloredText(gain.passengerRate >= 0)}>
             {gain.passengerRate < 0? "-" : "+"} {Math.abs(gain.passengerRate)} / {gain.unitTick*TICKUNIT/1000}s from <SourceDisplay source={gain.source}/>
@@ -62,6 +69,9 @@ function SourceDisplay({ source }: { source: Gain["source"] }){
 function totalGain(gains: Gain[]){
     let totalGain = 0
     for(const gain of gains){
+        if(gain.passengerRate === "unknown"){
+            continue
+        }
         totalGain += gain.passengerRate/gain.unitTick
     }
     return totalGain
@@ -82,7 +92,7 @@ function getTerminalGain(capture: CaptureData): Gain{
             terminalTitle: capture.title + (boost? " (Logistics Boost)" : ""),
         },
         passengerRate: capture.passengerRate,
-        unitTick: capture.unitTick / (boost? 2: 1),
+        unitTick: Math.round(capture.unitTick / (boost? 4 : 1)),
     }
 }
 
@@ -98,6 +108,12 @@ function getEffectGain(effect: Effect, airline: AirlineData): Gain{
                 source,
                 passengerRate: (appliedTerminal?.passengerRate ?? 0) * 2,
                 unitTick: appliedTerminal?.unitTick ?? 1
+            }
+        case "ICT":
+            return {
+                source,
+                passengerRate: "unknown",
+                unitTick: 1
             }
         default:
             throw "unhandled"

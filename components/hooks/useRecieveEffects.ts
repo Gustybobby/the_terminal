@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 export default function useRecieveEffects({ refreshRate }: {
     refreshRate: number
 }){
-    const [data, setData] = useState<Effect[] | "loading">("loading")
+    const [data, setData] = useState<{ allEffects: Effect[], id: number, currentTick: number }| "loading">("loading")
     const [shouldRefetch, refetch] = useState({})
     useEffect(() => {
         fetch(`/api/user/effects`)
@@ -19,5 +19,8 @@ export default function useRecieveEffects({ refreshRate }: {
         }, refreshRate)
         return () => clearInterval(interval)
     },[refreshRate])
-    return { effects: data, refetch }
+    if (data === "loading"){
+        return { effects: "loading" as "loading", id: "loading" as "loading", refetch }
+    }
+    return { effects: data.allEffects, id: data.id, currentTick: data.currentTick, refetch }
 }

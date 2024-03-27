@@ -5,6 +5,9 @@ import TerminalStaffDetails from "@/components/terminals/terminal-staff-details"
 import prisma from "@/prisma-client";
 
 export default async function Terminal({ params }: { params: { terminal_id: string }}) {
+  if(params.terminal_id === "11"){
+    redirect("/casino")
+  }
   const session = await getServerAuthSession()
   if(session?.user.role !== "STAFF" && session?.user.role !== "ADMIN"){
     redirect("/status")
@@ -27,4 +30,3 @@ export default async function Terminal({ params }: { params: { terminal_id: stri
     </main>
   );
 }
-<span className="text-center font-bold text-2xl p-4">You are not assigned to any Terminal</span>

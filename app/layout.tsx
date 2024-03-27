@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import ForceSignOut from "@/components/auth/foce-signout";
 import { getServerAuthSession } from "./api/auth/[...nextauth]/_utils";
 import AuthProvider from "@/components/auth/auth-provider";
 

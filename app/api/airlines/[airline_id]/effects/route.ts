@@ -4,9 +4,74 @@ import prisma from "@/prisma-client";
 import { GAME_ID, TICKUNIT } from "@/modules/routine";
 import { FACTION_MAP } from "@/game/faction";
 
+export async function GET(req: NextRequest, { params }: { params: { airline_id: string }}){
+    const session = await getServerAuthSession()
+    if(session?.user.role !== "ADMIN"){
+        return NextResponse.json({ message: "UNAUTHORIZED" }, { status: 400 })
+    }
+    const gameState = await prisma.gameState.findUniqueOrThrow({
+        where: {
+            id: GAME_ID
+        },
+        select: {
+            currentTick: true
+        }
+    })
+    const airline = await prisma.airline.findUniqueOrThrow({
+        where: {
+            id: +params.airline_id
+        },
+        select: {
+            id: true,
+            recieveEffects: {
+                where: {
+                    fromTick: {
+                        lte: gameState.currentTick
+                    },
+                    toTick: {
+                        gte: gameState.currentTick
+                    }
+                }
+            },
+            applyEffects: {
+                where: {
+                    fromTick: {
+                        lte: gameState.currentTick
+                    },
+                    toTick: {
+                        gte: gameState.currentTick
+                    }
+                },
+            }
+        }
+    })
+    const effects = await prisma.effect.findMany({
+        where: {
+            type: "BCET",
+            toTick: {
+                gte: gameState.currentTick
+            }
+        }
+    })
+    const allEffects = (airline.recieveEffects).concat(effects).concat(airline.applyEffects)
+    return NextResponse.json({ message: "SUCCESS", data: {
+        allEffects,
+        id: airline.id,
+        currentTick: gameState.currentTick
+    }}, { status: 200 })
+}
+
 export async function POST(req: NextRequest, { params }: { params: { airline_id: string }}){
     const session = await getServerAuthSession()
-    if(session?.user.role === "USER"){
+    const user = await prisma.user.findUniqueOrThrow({
+        where: {
+            id: session?.user.id ?? ""
+        },
+        select: {
+            airlineRole: true
+        }
+    })
+    if(session?.user.role === "USER" && user.airlineRole !== "Co_pilot"){
         return NextResponse.json({ message: "UNAUTHORIZED" }, { status: 400 })
     }
     const request = await req.json()
@@ -28,7 +93,6 @@ async function specialSkill(airlineId: number, applyToId: number | undefined, te
         select: {
             class: true,
             skillUse: true,
-            captures: true,
         }
     })
     if(FACTION_MAP[airline.class].use - airline.skillUse <= 0){
@@ -44,8 +108,13 @@ async function specialSkill(airlineId: number, applyToId: number | undefined, te
         }
     })
     switch(airline.class){
+        case "MSME":
+
+    }
+    let effect
+    switch(airline.class){
         case "ICT":
-            await prisma.effect.create({
+            effect = await prisma.effect.create({
                 data: {
                     type: airline.class,
                     fromTick: gameState.currentTick,
@@ -58,19 +127,34 @@ async function specialSkill(airlineId: number, applyToId: number | undefined, te
             })
             break
         case "MSME":
-            await prisma.effect.createMany({
-                data: airline.captures.map((terminal) => ({
+            const prevEffect = await prisma.effect.findMany({
+                where: {
+                    type: airline.class,
+                    fromTick: {
+                        lte: gameState.currentTick
+                    },
+                    toTick: {
+                        gte: gameState.currentTick
+                    },
+                    applyById: airlineId
+                }
+            })
+            if(prevEffect.length > 0){
+                console.log("Effect is already active")
+                throw "Effect is already active"
+            }
+            effect = await prisma.effect.create({
+                data: {
                     type: airline.class,
                     fromTick: gameState.currentTick,
                     toTick: gameState.currentTick + tickPerPhase(gameState.phase)*FACTION_MAP[airline.class].duration_factor,
                     applyById: airlineId,
-                    terminalId: terminal.id,
-                }))
+                }
             })
             break
         case "BCET":
             if(option === 1){
-                await prisma.effect.create({
+                effect = await prisma.effect.create({
                     data: {
                         type: airline.class,
                         fromTick: gameState.currentTick,
@@ -85,7 +169,7 @@ async function specialSkill(airlineId: number, applyToId: number | undefined, te
             break
         case "MT":
             if(option === 1){
-                await prisma.effect.create({
+                effect = await prisma.effect.create({
                     data: {
                         type: airline.class,
                         fromTick: gameState.currentTick,
@@ -97,7 +181,7 @@ async function specialSkill(airlineId: number, applyToId: number | undefined, te
                     }
                 })
             } else if(option === 2){
-                await prisma.effect.create({
+                effect = await prisma.effect.create({
                     data: {
                         type: airline.class,
                         fromTick: gameState.currentTick,
@@ -121,6 +205,7 @@ async function specialSkill(airlineId: number, applyToId: number | undefined, te
     })
     console.log("Airline", airlineId, "uses", FACTION_MAP[airline.class].ability_name)
     console.log({ applyToId, terminalId, option })
+    console.log(effect)
 }
 
 const tickPerPhase = (phase: number) => phase*10*60*1000/TICKUNIT

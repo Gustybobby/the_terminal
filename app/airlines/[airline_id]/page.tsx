@@ -38,7 +38,10 @@ export default async function Airline({ params }: { params: { airline_id: string
                 <NavBar child="airline"/>
                 <div className="w-11/12 my-4 md:w-1/2 flex flex-col rounded-lg shadow-lg bg-white">
                     <h1 className="text-center font-extrabold text-3xl bg-gray-200 rounded-t-lg py-2">{airline.title} Airline</h1>
-                    <EffectWrapper className="flex flex-col">
+                    <EffectWrapper
+                        className="flex flex-col"
+                        airlineId={session.user.role === "ADMIN"? +params.airline_id : undefined}
+                    >
                         <Interactable
                             airlineId={params.airline_id}
                             session={session}

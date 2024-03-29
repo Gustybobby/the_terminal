@@ -38,5 +38,5 @@ export default async function AirlinesPage(){
     if(user.airline?.ready && gameState.start){
         redirect(`/airlines/${user.airlineId}`)
     }
-    redirect(`/lobby/${user.airlineId}`)
+    redirect("/")
 }

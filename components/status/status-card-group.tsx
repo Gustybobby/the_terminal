@@ -33,6 +33,7 @@ export default function StatusCardGroup() {
       ))}
       <StatusCard
         terminal={{
+          secret: "",
           id: 11,
           title: "Casino",
           description: "Casino",

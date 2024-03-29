@@ -50,7 +50,7 @@ export async function POST(req: NextRequest, { params }: { params: { terminal_id
         return NextResponse.json({ message: "ERROR" }, { status: 400 })
     }
     const request = await req.json()
-    if(typeof request.data === "object"){
+    if(request.data !== null && typeof request.data === "object"){
         const { airlineId, secret } = request.data
         const terminal = await prisma.terminal.update({
             where: {

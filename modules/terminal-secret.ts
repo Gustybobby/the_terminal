@@ -19,7 +19,7 @@ export async function updateTerminalSecret(terminalId: number){
                 secret: newSecret
             }
         })
-        console.log("updated",terminalId,"secret to",newSecret)
+        console.log("updated terminal",terminalId,"secret to",newSecret)
     })
 }
 

@@ -8,11 +8,12 @@ import { useToast } from "../ui/use-toast"
 import { FaExplosion } from "react-icons/fa6";
 import { TICKUNIT } from "@/modules/routine"
 
-export default function EffectWrapper({ children, className }: {
+export default function EffectWrapper({ children, airlineId, className }: {
     children: ReactElement
+    airlineId?: number
     className?: string
 }){
-    const { effects, id, currentTick } = useRecieveEffects({ refreshRate: TICKUNIT })
+    const { effects, id, currentTick } = useRecieveEffects({ airlineId, refreshRate: TICKUNIT })
     const { toast } = useToast()
     useEffect(() => {
         if(effects === "loading"){

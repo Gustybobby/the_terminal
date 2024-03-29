@@ -18,6 +18,7 @@ export async function GET(req: NextRequest, { params }: { params: { airline_id: 
             id: +params.airline_id
         },
         select: {
+            id: true,
             passengers: true,
             skillUse: true,
             crews: {

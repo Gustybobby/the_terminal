@@ -5,8 +5,11 @@ import { Button, buttonVariants } from "../ui/button";
 import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "../ui/drawer";
 import TerminalCaptureOTP from "./terminal-capture-otp";
 import { sendJSONToAPI } from "@/tools/apiHandler";
+import { useToast } from "../ui/use-toast";
+import { FaCircleExclamation } from "react-icons/fa6";
 
 export function TerminalOTPDrawer({ airlineId }: { airlineId: number }) {
+    const { toast } = useToast()
     const [secret, setSecret] = useState("")
     return (
         <Drawer>
@@ -26,11 +29,25 @@ export function TerminalOTPDrawer({ airlineId }: { airlineId: number }) {
                     <Button
                         variant="outline"
                         onClick={async() => {
-                            await sendJSONToAPI({
+                            const res = await sendJSONToAPI({
                                 url: "/api/terminals/secret",
                                 method: "POST",
                                 body: JSON.stringify({ data: { airlineId, secret }})
                             })
+                            if(res.message === "ERROR"){
+                                toast({
+                                    description: (
+                                        <div className="flex flex-col">
+                                            <div className="flex items-center space-x-2">
+                                                <FaCircleExclamation className="text-lg"/>
+                                                <span className="font-bold text-lg">Incorrect Flag</span>
+                                            </div>
+                                        </div>
+                                    ),
+                                    variant: "destructive",
+                                    duration: 3000,
+                                })
+                            }
                             setSecret("")
                         }}
                         disabled={secret.length !== 6}

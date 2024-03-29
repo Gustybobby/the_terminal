@@ -11,7 +11,7 @@ export const FACTION_MAP = {
       duration_factor: 0.25,
       type: "Airline Debuff",
       description:
-        "Hack จะทำให้เกิดสองอย่าง :\n1. หยุดการใช้งานโปรแกรมของ Airline ไป 1 Airline ทำให้ไม่สามารถใช้ Capture Terminal/Use Skill/View Info ได้เป็นระยะเวลา 25% ของ phase\n2. ลด passenger rate ลง 20% ทุกๆ terminal เป็นระยะเวลา 25% ของ phase",
+        "Hack จะทำให้เกิดสองอย่าง :\n1. หยุดการใช้งานโปรแกรมของ Airline ไป 1 Airline ทำให้ไม่สามารถใช้ Capture Terminal/Use Skill/View Info ได้เป็นระยะเวลา 25% ของ phase\n2. ขโมย passenger rate 20% ทุกๆ terminal เป็นระยะเวลา 25% ของ phase",
     },
     MSME: {
       id: 2,

@@ -25,6 +25,7 @@ export interface EffectData {
 }
 
 export interface AirlineData {
+    id: number;
     passengers: number;
     class: AirlineClass;
     crews: CrewTableData[];
@@ -37,10 +38,9 @@ export interface AirlineData {
     }[];
 }
 
-export interface LobbyTableData{
-    id: string
-    airlineRole: AirlineRole
-    name : string | null
+export interface AirlineTargetData {
+    id: number
+    title: string
 }
 
 export interface AirlineClassAuction {

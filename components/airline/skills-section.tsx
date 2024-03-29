@@ -5,14 +5,25 @@ import { buttonVariants } from "../ui/button";
 import type { AirlineData } from "@/types/airline";
 import { FACTION_MAP } from "@/game/faction";
 import { DropdownMenu, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import type { Effect } from "@prisma/client";
+import type { AirlineClass, Effect } from "@prisma/client";
 import { TICKUNIT } from "@/modules/routine";
+import AirlineTargets from "./class-target-content/airline-targets";
+import { type Dispatch, type SetStateAction, useState } from "react";
+import ConfirmTargetDialog from "./class-target-content/confirm-target-dialog";
+
+export interface TargetData {
+    target: "T" | "A" | "NA",
+    id: number
+    title: string
+}
 
 export default function SkillsSection({ airline, effects, currentTick }: {
     airline: AirlineData
     effects: Effect[]
     currentTick: number
 }){
+    const [target, setTarget] = useState<TargetData | null>(null)
+
     return (
         <div className="p-4">
             <h2 className="font-bold text-2xl mb-2">Active Abilities</h2>
@@ -22,13 +33,10 @@ export default function SkillsSection({ airline, effects, currentTick }: {
                     key={fx.id+"_EFFECT"}
                     className="font-semibold mb-2 text-base"
                 >
-                    using
-                    &nbsp;
-                    <span className="text-blue-600">{FACTION_MAP[fx.type].ability_name}</span>
-                    &nbsp;
+                    using&nbsp;
+                    <span className="text-blue-600">{FACTION_MAP[fx.type].ability_name}</span>&nbsp;
                     {fx.applyToId && <span className="inline-block">{`on Airline ${fx.applyToId}`}</span>}
                     {fx.terminalId && <span className="inline-block">{`on Terminal ${fx.terminalId}`}</span>}
-                    &nbsp;
                     ({(fx.toTick - currentTick)*TICKUNIT/1000}s left)
                 </div>
             ))}
@@ -42,17 +50,46 @@ export default function SkillsSection({ airline, effects, currentTick }: {
                             <DropdownMenu>
                                 <DropdownMenuTrigger
                                     className={buttonVariants({ variant: "outline", className: "bg-green-300 hover:bg-green-400" })}
-                                    disabled={true}
+                                    disabled={airline.class === "CET"}
+                                    onClick={() => {
+                                        if(airline.class === "MSME"){
+                                            setTarget({ target: "NA", id: 0, title: "yourself" })
+                                        }
+                                    }}
                                 >
                                     {airline.class === "CET"? "Passive" : "Use"}
                                 </DropdownMenuTrigger>
+                                <TargetContent
+                                    airlineId={airline.id}
+                                    airlineClass={airline.class}
+                                    setTarget={setTarget}
+                                />
                             </DropdownMenu>
-                        </Card>
+                        </Card> 
                     ))
                     :
                     <span className="col-span-2">You used all your abilities for this phase</span>
                 }
             </div>
+            <ConfirmTargetDialog
+                target={target}
+                setTarget={setTarget}
+                airlineClass={airline.class}
+                airlineId={airline.id}
+            />
         </div>
     )
+}
+
+function TargetContent({ airlineId, airlineClass, setTarget }: {
+    airlineId: number
+    airlineClass: AirlineClass
+    setTarget: Dispatch<SetStateAction<TargetData | null>>
+}){
+    switch(airlineClass){
+        case "ICT":
+            return <AirlineTargets airlineId={airlineId} setTarget={setTarget}/>
+        case "MSME":
+            return <></>
+    }
 }

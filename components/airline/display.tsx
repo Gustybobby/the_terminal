@@ -9,8 +9,8 @@ import { TICKUNIT } from "@/modules/routine"
 
 export default function Display({ airline, effects }: { airline: AirlineData, effects: Effect[] }){
     const total = totalGain(
-        airline.captures.map((capture) => getTerminalGain(capture))
-            .concat(effects.map((effect) => getEffectGain(effect, airline)))
+        airline.captures.map((capture) => getTerminalGain(capture, effects))
+            .concat(effects.map((fx) => getEffectGain(fx, airline)).filter((fx) => fx !== null) as Gain[])
     )
     return (
         <div className="flex flex-col items-center">
@@ -25,22 +25,25 @@ export default function Display({ airline, effects }: { airline: AirlineData, ef
             <ul className="w-full flex flex-col items-start text-sm mt-2 ml-8">
                 {airline.captures.map((capture, index) => (
                     <PassengerGain
-                        gain={getTerminalGain(capture)}
+                        gain={getTerminalGain(capture, effects)}
                         key={"TERMINAL_"+index}
                     />
                 ))}
                 {effects.map((effect, index) => (
                     <PassengerGain
-                    gain={getEffectGain(effect, airline)}
-                    key={"EFFECT_"+index}
-                />
+                        gain={getEffectGain(effect, airline)}
+                        key={"EFFECT_"+index}
+                    />
                 ))}
             </ul>
         </div>
     )
 }
 
-function PassengerGain({ gain }: { gain: Gain }){
+function PassengerGain({ gain }: { gain: Gain | null }){
+    if(!gain){
+        return <></>
+    }
     if(gain.passengerRate === "unknown"){
         return (
             <li className={textStyles.coloredText(true)}>
@@ -83,8 +86,8 @@ const textStyles = {
     ].join(" ")
 }
 
-function getTerminalGain(capture: CaptureData): Gain{
-    const boost = capture.effects.find((fx) => fx.terminalId === capture.id)?.type === "MSME"
+function getTerminalGain(capture: CaptureData, effects: Effect[]): Gain{
+    const boost = !!effects.find((fx) => fx.type === "MSME")
     const effect = capture.effects.find((fx) => fx.terminalId === capture.id)
     return {
         source: {
@@ -97,7 +100,7 @@ function getTerminalGain(capture: CaptureData): Gain{
     }
 }
 
-function getEffectGain(effect: Effect, airline: AirlineData): Gain{
+function getEffectGain(effect: Effect, airline: AirlineData): Gain | null{
     const source: Source = {
         type: "effect",
         effectTitle: FACTION_MAP[effect.type].ability_name,
@@ -116,6 +119,8 @@ function getEffectGain(effect: Effect, airline: AirlineData): Gain{
                 passengerRate: "unknown",
                 unitTick: 1
             }
+        case "MSME":
+            return null
         default:
             throw "unhandled"
     }

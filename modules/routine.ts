@@ -112,16 +112,22 @@ function calculateAllTerminalGains(terminals: TerminalUpdateData[], currentTick:
     const gainData: { [id: string]: TerminalGainRoutineData } = {}
     for(const terminal of terminals){
         const terminalEffects = effects.filter((fx) => fx.terminalId === terminal.id)
-        const gainRoutine = calculateTerminalGain(terminal, currentTick, terminalEffects)
+        const logisticEffects = effects.filter((fx) => fx.type === "MSME")
+        const gainRoutine = calculateTerminalGain(terminal, currentTick, terminalEffects, logisticEffects)
         gainData[terminal.id] = gainRoutine
     }
     return gainData
 }
 
-function calculateTerminalGain(terminal: TerminalUpdateData, currentTick: number, terminalEffects: Effect[]): TerminalGainRoutineData{
+function calculateTerminalGain(
+    terminal: TerminalUpdateData,
+    currentTick: number,
+    terminalEffects: Effect[],
+    logisticEffects: Effect[],
+): TerminalGainRoutineData {
     let gain = 0
     let tickUpdated = false
-    const modifiedTick = getModifiedTick(terminal.unitTick, terminalEffects)
+    const modifiedTick = getModifiedTick(terminal, logisticEffects)
     if(currentTick - terminal.lastUpdateTick >= modifiedTick){
         gain += terminal.passengerRate
         tickUpdated = true
@@ -140,10 +146,10 @@ function calculateTerminalGain(terminal: TerminalUpdateData, currentTick: number
     }
 }
 
-function getModifiedTick(originalTick: number, terminalEffects: Effect[]){
-    let modTick = originalTick
-    for(const fx of terminalEffects){
-        if(fx.type === "MSME"){
+function getModifiedTick(terminal: TerminalUpdateData, effects: Effect[]){
+    let modTick = terminal.unitTick
+    for(const fx of effects){
+        if(fx.type === "MSME" && fx.applyById === terminal.capturedBy.id){
             modTick = Math.max(Math.round(modTick/4), 1)
         }
     }

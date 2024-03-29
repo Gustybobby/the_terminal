@@ -25,23 +25,15 @@ export async function GET(){
                     id: true,
                     recieveEffects: {
                         where: {
-                            fromTick: {
-                                lte: gameState.currentTick
-                            },
-                            toTick: {
-                                gte: gameState.currentTick
-                            }
+                            fromTick: { lte: gameState.currentTick },
+                            toTick: { gte: gameState.currentTick },
                         }
                     },
                     applyEffects: {
                         where: {
-                            fromTick: {
-                                lte: gameState.currentTick
-                            },
-                            toTick: {
-                                gte: gameState.currentTick
-                            }
-                        },
+                            fromTick: { lte: gameState.currentTick },
+                            toTick: { gte: gameState.currentTick },
+                        }
                     }
                 }
             }
@@ -50,9 +42,7 @@ export async function GET(){
     const effects = await prisma.effect.findMany({
         where: {
             type: "BCET",
-            toTick: {
-                gte: gameState.currentTick
-            }
+            toTick: { gte: gameState.currentTick }
         }
     })
     const allEffects = (user.airline?.recieveEffects ?? []).concat(effects).concat(user.airline?.applyEffects ?? [])

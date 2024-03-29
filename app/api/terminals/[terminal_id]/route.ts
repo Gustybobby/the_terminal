@@ -7,7 +7,7 @@ import { updateTerminalSecret } from "@/modules/terminal-secret"
 export async function GET(req: NextRequest, { params }: { params: { terminal_id: string }}){
     const session = await getServerAuthSession()
     if(session?.user.role !== "STAFF" && session?.user.role !== "ADMIN"){
-        return NextResponse.json({ message: "UNAUTHORIZED" }, { status: 400 })
+        return NextResponse.json({ message: "UNAUTHORIZED" }, { status: 401 })
     }
     try {
         const terminal = await prisma.terminal.findUniqueOrThrow({

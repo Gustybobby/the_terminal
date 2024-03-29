@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic"
 export async function GET(){
     const session = await getServerAuthSession()
     if(session?.user.role !== "ADMIN"){
-        return NextResponse.json({ message: "ERROR " }, { status: 400 })
+        return NextResponse.json({ message: "UNAUTHORIZED" }, { status: 401 })
     }
     await gameCycle()
     return NextResponse.json({ message: "SUCCESS" }, { status: 200 })

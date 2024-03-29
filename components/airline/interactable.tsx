@@ -8,6 +8,7 @@ import type { Session } from "next-auth"
 import useCaptureToast from "../hooks/useCaptureToast"
 import type { Effect } from "@prisma/client"
 import { TICKUNIT } from "@/modules/routine"
+import { TerminalOTPDrawer } from "./terminal-otp-drawer"
 
 export default function Interactable({ airlineId, session, isCaptain, ...props }: {
     airlineId: string
@@ -29,12 +30,13 @@ export default function Interactable({ airlineId, session, isCaptain, ...props }
         <div className="p-1">
             <Display airline={airline} effects={effects}/>
             <SkillsSection
-                airlineId={+airlineId}
                 airline={airline}
-                isCaptain={isCaptain}
                 effects={effects}
                 currentTick={currentTick}
             />
+            <div className="w-full flex flex-col items-center">
+                <TerminalOTPDrawer airlineId={+airlineId}/>
+            </div>
         </div>
     )
 }

@@ -85,13 +85,14 @@ const textStyles = {
 
 function getTerminalGain(capture: CaptureData): Gain{
     const boost = capture.effects.find((fx) => fx.terminalId === capture.id)?.type === "MSME"
+    const effect = capture.effects.find((fx) => fx.terminalId === capture.id)
     return {
         source: {
             type: "terminal",
             terminalId: capture.id,
-            terminalTitle: capture.title + (boost? " (Logistics Boost)" : ""),
+            terminalTitle: capture.title + (boost? " (Logistics Boost)" : "") + (effect?.type==="MT"? " (Decision Making)" : ""),
         },
-        passengerRate: capture.passengerRate,
+        passengerRate: (effect?.type==="MT"? (effect.multiplier ?? 1) : 1)*capture.passengerRate,
         unitTick: Math.round(capture.unitTick / (boost? 4 : 1)),
     }
 }

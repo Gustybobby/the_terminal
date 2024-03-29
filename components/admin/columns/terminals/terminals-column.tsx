@@ -19,7 +19,7 @@ export default function TerminalsColumn({ admin, refetch }: {
                 {admin.terminals.map((terminal) => (
                     <Card key={terminal.id+"_CARD"} className="p-2">
                         <CardTitle className="text-lg">
-                            {terminal.title}
+                            {terminal.id}. {terminal.title}
                         </CardTitle>
                         <CardDescription>
                             Owned by: {terminal.capturedBy?.title ?? "None"}

@@ -8,7 +8,7 @@ import { TICKUNIT } from "@/modules/routine"
 import type { SelectAirline } from "@/types/airline"
 import { TerminalSecretDrawer } from "./terminal-secret-drawer"
 
-export default function TerminalStaffDetails({ terminalId, airlines }: {
+export default function TerminalStaffDetails({ terminalId }: {
     terminalId: number
     airlines: SelectAirline[]
 }){
@@ -48,7 +48,7 @@ export default function TerminalStaffDetails({ terminalId, airlines }: {
                 :
                 <h1 className="text-base mb-4">No one have claimed this terminal yet</h1>
                 }
-                <TerminalSecretDrawer flagSecret={"123456"}/>
+                <TerminalSecretDrawer flagSecret={terminal.secret}/>
             </div>
         </div>
     )

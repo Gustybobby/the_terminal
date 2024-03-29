@@ -12,6 +12,7 @@ export interface CapturedByRecord {
 export interface TerminalData {
   id: number;
   title: string;
+  secret: string;
   description: string;
   passengerRate: number;
   unitTick: number;

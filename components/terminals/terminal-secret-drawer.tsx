@@ -23,4 +23,4 @@ export function TerminalSecretDrawer({ flagSecret }: { flagSecret: string }) {
             </DrawerContent>
         </Drawer>
     );
-  }
+}

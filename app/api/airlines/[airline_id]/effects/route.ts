@@ -14,6 +14,9 @@ export async function POST(req: NextRequest, { params }: { params: { airline_id:
     if(special){
         await specialSkill(+params.airline_id, applyToId, terminalId, option)
     }
+    else if(session?.user.role === "ADMIN"){
+        //handle custom buff
+    }
     return NextResponse.json({ message: "SUCCESS" }, { status: 200 })
 }
 
@@ -90,6 +93,18 @@ async function specialSkill(airlineId: number, applyToId: number | undefined, te
                         applyById: airlineId,
                         terminalId: terminalId,
                         multiplier: 3,
+                        unitTick: 1,
+                    }
+                })
+            } else if(option === 2){
+                await prisma.effect.create({
+                    data: {
+                        type: airline.class,
+                        fromTick: gameState.currentTick,
+                        toTick: gameState.currentTick + 30,
+                        applyById: airlineId,
+                        terminalId: terminalId,
+                        multiplier: 0.9,
                         unitTick: 1,
                     }
                 })

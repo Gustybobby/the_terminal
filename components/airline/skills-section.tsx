@@ -8,10 +8,8 @@ import { DropdownMenu, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import type { Effect } from "@prisma/client";
 import { TICKUNIT } from "@/modules/routine";
 
-export default function SkillsSection({ airlineId, airline, isCaptain, effects, currentTick }: {
-    airlineId: number
+export default function SkillsSection({ airline, effects, currentTick }: {
     airline: AirlineData
-    isCaptain: boolean
     effects: Effect[]
     currentTick: number
 }){
@@ -36,8 +34,8 @@ export default function SkillsSection({ airlineId, airline, isCaptain, effects, 
             ))}
             <h2 className="font-bold text-2xl mb-2">Unused Abilities</h2>
             <div className="grid grid-cols-2 gap-1">
-                {airline.stock?
-                    Array(airline.stock).fill(0).map((_, index) => (
+                {(airline.stock && airline.class !== "None")?
+                    Array(Math.max(airline.stock,0)).fill(0).map((_, index) => (
                         <Card className="py-2 flex flex-col items-center space-y-1" key={index}>
                             <GiPotionBall className="text-5xl"/>
                             <h1 className="font-bold text-center">{FACTION_MAP[airline.class].ability_name}</h1>

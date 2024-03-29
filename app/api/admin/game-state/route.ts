@@ -16,6 +16,7 @@ export async function PATCH(req: NextRequest){
         },
         data,
     })
+    console.log(data)
     if(update.currentTick === 0){
         await prisma.terminal.updateMany({
             data: {
@@ -26,17 +27,19 @@ export async function PATCH(req: NextRequest){
     }
     if(!update.start || reset){
         await prisma.effect.deleteMany()
+        console.log("clear all effects")
         await prisma.airline.updateMany({
             data: {
                 skillUse: 0
             },
         })
+        console.log("reset all class skill uses")
         await prisma.captureRecord.updateMany({
             data: {
                 capturedTick: 0
             }
         })
+        console.log("reset all capturedTick")
     }
-    console.log(update)
     return NextResponse.json({ message: "SUCCESS" }, { status: 200 })
 }

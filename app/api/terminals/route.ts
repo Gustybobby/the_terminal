@@ -27,6 +27,6 @@ export async function GET(){
         })
         return NextResponse.json({ message: "SUCCESS", data: terminals }, { status: 200 })
     } catch(e){
-        return NextResponse.json({ message: "ERROR" }, { status: 400 })
+        return NextResponse.json({ message: "ERROR" }, { status: 500 })
     }
 }

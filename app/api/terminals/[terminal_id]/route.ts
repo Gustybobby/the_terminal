@@ -32,7 +32,7 @@ export async function GET(req: NextRequest, { params }: { params: { terminal_id:
         })
         return NextResponse.json({ message: "SUCCESS", data: terminal }, { status: 200 })
     } catch(e){
-        return NextResponse.json({ message: "ERROR" }, { status: 400 })
+        return NextResponse.json({ message: "ERROR" }, { status: 500 })
     }
 }
 

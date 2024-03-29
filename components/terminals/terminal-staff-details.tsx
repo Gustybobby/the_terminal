@@ -7,15 +7,19 @@ import { useRouter } from "next/navigation"
 import { TICKUNIT } from "@/modules/routine"
 import type { SelectAirline } from "@/types/airline"
 import { TerminalSecretDrawer } from "./terminal-secret-drawer"
+import TerminalTimer from "./terminal-timer"
+import { useState } from "react"
 
 export default function TerminalStaffDetails({ terminalId }: {
     terminalId: number
     airlines: SelectAirline[]
 }){
     const { terminal } = useTerminal({ terminalId, refreshRate: TICKUNIT })
+    const [duration, setDuration] = useState(0)
     const router = useRouter()
+
     if(terminal === "error"){
-        router.replace("/status/terminals")
+        router.replace("/status")
         return <></>
     }
     if(terminal === "loading"){
@@ -49,6 +53,7 @@ export default function TerminalStaffDetails({ terminalId }: {
                 <h1 className="text-base mb-4">No one have claimed this terminal yet</h1>
                 }
                 <TerminalSecretDrawer flagSecret={terminal.secret}/>
+                <TerminalTimer duration={duration} setDuration={setDuration}/>
             </div>
         </div>
     )

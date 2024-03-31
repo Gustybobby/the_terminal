@@ -98,11 +98,20 @@ export default async function specialSkill(
                     }
                 })
             } else if(option === 2){
+                const ownerCheck = await prisma.terminal.findUnique({
+                    where: {
+                        id: terminalId,
+                        airlineId
+                    }
+                })
+                if(!ownerCheck){
+                    throw "cannot apply MT to this terminal due to not being an owner"
+                }
                 effect = await prisma.effect.create({
                     data: {
                         type: airline.class,
                         fromTick: gameState.currentTick,
-                        toTick: gameState.currentTick + 30,
+                        toTick: tickPerPhase(gameState.phase),
                         applyById: airlineId,
                         terminalId: terminalId,
                         multiplier: 0.9,

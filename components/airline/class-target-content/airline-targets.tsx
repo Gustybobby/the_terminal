@@ -19,7 +19,7 @@ export default function AirlineTargets({ airlineId, setTarget }: {
             {airlines.map((airline) => (
                 <DropdownMenuItem
                     key={airline.id}
-                    onClick={() => setTarget({ target: "A", id: airline.id, title: airline.title })}
+                    onClick={() => setTarget({ target: "A", id: airline.id, title: airline.title, option: 1 })}
                 >
                     {airline.title}
                 </DropdownMenuItem>

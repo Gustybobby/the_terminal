@@ -88,14 +88,19 @@ const textStyles = {
 
 function getTerminalGain(capture: CaptureData, effects: Effect[]): Gain{
     const boost = !!effects.find((fx) => fx.type === "MSME")
-    const effect = capture.effects.find((fx) => fx.terminalId === capture.id)
+    const decision = !!effects.find((fx) => fx.type === "MT")
+    const terminalEffects = capture.effects.filter((fx) => fx.terminalId === capture.id)
+    let passengerRate = capture.passengerRate
+    for(const fx of terminalEffects){
+        passengerRate = Math.floor((fx.multiplier ?? 1)*(( fx.flatRate ?? 0 ) + passengerRate))
+    }
     return {
         source: {
             type: "terminal",
             terminalId: capture.id,
-            terminalTitle: capture.title + (boost? " (Logistics Boost)" : "") + (effect?.type==="MT"? " (Decision Making)" : ""),
+            terminalTitle: capture.title + (boost? " (Logistics Boost)" : "") + (decision? " (Decision Making)" : ""),
         },
-        passengerRate: (effect?.type==="MT"? (effect.multiplier ?? 1) : 1)*capture.passengerRate,
+        passengerRate,
         unitTick: Math.round(capture.unitTick / (boost? 4 : 1)),
     }
 }
@@ -120,6 +125,7 @@ function getEffectGain(effect: Effect, airline: AirlineData): Gain | null{
                 unitTick: 1
             }
         case "MSME":
+        case "MT":
             return null
         default:
             throw "unhandled"

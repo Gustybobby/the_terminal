@@ -1,5 +1,4 @@
 "use client"
-import { GiPotionBall } from "react-icons/gi";
 import { Card } from "../ui/card";
 import { buttonVariants } from "../ui/button";
 import type { AirlineData } from "@/types/airline";
@@ -10,11 +9,15 @@ import { TICKUNIT } from "@/modules/routine";
 import AirlineTargets from "./class-target-content/airline-targets";
 import { type Dispatch, type SetStateAction, useState } from "react";
 import ConfirmTargetDialog from "./class-target-content/confirm-target-dialog";
+import { FaBuilding, FaBusinessTime, FaVirus } from "react-icons/fa";
+import { FaExplosion, FaGear } from "react-icons/fa6";
+import OptionTargets from "./class-target-content/option-targets";
 
 export interface TargetData {
     target: "T" | "A" | "NA",
     id: number
     title: string
+    option: number
 }
 
 export default function SkillsSection({ airline, effects, currentTick }: {
@@ -41,32 +44,37 @@ export default function SkillsSection({ airline, effects, currentTick }: {
                 </div>
             ))}
             <h2 className="font-bold text-2xl mb-2">Unused Abilities</h2>
-            <div className="grid grid-cols-2 gap-1">
-                {(airline.stock && airline.class !== "None")?
-                    Array(Math.max(airline.stock,0)).fill(0).map((_, index) => (
-                        <Card className="py-2 flex flex-col items-center space-y-1" key={index}>
-                            <GiPotionBall className="text-5xl"/>
-                            <h1 className="font-bold text-center">{FACTION_MAP[airline.class].ability_name}</h1>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger
-                                    className={buttonVariants({ variant: "outline", className: "bg-green-300 hover:bg-green-400" })}
-                                    disabled={airline.class === "CET"}
-                                    onClick={() => {
-                                        if(airline.class === "MSME"){
-                                            setTarget({ target: "NA", id: 0, title: "yourself" })
-                                        }
-                                    }}
-                                >
-                                    {airline.class === "CET"? "Passive" : "Use"}
-                                </DropdownMenuTrigger>
-                                <TargetContent
-                                    airlineId={airline.id}
-                                    airlineClass={airline.class}
-                                    setTarget={setTarget}
-                                />
-                            </DropdownMenu>
-                        </Card> 
-                    ))
+            <div className="flex flex-col items-center">
+                {(airline.stock > 0 && airline.class !== "None")?
+                    <Card className="p-4 flex flex-col items-center space-y-1 w-fit">
+                        {SkillIcon[airline.class]}
+                        <h1 className="font-bold text-center">{FACTION_MAP[airline.class].ability_name}</h1>
+                        <div className="flex flex-col items-start">
+                            {FACTION_MAP[airline.class].description.split("\n").map((line,j) => (
+                            <div className={`mb-1 ${line.includes("***")? "text-red-600 font-semibold" : ""}`} key={j}>
+                                {line}
+                            </div>
+                            ))}
+                        </div>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger
+                                className={buttonVariants({ variant: "outline", className: "bg-green-300 hover:bg-green-400" })}
+                                disabled={airline.class === "CET"}
+                                onClick={() => {
+                                    if(airline.class === "MSME"){
+                                        setTarget({ target: "NA", id: 0, title: "yourself", option: 1 })
+                                    }
+                                }}
+                            >
+                                {airline.class === "CET"? "Passive" : "Use"}
+                            </DropdownMenuTrigger>
+                            <TargetContent
+                                airlineId={airline.id}
+                                airlineClass={airline.class}
+                                setTarget={setTarget}
+                            />
+                        </DropdownMenu>
+                    </Card>
                     :
                     <span className="col-span-2">You used all your abilities for this phase</span>
                 }
@@ -91,5 +99,16 @@ function TargetContent({ airlineId, airlineClass, setTarget }: {
             return <AirlineTargets airlineId={airlineId} setTarget={setTarget}/>
         case "MSME":
             return <></>
+        case "BCET":
+        case "MT":
+            return <OptionTargets/>
     }
+}
+
+const SkillIcon = {
+    "ICT": <FaVirus className="text-5xl"/>,
+    "MSME": <FaGear className="text-5xl"/>,
+    "BCET": <FaExplosion className="text-5xl"/>,
+    "CET": <FaBuilding className="text-5xl"/>,
+    "MT": <FaBusinessTime className="text-5xl"/>,
 }

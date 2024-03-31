@@ -25,6 +25,16 @@ export async function PATCH(req: NextRequest){
         })
         console.log("reset all terminals")
     }
+    if(!update.start){
+        await prisma.captureRecord.deleteMany()
+        console.log("deleted all capture records")
+        await prisma.terminal.updateMany({
+            data: {
+                airlineId: null
+            }
+        })
+        console.log("set all terminals owner to null")
+    }
     if(!update.start || reset){
         await prisma.effect.deleteMany()
         console.log("clear all effects")

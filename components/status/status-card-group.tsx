@@ -9,7 +9,7 @@ import { TICKUNIT } from "@/modules/routine";
 import { Color } from "@prisma/client";
 
 export default function StatusCardGroup() {
-  const { terminals } = useAllTerminals({ refreshRate: TICKUNIT })
+  const { terminals, currentTick } = useAllTerminals({ refreshRate: TICKUNIT })
   useCaptureToast()
   
   if(terminals === "error"){
@@ -23,15 +23,17 @@ export default function StatusCardGroup() {
     )
   }
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
       {terminals.map((terminal: TerminalData) => (
         <StatusCard
           key={terminal.id}
           terminal={terminal}
           className={terminal.capturedBy? styles[terminal.capturedBy.color] : ""}
+          currentTick={currentTick}
         />
       ))}
       <StatusCard
+        className="col-span-3"
         terminal={{
           secret: "",
           id: 11,
@@ -42,6 +44,7 @@ export default function StatusCardGroup() {
           lastUpdateTick: 0,
           capturedBy: null
         }}
+        currentTick={0}
       />
     </div>
   );

@@ -3,8 +3,13 @@ import { IoPeopleCircleSharp } from "react-icons/io5";
 import Image from "next/image";
 import type { TerminalData } from "@/types/terminal"
 import { TICKUNIT } from "@/modules/routine";
+import { Progress } from "../ui/progress";
 
-export default function StatusCard({ terminal, className }: { terminal: TerminalData ,className?: string }) {
+export default function StatusCard({ terminal, currentTick, className }: {
+  terminal: TerminalData
+  currentTick: number
+  className?: string
+}){
   return (
     <Card className={`w-full ${className}`}>
       <CardHeader className="p-2 pb-1">
@@ -29,7 +34,12 @@ export default function StatusCard({ terminal, className }: { terminal: Terminal
           </div>
         </div>
       </CardHeader>
-      <CardContent className="flex p-2 pb-1 font-bold">
+      <CardContent className="flex flex-col p-2 pb-1 font-bold">
+          {terminal.id !== 11 &&
+            <Progress
+              value={terminal.capturedBy? (currentTick - terminal.lastUpdateTick)/(terminal.unitTick)*100 : 0}
+            />
+          }
           <p>Owned by: {terminal.capturedBy?.title ?? "None"}</p>
         </CardContent>
     </Card>

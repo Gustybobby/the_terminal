@@ -9,6 +9,8 @@ export interface TerminalUpdateData {
         id: number;
         capturedAt: Date;
         capturedTick: number;
+        endAt: Date | null;
+        endTick: number | null;
         terminalId: number;
         airlineId: number;
     }[];

@@ -44,12 +44,19 @@ export async function PATCH(req: NextRequest){
             },
         })
         console.log("reset all class skill uses")
+        await prisma.captureRecord.deleteMany({
+            where: {
+                endAt: {
+                    not: null
+                }
+            }
+        })
         await prisma.captureRecord.updateMany({
             data: {
                 capturedTick: 0
             }
         })
-        console.log("reset all capturedTick")
+        console.log("reset all captures")
     }
     return NextResponse.json({ message: "SUCCESS" }, { status: 200 })
 }

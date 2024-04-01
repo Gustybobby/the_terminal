@@ -87,7 +87,6 @@ async function getTerminals(): Promise<TerminalUpdateData[]>{
                 orderBy: {
                     capturedAt: "desc"
                 },
-                take: 1
             }
         }
     })
@@ -216,8 +215,10 @@ async function effectCycle(terminals: TerminalUpdateData[], effects: Effect[], c
             if(effects.find((fx) => fx.applyById === terminal.capturedBy.id && fx.terminalId === terminal.id)){
                 continue
             }
-            const capturedTick = terminal.capturedByRecords[0].capturedTick
-            if(currentTick - capturedTick >= classConfig.CET.reqDurationScale*totalPhaseTick(phase)){
+            const threshold = classConfig.CET.reqDurationScale*totalPhaseTick(phase)
+            const sumTicks = sumCaptureTicks(terminal.capturedByRecords, currentTick, terminal.capturedBy.id, threshold)
+            console.log("Airline",terminal.capturedBy.id,", Terminal",terminal.id,`, ${sumTicks} / ${threshold} until next passive activation`)
+            if(sumTicks === threshold){
                 const foundationMatters = await prisma.effect.create({
                     data: {
                         applyById: terminal.capturedBy.id,
@@ -233,6 +234,24 @@ async function effectCycle(terminals: TerminalUpdateData[], effects: Effect[], c
             }
         }
     }
+}
+
+function sumCaptureTicks(records: TerminalUpdateData["capturedByRecords"], currentTick: number, airlineId: number, threshold: number){
+    let sumTicks = 0
+    for(const record of records){
+        if(record.airlineId !== airlineId){
+            continue
+        }
+        if(record.endTick === null){
+            sumTicks += currentTick - record.capturedTick
+            continue
+        }
+        sumTicks += record.endTick - record.capturedTick
+    }
+    if(sumTicks > threshold){
+        sumTicks = sumTicks % threshold
+    }
+    return sumTicks
 }
 
 const totalPhaseTick = (phase: number) => phase*10*60*1000/TICKUNIT

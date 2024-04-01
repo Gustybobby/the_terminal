@@ -23,7 +23,7 @@ export const FACTION_MAP = {
       duration_factor: 0.25,
       type: "Airline Buff",
       description:
-        "ทำให้ time interval ของ passenger rate ลดลงเหลือ 25% ทุก terminal ที่ครอบครองเป็นระยะเวลา 25% ของ phase\nEx. 100 Ps / 20 sec => 100 Ps / 5 Sec\n*** ผลของสกิลจะหยุดทันทีเมื่อถูก airline อื่นยึดไป",
+        "ทำให้ time interval ของ passenger rate ลดลงเหลือ 25% ทุก terminal ที่ครอบครองเป็นระยะเวลา 25% ของ phase\nEx. 100 Ps / 20 sec => 100 Ps / 5 Sec",
     },
     BCET: {
       id: 3,
@@ -52,7 +52,6 @@ export const FACTION_MAP = {
       type: "Passive Buff",
       description: [
         "เมื่อครอบครอง terminal ไหนเกินระยะเวลา 50% ของ phase passenger rate ของ terminal น้้น x3 จนกว่าจะหมด phase",
-        "*** ผลของสกิลจะหยุดทันทีเมื่อถูก airline อื่นยึดไป",
       ].join("\n")
     },
     MT: {

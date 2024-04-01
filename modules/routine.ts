@@ -248,9 +248,9 @@ function sumCaptureTicks(records: TerminalUpdateData["capturedByRecords"], curre
         }
         sumTicks += record.endTick - record.capturedTick
     }
-    if(sumTicks > threshold){
+    /**if(sumTicks > threshold){
         sumTicks = sumTicks % threshold
-    }
+    } */
     return sumTicks
 }
 

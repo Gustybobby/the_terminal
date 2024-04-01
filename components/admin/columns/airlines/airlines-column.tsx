@@ -72,8 +72,8 @@ const styles: { [key in Color]: string } = {
     ORANGE: "bg-orange-200",
     GREEN: "bg-green-200",
     BLUE: "bg-blue-300",
-    PURPLE: "bg-purple-200",
+    PURPLE: "bg-purple-300",
     BROWN: "bg-yellow-300",
     AQUA: "bg-cyan-200",
     BEIGE: "bg-orange-100",
-  }
+}

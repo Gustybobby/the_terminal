@@ -23,7 +23,7 @@ export default function StatusCardGroup() {
     )
   }
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
       {terminals.map((terminal: TerminalData) => (
         <StatusCard
           key={terminal.id}
@@ -33,11 +33,12 @@ export default function StatusCardGroup() {
         />
       ))}
       <StatusCard
-        className="col-span-3"
+        className="lg:col-span-2"
         terminal={{
           secret: "",
           id: 11,
           title: "Casino",
+          status: "Open",
           description: "Casino",
           passengerRate: 0,
           unitTick: 0,
@@ -51,14 +52,14 @@ export default function StatusCardGroup() {
 }
 
 const styles: { [key in Color]: string } = {
-  RED: "bg-red-400",
-  PINK: "bg-pink-400",
-  YELLOW: "bg-yellow-400",
-  ORANGE: "bg-orange-400",
-  GREEN: "bg-green-400",
-  BLUE: "bg-blue-400",
-  PURPLE: "bg-purple-400",
-  BROWN: "bg-yellow-600",
-  AQUA: "bg-cyan-400",
-  BEIGE: "bg-orange-200",
+  RED: "bg-red-200",
+  PINK: "bg-pink-200",
+  YELLOW: "bg-yellow-200",
+  ORANGE: "bg-orange-200",
+  GREEN: "bg-green-200",
+  BLUE: "bg-blue-300",
+  PURPLE: "bg-purple-300",
+  BROWN: "bg-yellow-300",
+  AQUA: "bg-cyan-200",
+  BEIGE: "bg-orange-100",
 }

@@ -27,6 +27,7 @@ model Terminal {
   secret            String          @unique
   title             String
   description       String
+  status            TerminalStatus  @default(Open)
   passengerRate     Int
   unitTick          Int             @default(1)
   airlineId         Int?
@@ -125,4 +126,10 @@ enum Color {
   BROWN
   AQUA
   BEIGE
+}
+
+enum TerminalStatus {
+  Open
+  Playing
+  Cooldown
 }

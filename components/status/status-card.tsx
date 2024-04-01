@@ -4,6 +4,8 @@ import Image from "next/image";
 import type { TerminalData } from "@/types/terminal"
 import { TICKUNIT } from "@/modules/routine";
 import { Progress } from "../ui/progress";
+import type { TerminalStatus } from "@prisma/client";
+import { statusEmoji } from "./status-emoji";
 
 export default function StatusCard({ terminal, currentTick, className }: {
   terminal: TerminalData
@@ -24,7 +26,16 @@ export default function StatusCard({ terminal, currentTick, className }: {
               quality={50}
             />
             <div className="ml-2 flex flex-col items-start">
-              <CardTitle className=" text-xl">{terminal.title}</CardTitle>
+              <CardTitle className="text-xl bg-white/40 px-2 rounded-lg border border-black">
+                <span className={styles.status(terminal.status)}>
+                  <span className="text-xl">
+                    {statusEmoji[terminal.status]}
+                  </span>
+                  {terminal.status}
+                </span>
+                &nbsp;
+                {terminal.title}
+              </CardTitle>
               <CardDescription className="flex flex-col items-start text-black">{terminal.description}</CardDescription>
             </div>
           </div>
@@ -36,12 +47,24 @@ export default function StatusCard({ terminal, currentTick, className }: {
       </CardHeader>
       <CardContent className="flex flex-col p-2 pb-1 font-bold">
           {terminal.id !== 11 &&
-            <Progress
-              value={terminal.capturedBy? (currentTick - terminal.lastUpdateTick)/(terminal.unitTick)*100 : 0}
-            />
+            <>
+              <span className="text-sm">{terminal.capturedBy? "Loading Passengers..." : "..."}</span>
+              <Progress
+                value={terminal.capturedBy? (currentTick - terminal.lastUpdateTick)/(terminal.unitTick)*100 : 0}
+              />
+            </>
           }
           <p>Owned by: {terminal.capturedBy?.title ?? "None"}</p>
         </CardContent>
     </Card>
   );
+}
+
+const styles = {
+  status: (status: TerminalStatus) => [
+    status === "Open"? "text-green-500" : "",
+    status === "Playing"? "text-blue-500" : "",
+    status === "Cooldown"? "text-red-500" : "",
+    "text-base",
+  ].join(" ")
 }

@@ -9,12 +9,13 @@ import type { SelectAirline } from "@/types/airline"
 import { TerminalSecretDrawer } from "./terminal-secret-drawer"
 import TerminalTimer from "./terminal-timer"
 import { useState } from "react"
+import TerminalStatusDropdown from "./terminal-status-dropdown"
 
 export default function TerminalStaffDetails({ terminalId }: {
     terminalId: number
     airlines: SelectAirline[]
 }){
-    const { terminal } = useTerminal({ terminalId, refreshRate: TICKUNIT })
+    const { terminal, refetch } = useTerminal({ terminalId, refreshRate: TICKUNIT })
     const [duration, setDuration] = useState(0)
     const router = useRouter()
 
@@ -43,6 +44,13 @@ export default function TerminalStaffDetails({ terminalId }: {
                 </div>
             </div>
             <p className="text-l font-normal mb-4 ml-1">{terminal.description}</p>
+            <div className="flex justify-end">
+                <TerminalStatusDropdown
+                    status={terminal.status}
+                    terminalId={terminalId}
+                    refetch={refetch}
+                />
+            </div>
             <div className="w-full flex flex-col justify-center items-center">
                 <h2 className=" text-2xl font-bold mb-2">Terminal Owner</h2>
                 {terminal.capturedBy?

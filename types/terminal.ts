@@ -1,4 +1,4 @@
-import type { AirlineClass, Color } from "@prisma/client";
+import type { AirlineClass, Color, TerminalStatus } from "@prisma/client";
 
 export interface CapturedByRecord {
   title: string;
@@ -13,6 +13,7 @@ export interface TerminalData {
   id: number;
   title: string;
   secret: string;
+  status: TerminalStatus
   description: string;
   passengerRate: number;
   unitTick: number;

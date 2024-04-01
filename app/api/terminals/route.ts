@@ -22,6 +22,7 @@ export async function GET(){
                 passengerRate: true,
                 unitTick: true,
                 lastUpdateTick: true,
+                status: true,
                 capturedBy: {
                     select: {
                         id: true,

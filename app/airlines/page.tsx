@@ -9,7 +9,7 @@ export default async function AirlinesPage(){
         redirect("/")
     }
     if(session.user.role === "STAFF"){
-        redirect("/status/terminals")
+        redirect("/terminals")
     }
     const user = await prisma.user.findUniqueOrThrow({
         where: {

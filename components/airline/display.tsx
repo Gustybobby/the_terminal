@@ -90,6 +90,7 @@ function getTerminalGain(capture: CaptureData, effects: Effect[]): Gain{
     const boost = !!effects.find((fx) => fx.type === "MSME")
     const decision = !!effects.find((fx) => fx.type === "MT")
     const terminalEffects = capture.effects.filter((fx) => fx.terminalId === capture.id)
+    const foundation = !!terminalEffects.find((fx) => fx.type === "CET")
     let passengerRate = capture.passengerRate
     for(const fx of terminalEffects){
         passengerRate = Math.floor((fx.multiplier ?? 1)*(( fx.flatRate ?? 0 ) + passengerRate))
@@ -98,7 +99,10 @@ function getTerminalGain(capture: CaptureData, effects: Effect[]): Gain{
         source: {
             type: "terminal",
             terminalId: capture.id,
-            terminalTitle: capture.title + (boost? " (Logistics Boost)" : "") + (decision? " (Decision Making)" : ""),
+            terminalTitle: capture.title + 
+                (boost? " (Logistics Boost)" : "") +
+                (decision? " (Decision Making)" : "") +
+                (foundation? " (Foundation Matters)" : ""),
         },
         passengerRate,
         unitTick: Math.round(capture.unitTick / (boost? 4 : 1)),
@@ -111,19 +115,13 @@ function getEffectGain(effect: Effect, airline: AirlineData): Gain | null{
         effectTitle: FACTION_MAP[effect.type].ability_name,
     }
     switch(effect.type){
-        case "CET":
-            const appliedTerminal: CaptureData | undefined = airline.captures.find((terminal) => terminal.id === effect.terminalId)
-            return {
-                source,
-                passengerRate: (appliedTerminal?.passengerRate ?? 0) * 2,
-                unitTick: appliedTerminal?.unitTick ?? 1
-            }
         case "ICT":
             return {
                 source,
                 passengerRate: "unknown",
                 unitTick: 1
             }
+        case "CET":
         case "MSME":
         case "MT":
             return null

@@ -28,7 +28,7 @@ export default async function Home() {
                     by SIIT Insight Camp 2024
                 </h2>
                 <div className="space-x-2">
-                    {session?.user.role === "USER" || session?.user.role === "ADMIN" &&
+                    {(session?.user.role === "USER" || session?.user.role === "ADMIN") &&
                     <Link
                         className={buttonVariants({ variant: "default" })}
                         href={"/airlines"}
@@ -36,7 +36,7 @@ export default async function Home() {
                         Access Airline
                     </Link>
                     }
-                    {session?.user.role === "STAFF" || session?.user.role === "ADMIN" &&
+                    {(session?.user.role === "STAFF" || session?.user.role === "ADMIN") &&
                     <Link
                         className={buttonVariants({ variant: "default" })}
                         href={"/terminals"}

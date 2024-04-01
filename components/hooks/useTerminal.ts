@@ -6,10 +6,13 @@ export default function useTerminal({ terminalId, refreshRate }: {
     refreshRate: number
 }){
     const [data, setData] = useState<TerminalData | "loading" | "error">("loading")
+    const [shouldRefetch, refetch] = useState({})
     useEffect(() => {
         fetch(`/api/terminals/${terminalId}`)
             .then(res => res.json())
             .then(data => data.message === "SUCCESS"? setData(data.data) : setData("error"))
+    },[shouldRefetch, terminalId])
+    useEffect(() => {
         const interval = setInterval(() => {
             fetch(`/api/terminals/${terminalId}`)
                 .then(res => res.json())
@@ -17,5 +20,5 @@ export default function useTerminal({ terminalId, refreshRate }: {
         }, refreshRate)
         return () => clearInterval(interval)
     },[refreshRate, terminalId])
-    return { terminal: data }
+    return { terminal: data, refetch }
 }

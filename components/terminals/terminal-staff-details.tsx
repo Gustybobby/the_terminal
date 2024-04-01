@@ -10,6 +10,7 @@ import { TerminalSecretDrawer } from "./terminal-secret-drawer"
 import TerminalTimer from "./terminal-timer"
 import { useState } from "react"
 import TerminalStatusDropdown from "./terminal-status-dropdown"
+import { ActivationOTPDrawer } from "./activation-otp-drawer"
 
 export default function TerminalStaffDetails({ terminalId }: {
     terminalId: number
@@ -61,6 +62,7 @@ export default function TerminalStaffDetails({ terminalId }: {
                 <h1 className="text-base mb-4">No one have claimed this terminal yet</h1>
                 }
                 <TerminalSecretDrawer flagSecret={terminal.secret}/>
+                <ActivationOTPDrawer terminalId={terminalId}/>
                 <TerminalTimer duration={duration} setDuration={setDuration}/>
             </div>
         </div>

@@ -93,9 +93,10 @@ async function captureCleanUp(airlineId: number | null, terminalId: number, curr
     await prisma.effect.deleteMany({
         where: {
             terminalId,
-            AND: [
-                { type: { not: "BCET" } },
+            type: { not: "BCET" },
+            OR: [
                 { type: { not: "MT" } },
+                { multiplier: 0.9 },
             ],
         },
     })

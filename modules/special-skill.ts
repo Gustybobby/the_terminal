@@ -36,6 +36,9 @@ export default async function specialSkill(
     let effect
     switch(airline.class){
         case "ICT":
+            if(option !== 1){
+                throw "Invalid option"
+            }
             effect = await prisma.effect.create({
                 data: {
                     type: airline.class,
@@ -49,6 +52,9 @@ export default async function specialSkill(
             })
             break
         case "MSME":
+            if(option !== 1){
+                throw "Invalid option"
+            }
             const prevEffect1 = await prisma.effect.findMany({
                 where: {
                     type: airline.class,
@@ -91,6 +97,18 @@ export default async function specialSkill(
                         applyById: airlineId,
                         terminalId: terminalId,
                         multiplier: 0.5,
+                        unitTick: 1,
+                    }
+                })
+            } else if (option === 2){ //for staff
+                effect = await prisma.effect.create({
+                    data: {
+                        type: airline.class,
+                        fromTick: gameState.currentTick,
+                        toTick: gameState.currentTick + 2, 
+                        applyById: airlineId,
+                        terminalId: terminalId,
+                        multiplier: 1,
                         unitTick: 1,
                     }
                 })

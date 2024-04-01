@@ -17,7 +17,7 @@ export default function PassengersEditDialog({ open, close, airline }: {
                     <AlertDialogTitle>
                         {airline?.title} Passengers
                     </AlertDialogTitle>
-                    <PassengerEditFields airlineId={airline?.id ?? -1}/>
+                    <PassengerEditFields airlineId={airline?.id ?? -1} passengers={airline?.passengers ?? 0}/>
                 </AlertDialogHeader>
                 <AlertDialogCancel
                     onClick={() => close()}

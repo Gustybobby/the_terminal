@@ -5,7 +5,7 @@ import { Button } from "../../../../ui/button"
 import { Input } from "../../../../ui/input"
 import { sendJSONToAPI } from "@/tools/apiHandler"
 
-export default function PassengerEditFields({ airlineId }: { airlineId: number }){
+export default function PassengerEditFields({ airlineId, passengers }: { airlineId: number, passengers: number }){
     const [value, setValue] = useState<number | "">("")
     return (
         <div className="w-full flex flex-col items-center">
@@ -22,7 +22,7 @@ export default function PassengerEditFields({ airlineId }: { airlineId: number }
                         await sendJSONToAPI({
                             url: `/api/airlines/${airlineId}`,
                             method: "PATCH",
-                            body: JSON.stringify({ data: { passengers: value }})
+                            body: JSON.stringify({ data: { passengers: Math.round(+value) }})
                         })
                     }}
                     disabled={value === ""}
@@ -34,7 +34,7 @@ export default function PassengerEditFields({ airlineId }: { airlineId: number }
                         await sendJSONToAPI({
                             url: `/api/airlines/${airlineId}`,
                             method: "PATCH",
-                            body: JSON.stringify({ data: { passengers: { increment: value } }})
+                            body: JSON.stringify({ data: { passengers: Math.round(passengers+(+value)) }})
                         })
                     }}
                     disabled={value === ""}
@@ -46,7 +46,7 @@ export default function PassengerEditFields({ airlineId }: { airlineId: number }
                         await sendJSONToAPI({
                             url: `/api/airlines/${airlineId}`,
                             method: "PATCH",
-                            body: JSON.stringify({ data: { passengers: { multiply: value } }})
+                            body: JSON.stringify({ data: { passengers: Math.round(passengers*(+value)) } })
                         })
                     }}
                     disabled={value === ""}
@@ -58,7 +58,7 @@ export default function PassengerEditFields({ airlineId }: { airlineId: number }
                         await sendJSONToAPI({
                             url: `/api/airlines/${airlineId}`,
                             method: "PATCH",
-                            body: JSON.stringify({ data: { passengers: { divide: value } }})
+                            body: JSON.stringify({ data: { passengers: Math.round(passengers/(+value)) }})
                         })
                     }}
                     disabled={value === ""}

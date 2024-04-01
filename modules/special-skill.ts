@@ -49,7 +49,7 @@ export default async function specialSkill(
             })
             break
         case "MSME":
-            const prevEffect = await prisma.effect.findMany({
+            const prevEffect1 = await prisma.effect.findMany({
                 where: {
                     type: airline.class,
                     fromTick: { lte: gameState.currentTick },
@@ -57,7 +57,7 @@ export default async function specialSkill(
                     applyById: airlineId
                 }
             })
-            if(prevEffect.length > 0){
+            if(prevEffect1.length > 0){
                 throw "Effect is already active"
             }
             effect = await prisma.effect.create({
@@ -71,6 +71,18 @@ export default async function specialSkill(
             break
         case "BCET":
             if(option === 1){
+                const prevEffect2 = await prisma.effect.findMany({
+                    where: {
+                        type: airline.class,
+                        fromTick: { lte: gameState.currentTick },
+                        toTick: { gte: gameState.currentTick },
+                        applyById: airlineId,
+                        terminalId: terminalId,
+                    }
+                })
+                if(prevEffect2.length > 0){
+                    throw "Effect is already active"
+                }
                 effect = await prisma.effect.create({
                     data: {
                         type: airline.class,
@@ -106,7 +118,7 @@ export default async function specialSkill(
                         unitTick: 1,
                     }
                 })
-            } else if(option === 2){
+            } else if(option === 2){ //for staff
                 effect = await prisma.effect.create({
                     data: {
                         type: airline.class,

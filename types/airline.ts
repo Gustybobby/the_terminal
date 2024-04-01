@@ -39,7 +39,7 @@ export interface AirlineData {
     }[];
 }
 
-export interface AirlineTargetData {
+export interface AbilityTargetData {
     id: number
     title: string
 }

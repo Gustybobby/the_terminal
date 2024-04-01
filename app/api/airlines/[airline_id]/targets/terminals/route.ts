@@ -11,12 +11,15 @@ export async function GET(req: NextRequest, { params }: { params: { airline_id: 
             class: true,
             applyEffects: {
                 select: {
-                    applyToId: true,
+                    terminalId: true,
                 }
             }
         }
     })
-    const allAirlines = await prisma.airline.findMany({
+    const allTerminals = await prisma.terminal.findMany({
+        where: {
+            airlineId: airline.class === "BCET"? undefined : +params.airline_id
+        },
         select: {
             id: true,
             title: true,
@@ -25,7 +28,7 @@ export async function GET(req: NextRequest, { params }: { params: { airline_id: 
             id: "asc"
         }
     })
-    const noEffectAirlines: AbilityTargetData[] = allAirlines
-        .filter((al) => !airline.applyEffects.find(({ applyToId }) => al.id === applyToId) && al.id !== +params.airline_id)
-    return NextResponse.json({ message: "SUCCESS", data: noEffectAirlines })
+    const noEffectTerminals: AbilityTargetData[] = allTerminals
+        .filter((tl) => !airline.applyEffects.find(({ terminalId }) => tl.id === terminalId))
+    return NextResponse.json({ message: "SUCCESS", data: noEffectTerminals })
 }

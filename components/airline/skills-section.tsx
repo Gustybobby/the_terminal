@@ -12,6 +12,7 @@ import ConfirmTargetDialog from "./class-target-content/confirm-target-dialog";
 import { FaBuilding, FaBusinessTime, FaVirus } from "react-icons/fa";
 import { FaExplosion, FaGear } from "react-icons/fa6";
 import OptionTargets from "./class-target-content/option-targets";
+import TerminalTargets from "./class-target-content/terminal-targets";
 
 export interface TargetData {
     target: "T" | "A" | "NA",
@@ -49,6 +50,7 @@ export default function SkillsSection({ airline, effects, currentTick }: {
                     <Card className="p-4 flex flex-col items-center space-y-1 w-fit">
                         {SkillIcon[airline.class]}
                         <h1 className="font-bold text-center">{FACTION_MAP[airline.class].ability_name}</h1>
+                        <h2 className="font-semibold text-red-600">Uses left for this phase: {airline.stock}</h2>
                         <div className="flex flex-col items-start">
                             {FACTION_MAP[airline.class].description.split("\n").map((line,j) => (
                             <div className={`mb-1 ${line.includes("***")? "text-red-600 font-semibold" : ""}`} key={j}>
@@ -101,7 +103,7 @@ function TargetContent({ airlineId, airlineClass, setTarget }: {
             return <></>
         case "BCET":
         case "MT":
-            return <OptionTargets/>
+            return <TerminalTargets airlineId={airlineId} setTarget={setTarget}/>
     }
 }
 

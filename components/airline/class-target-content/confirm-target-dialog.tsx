@@ -21,7 +21,11 @@ export default function ConfirmTargetDialog({ target, setTarget, airlineClass, a
             <AlertDialogContent className="max-w-80 md:max-w-96 rounded-lg">
                 <AlertDialogHeader>
                     <AlertDialogTitle className="text-left">
-                        Use <span className="text-blue-600 inline-block">{FACTION_MAP[airlineClass].ability_name}</span> on&nbsp;
+                        Use&nbsp;
+                        <span className="text-blue-600 inline-block">
+                            {FACTION_MAP[airlineClass].ability_name}&nbsp;
+                            {(airlineClass === "MT" || airlineClass === "BCET") && "(Option 2)"}
+                        </span> on&nbsp;
                         <span className="text-red-600 inline-block">
                             {target?.title} {target?.target === "A" && `(Airline ${target?.id})`}
                         </span>?

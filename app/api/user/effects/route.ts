@@ -20,35 +20,24 @@ export async function GET(){
             id: session?.user.id ?? ""
         },
         select: {
-            airline: {
-                select: {
-                    id: true,
-                    recieveEffects: {
-                        where: {
-                            fromTick: { lte: gameState.currentTick },
-                            toTick: { gte: gameState.currentTick },
-                        }
-                    },
-                    applyEffects: {
-                        where: {
-                            fromTick: { lte: gameState.currentTick },
-                            toTick: { gte: gameState.currentTick },
-                        }
-                    }
-                }
-            }
+            id: true,
+            airlineId: true,
         }
     })
-    const effects = await prisma.effect.findMany({
+    const allEffects = await prisma.effect.findMany({
         where: {
-            type: "BCET",
-            toTick: { gte: gameState.currentTick }
+            fromTick: { lte: gameState.currentTick },
+            toTick: { gte: gameState.currentTick },
+            OR: [
+                { type: "BCET" },
+                { applyBy: { crews: { some: { id: user.id }}} },
+                { applyTo: { crews: { some: { id: user.id }}} },
+            ]
         }
     })
-    const allEffects = (user.airline?.recieveEffects ?? []).concat(effects).concat(user.airline?.applyEffects ?? [])
     return NextResponse.json({ message: "SUCCESS", data: {
         allEffects,
-        id: user.airline?.id,
+        id: user.airlineId,
         currentTick: gameState.currentTick
     }}, { status: 200 })
 }

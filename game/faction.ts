@@ -34,8 +34,12 @@ export const FACTION_MAP = {
       duration: -1,
       duration_factor: 1,
       type: "Global Sabotage",
-      description:
-        "สามารถเลือกได้ 1 อย่าง\n1. ทำให้ทีมอื่นที่เล่นอยู่ใน terminal นั้นออกไปจากตัวเกมและสามารถยึดฐานนั้นได้ทันที\n2. ทำให้เกิด effect “Exploded” , ซึ่งทำให้ Terminal passenger rate ลดลง 50% เป็นระยะเวลา 5 นาที",
+      description: [
+        "สามารถเลือกได้ 1 อย่าง",
+        "1. ทำให้ทีมอื่นที่เล่นอยู่ใน terminal นั้นออกไปจากตัวเกมและสามารถยึดฐานนั้นได้ทันที",
+        "(วิธีใช้: Captain ให้ Activation Code กับ Terminal Staff)",
+        "2. ทำให้เกิด effect “Exploded” , ซึ่งทำให้ Terminal passenger rate ลดลง 50% เป็นระยะเวลา 5 นาที",
+      ].join("\n")
     },
     CET: {
       id: 5,
@@ -46,8 +50,10 @@ export const FACTION_MAP = {
       duration: -1,
       duration_factor: 1,
       type: "Passive Buff",
-      description:
-        "เมื่อครอบครอง terminal ไหนเกินระยะเวลา 50% ของ phase passenger rate ของ terminal น้้น x3 จนกว่าจะหมด phase\n*** ผลของสกิลจะหยุดทันทีเมื่อถูก airline อื่นยึดไป",
+      description: [
+        "เมื่อครอบครอง terminal ไหนเกินระยะเวลา 50% ของ phase passenger rate ของ terminal น้้น x3 จนกว่าจะหมด phase",
+        "*** ผลของสกิลจะหยุดทันทีเมื่อถูก airline อื่นยึดไป",
+      ].join("\n")
     },
     MT: {
       id: 4,
@@ -58,8 +64,12 @@ export const FACTION_MAP = {
       duration: -1,
       duration_factor: 1,
       type: "Terminal Buff/Protection",
-      description:
-        "ธุรกิจมีทั้งข้อดีข้อเสีย ให้เลือก 1 อย่าง\n1. ป้องกัน Terminal ตัวเองได้ 1 ครั้ง เมื่อแพ้ แต่ต้องสูญเสีย 10% passenger rate\n2. 3x passenger rate กับ terminal เป็นระยะเวลา 5 นาทีของ phase",
+      description: [
+        "ธุรกิจมีทั้งข้อดีข้อเสีย ให้เลือก 1 อย่าง",
+        "1. ป้องกัน Terminal ตัวเองได้ 1 ครั้ง เมื่อแพ้ แต่ต้องสูญเสีย 10% passenger rate",
+        "(วิธีใช้: Captain ให้ Activation Code กับ Terminal Staff)",
+        "2. 3x passenger rate กับ terminal เป็นระยะเวลา 5 นาที"
+      ].join("\n")
     },
     None: {
         id: 999,

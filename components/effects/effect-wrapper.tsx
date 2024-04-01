@@ -19,7 +19,7 @@ export default function EffectWrapper({ children, airlineId, className }: {
         if(effects === "loading"){
             return
         }
-        const labExplosion = effects.find((effect) => effect.type === "BCET")
+        const labExplosion = effects.find((effect) => effect.type === "BCET" && currentTick - effect.fromTick < 2 && effect.multiplier === 1)
         if(labExplosion){
             toast({
                 description: (
@@ -35,7 +35,7 @@ export default function EffectWrapper({ children, airlineId, className }: {
                 duration: 3000,
             })
         }
-    }, [effects, toast])
+    }, [effects, currentTick, toast])
     if(effects === "loading"){
         return (
           <div className="w-full h-full flex justify-center items-center">
@@ -45,7 +45,7 @@ export default function EffectWrapper({ children, airlineId, className }: {
       }
     const isDisabled = !!effects.find((effect) => effect.type === "ICT" && effect.applyToId === id)
     const renderChildren = () => {
-        return cloneElement(children, { effects: effects.filter((effect) => effect.type !== "BCET"), currentTick })
+        return cloneElement(children, { effects: effects.filter((effect) => effect.type !== "BCET" || effect.applyById === airlineId), currentTick })
     }
     return (
         <div className={className}>

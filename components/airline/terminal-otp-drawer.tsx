@@ -28,7 +28,9 @@ export function TerminalOTPDrawer({ airlineId }: { airlineId: number }) {
                 <DrawerFooter>
                     <Button
                         variant="outline"
-                        onClick={async() => {
+                        onClick={async(e) => {
+                            const button = e.target as HTMLButtonElement
+                            button.disabled = true
                             const res = await sendJSONToAPI({
                                 url: "/api/terminals/secret",
                                 method: "POST",
@@ -49,6 +51,7 @@ export function TerminalOTPDrawer({ airlineId }: { airlineId: number }) {
                                 })
                             }
                             setSecret("")
+                            button.disabled = false
                         }}
                         disabled={secret.length !== 6}
                     >

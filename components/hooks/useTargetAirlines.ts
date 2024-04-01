@@ -1,11 +1,11 @@
-import type { AirlineTargetData } from "@/types/airline"
+import { AbilityTargetData } from "@/types/airline"
 import { useEffect, useState } from "react"
 
 export default function useTargetAirlines({ refreshRate, airlineId }: {
     refreshRate: number
     airlineId: number
 }){
-    const [data, setData] = useState<AirlineTargetData[] | "loading" | "error">("loading")
+    const [data, setData] = useState<AbilityTargetData[] | "loading" | "error">("loading")
     const [shouldRefetch, refetch] = useState({})
     useEffect(() => {
         fetch(`/api/airlines/${airlineId}/targets/airlines`)

@@ -13,7 +13,7 @@ export default async function TerminalsPage(){
                 terminalId: true
             }
         })
-        redirect(`${terminalId}`)
+        redirect(`/terminals/${terminalId}`)
     }
     redirect(`/status`)
 }

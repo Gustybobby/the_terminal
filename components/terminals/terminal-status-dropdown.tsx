@@ -21,6 +21,7 @@ export default function TerminalStatusDropdown({ status, terminalId, refetch }: 
             <DropdownMenuContent>
                 {Object.values(TerminalStatus).map((avStatus) => (
                 <DropdownMenuItem
+                    key={avStatus+"_ITEM"}
                     onClick={async() => {
                         await sendJSONToAPI({
                             url: `/api/terminals/${terminalId}`,

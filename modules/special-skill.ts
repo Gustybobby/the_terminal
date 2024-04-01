@@ -85,6 +85,15 @@ export default async function specialSkill(
             }
             break
         case "MT":
+            const ownerCheck = await prisma.terminal.findUnique({
+                where: {
+                    id: terminalId,
+                    airlineId
+                }
+            })
+            if(!ownerCheck){
+                throw "cannot apply MT to this terminal due to not being an owner"
+            }
             if(option === 1){
                 effect = await prisma.effect.create({
                     data: {
@@ -98,15 +107,6 @@ export default async function specialSkill(
                     }
                 })
             } else if(option === 2){
-                const ownerCheck = await prisma.terminal.findUnique({
-                    where: {
-                        id: terminalId,
-                        airlineId
-                    }
-                })
-                if(!ownerCheck){
-                    throw "cannot apply MT to this terminal due to not being an owner"
-                }
                 effect = await prisma.effect.create({
                     data: {
                         type: airline.class,

@@ -9,6 +9,7 @@ import useCaptureToast from "../hooks/useCaptureToast"
 import type { Effect } from "@prisma/client"
 import { TICKUNIT } from "@/modules/routine"
 import { TerminalOTPDrawer } from "./terminal-otp-drawer"
+import { AirlineSecretDrawer } from "./airline-secret-drawer"
 
 export default function Interactable({ airlineId, session, isCaptain, ...props }: {
     airlineId: string
@@ -36,6 +37,7 @@ export default function Interactable({ airlineId, session, isCaptain, ...props }
             />
             <div className="w-full flex flex-col items-center">
                 <TerminalOTPDrawer airlineId={+airlineId}/>
+                <AirlineSecretDrawer airlineSecret={airline.airlineSecret}/>
             </div>
         </div>
     )

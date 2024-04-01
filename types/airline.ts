@@ -27,6 +27,7 @@ export interface EffectData {
 export interface AirlineData {
     id: number;
     passengers: number;
+    airlineSecret: string;
     class: AirlineClass;
     crews: CrewTableData[];
     captures: CaptureData[];

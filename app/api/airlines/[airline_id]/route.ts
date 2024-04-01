@@ -20,6 +20,7 @@ export async function GET(req: NextRequest, { params }: { params: { airline_id: 
         select: {
             id: true,
             passengers: true,
+            airlineSecret: true,
             skillUse: true,
             crews: {
                 select: {

@@ -57,6 +57,12 @@ export async function PATCH(req: NextRequest){
             }
         })
         console.log("reset all captures")
+        await prisma.terminal.updateMany({
+            data: {
+                status: "Cooldown"
+            }
+        })
+        console.log("Set all terminals status to Cooldown")
     }
     return NextResponse.json({ message: "SUCCESS" }, { status: 200 })
 }

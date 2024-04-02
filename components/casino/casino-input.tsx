@@ -1,60 +1,33 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import type { CasinoSelectData } from "@/types/terminal";
+import type { CasinoPlayData } from "@/types/terminal";
 import type { Dispatch, SetStateAction } from "react";
 
-export default function CasinoInput({
-  initialCost,
-  index,
-  setTableData,
-}: {
-  initialCost: number;
-  index: number;
-  setTableData: Dispatch<SetStateAction<CasinoSelectData[]>>;
+export default function CasinoInput({ initialCost, index, setTableData }: {
+    initialCost: number;
+    index: number;
+    setTableData: Dispatch<SetStateAction<CasinoPlayData[] | "loading">>;
 }) {
-  return (
-    <div className="flex items-center space-x-2">
-      <Input
-        className="outline "
-        type="number"
-        placeholder="Number"
-        step = "50"
-        value={initialCost}
-        onChange={(e) =>
-          setTableData((tableData) => {
-            const newTableData = tableData.map((row, i) => {
-              return i === index
-                ? { ...row, initial_cost: +e.target.value }
-                : { ...row };
-            });
-            // newTableData.sort((a, b) => {
-            //   return (
-            //     roles.findIndex((role) => a.role === role.value) -
-            //     roles.findIndex((role) => b.role === role.value)
-            //   );
-            // });
-            return newTableData;
-          })
-        }
-      />
-      {/* <Checkbox
-        id="terms"
-        onClick={() =>
-          setTableData((tableData) => {
-            const newTableData = tableData.map((row, i) => {
-              return i === index ? { ...row, is: is_playing } : { ...row };
-            });
-            // newTableData.sort((a, b) => {
-            //   return (
-            //     roles.findIndex((role) => a.role === role.value) -
-            //     roles.findIndex((role) => b.role === role.value)
-            //   );
-            // });
-            return newTableData;
-          })
-        }
-      /> */}
-    </div>
-  );
+    return (
+        <div className="flex items-center space-x-2">
+            <Input
+                className="border-black"
+                type="number"
+                placeholder="Number"
+                step="50"
+                min={100}
+                value={initialCost}
+                onChange={(e) =>
+                setTableData((tableData) =>
+                    tableData === "loading"? "loading" :
+                        tableData.map((row, i) => {
+                            return i === index
+                                ? { ...row, pot: +e.target.value }
+                                : { ...row };
+                        })
+                )}
+            />
+        </div>
+    )
 }

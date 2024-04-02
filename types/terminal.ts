@@ -38,14 +38,12 @@ export interface Faction {
 }
 
 export interface CasinoSelectData {
-  airline_id: number;
-  airline_name: string;
-  available_cost: number;
-  initial_cost: number;
-  player_id: number;
-  is_playing: boolean;
+  id: number;
+  title: string;
+  passengers: number;
 }
 
-export interface CasinoTableData extends CasinoSelectData {
-  this_pot: number;
+export interface CasinoPlayData extends CasinoSelectData {
+  pot: number;
+  playing: boolean;
 }

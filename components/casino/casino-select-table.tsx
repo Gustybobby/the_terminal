@@ -1,54 +1,41 @@
 "use client";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
-
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import type { Dispatch, SetStateAction } from "react";
 import CasinoCheckbox from "./casino-checkbox";
 import CasinoInput from "./casino-input";
+import { CasinoPlayData } from "@/types/terminal";
 
-import { CasinoSelectData } from "@/types/terminal";
-
-export default function LobbyTable({
-  className,
-  tableData,
-  setTableData,
-}: {
+export default function CasinoSelectTable({ className, tableData, setTableData }: {
   className: string;
-  tableData: CasinoSelectData[];
-  setTableData: Dispatch<SetStateAction<CasinoSelectData[]>>;
+  tableData: CasinoPlayData[];
+  setTableData: Dispatch<SetStateAction<CasinoPlayData[] | "loading">>;
 }) {
   return (
     <Table className={`bg-white ${className}`}>
       <TableHeader className="font-bold">
         <TableRow>
           <TableHead className="w-1/12">Airline</TableHead>
-          <TableHead className="w-1/12">Available_P</TableHead>
-          <TableHead className="w-2/12">Initial_P</TableHead>
+          <TableHead className="w-1/12">Available P</TableHead>
+          <TableHead className="w-2/12">Initial P</TableHead>
           <TableHead className="w-1/12">Play</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {tableData.map((row, index) => (
           <TableRow key={index}>
-            <TableCell>{row.airline_name}</TableCell>
-            <TableCell>{row.available_cost}</TableCell>
+            <TableCell>{row.title}</TableCell>
+            <TableCell>{row.passengers}</TableCell>
             <TableCell>
               <CasinoInput
-                initialCost={row.initial_cost}
+                initialCost={row.pot}
                 setTableData={setTableData}
                 index={index}
               />
             </TableCell>
             <TableCell className="flex flex-col font-medium items-center">
               <CasinoCheckbox
-                is_playing={row.is_playing}
+                playing={row.playing}
                 setTableData={setTableData}
                 index={index}
               />

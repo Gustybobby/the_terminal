@@ -1,51 +1,52 @@
 import prisma from "@/prisma-client";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { getServerAuthSession } from "../auth/[...nextauth]/_utils";
 
-// export const dynamic = "force-dynamic"
+export const dynamic = "force-dynamic"
+
+export async function GET(){
+    const session = await getServerAuthSession()
+    if (session?.user.role !== "ADMIN" && session?.user.role !== "STAFF")  {
+        return NextResponse.json({ message: "UNAUTHORIZED" }, { status: 401 })
+    }
+    const airlines = await prisma.airline.findMany({
+        select: {
+            id: true,
+            title: true,
+            passengers: true,
+        },
+        orderBy: {
+            id: "asc"
+        }
+    })
+    return NextResponse.json({ message: "SUCCESS", data: airlines }, { status: 200 })
+}
 
 interface updateType {
-  airline_id: string;
-  passengerAmount: string;
+    airline_id: number;
+    passengerAmount: number;
 }
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { airline_id: string; passengerAmount: string } }
-) {
-  const request = await req.json();
-  const data = request.data as updateType;
-  console.log(data);
-  console.log(data.airline_id);
-  console.log(data.passengerAmount);
 
-  const session = await getServerAuthSession();
-  if (!session?.user.id) {
-    return NextResponse.json({ message: "ERROR" }, { status: 400 });
-  }
-  const passengerAmountInt = parseInt(data.passengerAmount);
-  const airlineIdInt = parseInt(data.airline_id);
-  const airline = await prisma.airline.findUniqueOrThrow({
-    where: {
-      id: airlineIdInt,
-    },
-    select: {
-      passengers: true,
-    },
-  });
-  if (!airline) {
-    return NextResponse.json({ message: "ERROR" }, { status: 400 });
-  }
-
-  const updateAirline = await prisma.airline.update({
-    where: {
-      id: airlineIdInt,
-    },
-    data: {
-      passengers: airline.passengers + passengerAmountInt,
-    },
-  });
-  console.log("prev passengers is", airline.passengers);
-  console.log("increment by", passengerAmountInt);
-  console.log("new passengers is", updateAirline.passengers);
-  return NextResponse.json({ message: "SUCCESS" }, { status: 200 });
+export async function POST(req: NextRequest) {
+    const request = await req.json()
+    const data = request.data as updateType
+    const session = await getServerAuthSession()
+    if (session?.user.role !== "ADMIN" && session?.user.role !== "STAFF")  {
+        return NextResponse.json({ message: "UNAUTHORIZED" }, { status: 401 })
+    }
+    const updatedAirline = await prisma.airline.update({
+        where: {
+            id: data.airline_id,
+        },
+        data: {
+            passengers: { increment: data.passengerAmount },
+        },
+        select: {
+            id: true,
+            title: true,
+            passengers: true,
+        },
+    })
+    console.log("Updated",updatedAirline,"incremented by",data.passengerAmount)
+    return NextResponse.json({ message: "SUCCESS" }, { status: 200 });
 }

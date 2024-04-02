@@ -30,7 +30,7 @@ export const FACTION_MAP = {
       name: "School of BCET",
       abbreviation: "BCET",
       ability_name: "Lab Explosion",
-      use: 3,
+      use: 2,
       duration: -1,
       duration_factor: 1,
       type: "Global Sabotage",

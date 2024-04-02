@@ -36,9 +36,10 @@ export const FACTION_MAP = {
       type: "Global Sabotage",
       description: [
         "สามารถเลือกได้ 1 อย่าง",
-        "1. ทำให้ทีมอื่นที่เล่นอยู่ใน terminal นั้นออกไปจากตัวเกมและสามารถยึดฐานนั้นได้ทันที",
-        "(วิธีใช้: Captain ให้ Activation Code กับ Terminal Staff)",
-        "2. ทำให้เกิด effect “Exploded” , ซึ่งทำให้ Terminal passenger rate ลดลง 50% เป็นระยะเวลา 5 นาที",
+        "1. ทำให้ทีมอื่นที่อยู่ภายใน Round นั้นของ Terminal นั้นจะต้องออกไปจากตัวเกมและสามารถยึดฐานนั้นได้ทันที",
+        "(วิธีใช้: Captain ขอรหัสระเบิดจาก Co-Pilot แล้วบอกกับ Staff Terminal เวลาที่ต้องการใช้งานเพื่อแย่ง Terminal)",
+        "2. ทำให้เกิด Debuff “Exploded” , ซึ่งทำให้ Terminal จำนวน Passengers Rate ลดลง 50% เป็นระยะเวลา 5 นาที",
+        "(วิธีใช้: Co-Pilot กดใช้งานสกิล Debuff Terminal ผ่าน Device)",
       ].join("\n")
     },
     CET: {
@@ -51,7 +52,8 @@ export const FACTION_MAP = {
       duration_factor: 1,
       type: "Passive Buff",
       description: [
-        "เมื่อครอบครอง terminal ไหนเกินระยะเวลา 50% ของ phase passenger rate ของ terminal น้้น x3 จนกว่าจะหมด phase",
+        "เมื่อครอบครอง terminal ไหนรวมแล้วเกินระยะเวลา 50% ของเฟสนั้น passenger rate ของ Terminal น้้น x3 จนกว่าเวลาจะหมด",
+        "*** ผลของสกิลนี้จะยุติลงเมื่อ terminal ถูก airline อื่นยึดไป"
       ].join("\n")
     },
     MT: {

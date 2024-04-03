@@ -16,14 +16,19 @@ export default function TerminalTargets({ airlineId, setTarget }: {
     }
     return (
         <DropdownMenuContent>
-            {terminals.map((terminal) => (
+            {terminals.length > 0? terminals.map((terminal) => (
                 <DropdownMenuItem
                     key={terminal.id}
                     onClick={() => setTarget({ target: "T", id: terminal.id, title: terminal.title, option: 1 })}
                 >
                     {terminal.title}
                 </DropdownMenuItem>
-            ))}
+                ))
+                :
+                <DropdownMenuItem className="text-red-600">
+                    No Target Available
+                </DropdownMenuItem>
+            }
         </DropdownMenuContent>
     )
 }

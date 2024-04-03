@@ -16,14 +16,19 @@ export default function AirlineTargets({ airlineId, setTarget }: {
     }
     return (
         <DropdownMenuContent>
-            {airlines.map((airline) => (
+            {airlines.length > 0? airlines.map((airline) => (
                 <DropdownMenuItem
                     key={airline.id}
                     onClick={() => setTarget({ target: "A", id: airline.id, title: airline.title, option: 1 })}
                 >
                     {airline.title}
                 </DropdownMenuItem>
-            ))}
+                ))
+                :
+                <DropdownMenuItem className="text-red-600">
+                    No Target Available
+                </DropdownMenuItem>
+            }
         </DropdownMenuContent>
     )
 }

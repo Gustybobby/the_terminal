@@ -6,8 +6,8 @@ import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, Dr
 export function AirlineSecretDrawer({ airlineSecret }: { airlineSecret: string }) {
     return (
         <Drawer>
-            <DrawerTrigger className="border-2 p-4 border-black rounded-lg hover:bg-gray-200 transition-colors text-black mb-4">
-                Activation Code
+            <DrawerTrigger className={buttonVariants({ variant: "outline", className: "bg-green-300 hover:bg-green-400" })}>
+                Option 1
             </DrawerTrigger>
             <DrawerContent>
                 <DrawerHeader>

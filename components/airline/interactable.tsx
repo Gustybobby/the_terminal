@@ -37,7 +37,6 @@ export default function Interactable({ airlineId, session, isCaptain, ...props }
             />
             <div className="w-full flex flex-col items-center">
                 <TerminalOTPDrawer airlineId={+airlineId}/>
-                {(airline.class === "BCET" || airline.class === "MT") && <AirlineSecretDrawer airlineSecret={airline.airlineSecret}/>}
             </div>
         </div>
     )

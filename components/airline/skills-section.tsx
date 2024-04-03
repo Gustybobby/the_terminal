@@ -13,6 +13,7 @@ import { FaBuilding, FaBusinessTime, FaVirus } from "react-icons/fa";
 import { FaExplosion, FaGear } from "react-icons/fa6";
 import OptionTargets from "./class-target-content/option-targets";
 import TerminalTargets from "./class-target-content/terminal-targets";
+import { AirlineSecretDrawer } from "./airline-secret-drawer";
 
 export interface TargetData {
     target: "T" | "A" | "NA",
@@ -50,7 +51,7 @@ export default function SkillsSection({ airline, effects, currentTick }: {
                     <Card className="p-4 flex flex-col items-center space-y-1 w-fit">
                         {SkillIcon[airline.class]}
                         <h1 className="font-bold text-center">{FACTION_MAP[airline.class].ability_name}</h1>
-                        <h2 className="font-semibold text-red-600">Uses left for this phase: {airline.stock}</h2>
+                        <h2 className="font-semibold text-red-600">{airline.class !== "CET"? `Uses left for this phase: ${airline.stock}` : ""}</h2>
                         <div className="flex flex-col items-start">
                             {FACTION_MAP[airline.class].description.split("\n").map((line,j) => (
                             <div className={`mb-1 ${line.includes("***")? "text-red-600 font-semibold" : ""}`} key={j}>
@@ -59,17 +60,20 @@ export default function SkillsSection({ airline, effects, currentTick }: {
                             ))}
                         </div>
                         <DropdownMenu>
-                            <DropdownMenuTrigger
-                                className={buttonVariants({ variant: "outline", className: "bg-green-300 hover:bg-green-400" })}
-                                disabled={airline.class === "CET"}
-                                onClick={() => {
-                                    if(airline.class === "MSME"){
-                                        setTarget({ target: "NA", id: 0, title: "yourself", option: 1 })
-                                    }
-                                }}
-                            >
-                                {airline.class === "CET"? "Passive" : "Use"}
-                            </DropdownMenuTrigger>
+                            <div className="flex items-center space-x-2">
+                                {(airline.class === "BCET" || airline.class === "MT") && <AirlineSecretDrawer airlineSecret={airline.airlineSecret}/>}
+                                <DropdownMenuTrigger
+                                    className={buttonVariants({ variant: "outline", className: "bg-green-300 hover:bg-green-400" })}
+                                    disabled={airline.class === "CET"}
+                                    onClick={() => {
+                                        if(airline.class === "MSME"){
+                                            setTarget({ target: "NA", id: 0, title: "yourself", option: 1 })
+                                        }
+                                    }}
+                                >
+                                    {airline.class === "CET"? "Passive" : ((airline.class === "MT" || airline.class === "BCET")? "Option 2" : "Use")}
+                                </DropdownMenuTrigger>
+                            </div>
                             <TargetContent
                                 airlineId={airline.id}
                                 airlineClass={airline.class}

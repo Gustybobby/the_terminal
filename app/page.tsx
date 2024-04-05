@@ -1,7 +1,8 @@
 import Image from "next/image"
 import { getServerAuthSession } from "./api/auth/[...nextauth]/_utils"
 import Link from "next/link"
-import { buttonVariants } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
+import SignOut from "@/components/sign-out"
 
 export default async function Home() {
     const session = await getServerAuthSession()
@@ -27,7 +28,7 @@ export default async function Home() {
                 <h2 className="text-lg font-semibold mb-2">
                     by SIIT Insight Camp 2024
                 </h2>
-                <div className="space-x-2">
+                <div className="space-x-2 mb-2">
                     {(session?.user.role === "USER" || session?.user.role === "ADMIN") &&
                     <Link
                         className={buttonVariants({ variant: "default" })}
@@ -53,6 +54,7 @@ export default async function Home() {
                     </Link>
                     }
                 </div>
+                <SignOut/>
             </div>
         </main>
     )

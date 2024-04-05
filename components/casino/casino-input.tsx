@@ -17,13 +17,13 @@ export default function CasinoInput({ initialCost, index, setTableData }: {
                 placeholder="Number"
                 step="50"
                 min={100}
-                value={initialCost}
+                value={initialCost || ""}
                 onChange={(e) =>
                 setTableData((tableData) =>
                     tableData === "loading"? "loading" :
                         tableData.map((row, i) => {
                             return i === index
-                                ? { ...row, pot: +e.target.value }
+                                ? { ...row, pot: e.target.value === ""? 0 : +e.target.value }
                                 : { ...row };
                         })
                 )}

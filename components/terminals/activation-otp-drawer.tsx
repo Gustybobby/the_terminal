@@ -14,7 +14,7 @@ export function ActivationOTPDrawer({ terminalId }: { terminalId: number }) {
     return (
         <Drawer>
             <DrawerTrigger className="border-2 p-4 border-black rounded-lg hover:bg-gray-200 transition-colors text-black mb-4">
-                Activation Code
+                Fill Activation Code
             </DrawerTrigger>
             <DrawerContent>
                 <DrawerHeader>

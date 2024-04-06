@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation"
 import { getServerAuthSession } from "../api/auth/[...nextauth]/_utils"
 import prisma from "@/prisma-client"
-import { GAME_ID } from "@/modules/routine"
 
 export default async function AirlinesPage(){
     const session = await getServerAuthSession()
@@ -27,16 +26,5 @@ export default async function AirlinesPage(){
     if(user.airlineId === null){
         redirect("/")
     }
-    const gameState = await prisma.gameState.findUniqueOrThrow({
-        where: {
-            id: GAME_ID
-        },
-        select: {
-            start: true
-        }
-    })
-    if(user.airline?.ready && gameState.start){
-        redirect(`/airlines/${user.airlineId}`)
-    }
-    redirect("/")
+    redirect(`/airlines/${user.airlineId}`)
 }

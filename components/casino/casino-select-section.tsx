@@ -38,7 +38,27 @@ export default function CasinoSelectSection(){
 			}
 			<div className="m-2 flex flex-col items-center">
 				<Button
-					className={`w-full text-center mt-8 focus:shadow-outline disabled:opacity-75 ${(illegalPot && !playing)? "bg-red-500" : ""}`}
+					className="w-full mt-8 text-center focus:shadow-outline disabled:opacity-75 bg-green-500 hover:bg-green-400"
+					onClick={async(e) => {
+						const button = e.target as HTMLButtonElement
+						button.disabled = true
+						for(const airline of selectData.filter(({ playing }) => playing)){
+							const elem = document.getElementById(`airline_casino_${airline.id}`) as HTMLInputElement
+							await sendJSONToAPI({
+								url: "/api/casino",
+								method: "POST",
+								body: JSON.stringify({ data: { airline_id: airline.id, passengerAmount: +elem.value }})
+							})
+							elem.value = ""
+						}
+						button.disabled = false
+					}}
+					disabled={!playing}
+				>
+                	Add Passengers
+            	</Button>
+				<Button
+					className={`w-full text-center mt-2 focus:shadow-outline disabled:opacity-75 ${(illegalPot && !playing)? "bg-red-500" : ""}`}
 					onClick={async(e) => {
 						const button = e.target as HTMLButtonElement
 						button.disabled = true

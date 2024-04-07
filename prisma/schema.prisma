@@ -116,16 +116,16 @@ enum AirlineClass {
 }
 
 enum Color {
-  RED
-  PINK
-  ORANGE
-  YELLOW
-  GREEN
+  DARK_ORANGE
+  MAGENTA
   BLUE
-  PURPLE
+  YELLOW
   BROWN
+  GREEN
+  LIGHT_ORANGE
   AQUA
-  BEIGE
+  PURPLE
+  PINK
 }
 
 enum TerminalStatus {

@@ -66,14 +66,14 @@ export default function AirlinesColumn({ admin, refetch }: {
 }
 
 const styles: { [key in Color]: string } = {
-    RED: "bg-red-200",
+    DARK_ORANGE: "bg-orange-400",
+    MAGENTA: "bg-pink-400",
     PINK: "bg-pink-200",
     YELLOW: "bg-yellow-200",
-    ORANGE: "bg-orange-200",
+    LIGHT_ORANGE: "bg-orange-200",
     GREEN: "bg-green-200",
     BLUE: "bg-blue-300",
     PURPLE: "bg-purple-300",
     BROWN: "bg-yellow-300",
     AQUA: "bg-cyan-200",
-    BEIGE: "bg-orange-100",
-}
+  }

@@ -23,7 +23,7 @@ export default async function Airline({ params }: { params: { airline_id: string
     if(user.airlineRole !== "Co_pilot" && session.user.role !== "ADMIN"){
         redirect("/")
     }
-    if(user.airlineId !== +params.airline_id){
+    if(user.airlineId !== +params.airline_id && session.user.role !== "ADMIN"){
         redirect("/airlines")
     }
     const airline = await prisma.airline.findUniqueOrThrow({

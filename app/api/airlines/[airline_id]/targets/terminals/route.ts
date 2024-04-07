@@ -29,6 +29,6 @@ export async function GET(req: NextRequest, { params }: { params: { airline_id: 
         }
     })
     const noEffectTerminals: AbilityTargetData[] = allTerminals
-        .filter((tl) => !airline.applyEffects.find(({ terminalId }) => tl.id === terminalId))
+        .filter((tl) => !airline.applyEffects.find(({ terminalId }) => tl.id === terminalId && airline.class !== "MT"))
     return NextResponse.json({ message: "SUCCESS", data: noEffectTerminals })
 }

@@ -7,6 +7,7 @@ import { sendJSONToAPI } from "@/tools/apiHandler";
 import { useToast } from "../ui/use-toast";
 import { FaCircleExclamation } from "react-icons/fa6";
 import AirlineActivationOTP from "./airline-activation-otp";
+import { FaCheckCircle } from "react-icons/fa";
 
 export function ActivationOTPDrawer({ terminalId }: { terminalId: number }) {
     const { toast } = useToast()
@@ -47,6 +48,19 @@ export function ActivationOTPDrawer({ terminalId }: { terminalId: number }) {
                                         </div>
                                     ),
                                     variant: "destructive",
+                                    duration: 3000,
+                                })
+                            } else {
+                                toast({
+                                    description: (
+                                        <div className="flex flex-col">
+                                            <div className="flex items-center space-x-2">
+                                                <FaCheckCircle className="text-lg"/>
+                                                <span className="font-bold text-lg">Success</span>
+                                            </div>
+                                        </div>
+                                    ),
+                                    variant: "default",
                                     duration: 3000,
                                 })
                             }

@@ -12,6 +12,7 @@ export async function GET(req: NextRequest, { params }: { params: { airline_id: 
             applyEffects: {
                 select: {
                     terminalId: true,
+                    multiplier: true,
                 }
             }
         }
@@ -29,6 +30,6 @@ export async function GET(req: NextRequest, { params }: { params: { airline_id: 
         }
     })
     const noEffectTerminals: AbilityTargetData[] = allTerminals
-        .filter((tl) => !airline.applyEffects.find(({ terminalId }) => tl.id === terminalId && airline.class !== "MT"))
+        .filter((tl) => !airline.applyEffects.find(({ terminalId, multiplier }) => tl.id === terminalId && (airline.class !== "MT" || multiplier === 0.9)))
     return NextResponse.json({ message: "SUCCESS", data: noEffectTerminals })
 }
